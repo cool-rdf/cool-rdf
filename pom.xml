@@ -120,6 +120,7 @@
         <maven-surefire-junit5-tree-reporter.version>1.2.1</maven-surefire-junit5-tree-reporter.version>
         <maven-surefire-plugin.version>3.0.0-M7</maven-surefire-plugin.version>
         <native-maven-plugin.version>0.10.1</native-maven-plugin.version>
+        <versions-maven-plugin.version>2.17.1</versions-maven-plugin.version>
     </properties>
 
     <modules>
@@ -437,6 +438,11 @@
                     <artifactId>native-maven-plugin</artifactId>
                     <version>${native-maven-plugin.version}</version>
                 </plugin>
+                <plugin>
+                    <groupId>org.codehaus.mojo</groupId>
+                    <artifactId>versions-maven-plugin</artifactId>
+                    <version>${versions-maven-plugin.version}</version>
+                </plugin>
             </plugins>
         </pluginManagement>
 
@@ -545,6 +551,15 @@
                     <developmentVersion>DEV-SNAPSHOT</developmentVersion>
                     <!-- release:perform -->
                     <releaseProfiles>prepare-release,maven-central</releaseProfiles>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>versions-maven-plugin</artifactId>
+                <version>${versions-maven-plugin.version}</version>
+                <configuration>
+                    <ignoredVersions>.*[\.-](?i)(alpha|beta|(rc[0-9]+)|(m\d+)).*</ignoredVersions>
                 </configuration>
             </plugin>
         </plugins>
