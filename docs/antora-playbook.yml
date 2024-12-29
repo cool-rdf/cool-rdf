@@ -1,0 +1,33 @@
+site:
+  title: "Cool RDF"
+  url: https://rdf.cool
+  start_page: cool-rdf::index.adoc
+content:
+  sources:
+    - url: ..
+      branches: HEAD
+      start_path: docs/src/docs/antora
+ui:
+  bundle:
+    #    url: ./src/docs/resources/ui-bundle.zip
+    url: https://github.com/eclipse-esmf/esmf-antora-ui/releases/download/v1.6.0/esmf-antora-ui-bundle-1.6.0.zip
+    snapshot: true
+  supplemental_files:
+    - path: ui.yml
+      contents: |
+        static_files: [ .nojekyll ]
+    - path: .nojekyll
+runtime:
+  cache_dir: ./.cache/antora
+antora:
+  extensions:
+    - require: '@antora/lunr-extension'
+      index_latest_only: true
+asciidoc:
+  extensions:
+    - '@djencks/asciidoctor-mathjax'
+  attributes:
+    doctype: book
+    sectanchors: true
+    idprefix: ''
+    idseparator: '-'

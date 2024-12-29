@@ -34,6 +34,18 @@
         <maven.failsafe.skip>false</maven.failsafe.skip>
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <jacoco.skip>true</jacoco.skip>
+
+        <frontend-maven-plugin.version>1.15.1</frontend-maven-plugin.version>
+        <nodejs.version>16.18.0</nodejs.version>
+        <npm.version>9.6.0</npm.version>
+        <antora.version>3.0.0</antora.version>
+
+        <nodejs-directory>${project.basedir}/node</nodejs-directory>
+        <node-modules-directory>${project.basedir}/node_modules</node-modules-directory>
+        <antora-lunr-extension.version>1.0.0-alpha.1</antora-lunr-extension.version>
+        <antora-mathjax-extension.version>0.0.9</antora-mathjax-extension.version>
+        <antora-cli>${node-modules-directory}/@antora/cli/bin/antora</antora-cli>
+        <antora-playbook>antora-playbook.yml</antora-playbook>
     </properties>
 
     <dependencies>
@@ -45,7 +57,66 @@
     </dependencies>
 
     <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.github.eirslett</groupId>
+                    <artifactId>frontend-maven-plugin</artifactId>
+                    <version>${frontend-maven-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${nodejs-directory}</directory>
+                        </fileset>
+                        <fileset>
+                            <directory>${node-modules-directory}</directory>
+                        </fileset>
+                        <fileset>
+                            <!-- Where Antora writes its output -->
+                            <directory>${project.basedir}/build</directory>
+                        </fileset>
+                        <fileset>
+                            <!-- Antora's internal cache -->
+                            <directory>${project.basedir}/.cache</directory>
+                        </fileset>
+                        <fileset>
+                            <directory>${project.basedir}</directory>
+                            <includes>
+                                <include>package.json</include>
+                                <include>package-lock.json</include>
+                            </includes>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>run-antora</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <executable>${antora-cli}</executable>
+                            <commandlineArgs>${antora-playbook} --stacktrace --fetch</commandlineArgs>
+                            <useMavenLogger>true</useMavenLogger>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-antrun-plugin</artifactId>
@@ -56,7 +127,7 @@
                         <configuration>
                             <target name="main">
                                 <apply executable="java"
-                                       dest="${project.basedir}/src/docs/asciidoc/images/generated"
+                                       dest="${project.basedir}/src/docs/antora/modules/ROOT/assets/images/generated"
                                        parallel="false"
                                        failonerror="true"
                                        failifexecutionfails="true"
@@ -68,7 +139,8 @@
                                     <arg value="detect"/>
                                     <srcfile/>
                                     <targetfile/>
-                                    <fileset dir="${project.basedir}/src/docs/asciidoc/examples" includes="*.ttl"/>
+                                    <fileset dir="${project.basedir}/src/docs/antora/modules/ROOT/examples"
+                                             includes="*.ttl"/>
                                     <mapper type="glob" from="*.ttl" to="*.svg"/>
                                 </apply>
                             </target>
@@ -76,66 +148,6 @@
                         <goals>
                             <goal>run</goal>
                         </goals>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>de.saumya.mojo</groupId>
-                <artifactId>gem-maven-plugin</artifactId>
-                <configuration>
-                    <jrubyVersion>${jruby.version}</jrubyVersion>
-                    <gemHome>${project.build.directory}/gems</gemHome>
-                    <gemPath>${project.build.directory}/gems</gemPath>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>install-gems</id>
-                        <goals>
-                            <goal>initialize</goal>
-                        </goals>
-                        <phase>initialize</phase>
-                    </execution>
-                </executions>
-            </plugin>
-
-            <plugin>
-                <groupId>org.asciidoctor</groupId>
-                <artifactId>asciidoctor-maven-plugin</artifactId>
-                <dependencies>
-                    <!-- Comment this section to use the default jruby artifact provided by the plugin -->
-                    <dependency>
-                        <groupId>org.jruby</groupId>
-                        <artifactId>jruby</artifactId>
-                        <version>${jruby.version}</version>
-                    </dependency>
-                    <!-- Comment this section to use the default AsciidoctorJ artifact provided by the plugin -->
-                    <dependency>
-                        <groupId>org.asciidoctor</groupId>
-                        <artifactId>asciidoctorj</artifactId>
-                        <version>${asciidoctorj.version}</version>
-                    </dependency>
-                </dependencies>
-                <configuration>
-                    <sourceDirectory>src/docs/asciidoc</sourceDirectory>
-                    <attributes>
-                        <basedir>${project.basedir}</basedir>
-                        <project-version>${project.version}</project-version>
-                        <sourcedir>${project.build.sourceDirectory}</sourcedir>
-                    </attributes>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>generate-documentation</id>
-                        <phase>compile</phase>
-                        <goals>
-                            <goal>process-asciidoc</goal>
-                        </goals>
-                        <configuration>
-                            <backend>html5</backend>
-                            <doctype>book</doctype>
-                            <outputDirectory>${project.build.directory}/docs</outputDirectory>
-                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -192,10 +204,115 @@
         </plugins>
     </build>
 
-    <repositories>
-        <repository>
-            <id>mavengems</id>
-            <url>mavengem:https://rubygems.org</url>
-        </repository>
-    </repositories>
+    <profiles>
+        <profile>
+            <id>download-nodejs</id>
+            <activation>
+                <file>
+                    <missing>${basedir}/node/node</missing>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>install-node</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>install-node-and-npm</goal>
+                                </goals>
+                                <configuration>
+                                    <environmentVariables>
+                                        <strict-ssl>false</strict-ssl>
+                                    </environmentVariables>
+                                    <!-- frontend-maven-plugin will add a "/node" to the back -->
+                                    <!-- of this path, so do NOT use ${node-directory} here -->
+                                    <installDirectory>${project.basedir}</installDirectory>
+                                    <nodeVersion>v${nodejs.version}</nodeVersion>
+                                    <npmVersion>${npm.version}</npmVersion>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Download Antora and its requirements if necessary -->
+        <profile>
+            <id>download-antora</id>
+            <activation>
+                <file>
+                    <!-- Note we can't use ${antora-cli} here because profile activation happens before variable interpolation :( -->
+                    <missing>${basedir}/node_modules/@antora/cli/bin/antora</missing>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>install-antora</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <configuration>
+                                    <!--suppress MavenModelInspection -->
+                                    <arguments>install @antora/cli@${antora.version}</arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>install-antora-site-generator</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <configuration>
+                                    <!--suppress MavenModelInspection -->
+                                    <arguments>install @antora/site-generator@${antora.version}</arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>install-antora-lunr-extension</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <configuration>
+                                    <!--suppress MavenModelInspection -->
+                                    <arguments>install @antora/lunr-extension@${antora-lunr-extension.version}
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>install-asciidoctor-mathjax</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <configuration>
+                                    <!--suppress MavenModelInspection -->
+                                    <arguments>install @djencks/asciidoctor-mathjax@${antora-mathjax-extension.version} </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Execute Antora to build documentation, but use site-local.yml -->
+        <profile>
+            <id>antora-local</id>
+            <properties>
+                <antora-playbook>antora-local.yml</antora-playbook>
+            </properties>
+        </profile>
+    </profiles>
 </project>
