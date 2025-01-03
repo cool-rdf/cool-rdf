@@ -4,13 +4,12 @@ site:
   start_page: cool-rdf::index.adoc
 content:
   sources:
-    - url: ..
+    - url: ../..
       branches: HEAD
       start_path: docs/src/docs/antora
 ui:
   bundle:
-    #    url: ./src/docs/resources/ui-bundle.zip
-    url: https://github.com/eclipse-esmf/esmf-antora-ui/releases/download/v1.6.0/esmf-antora-ui-bundle-1.6.0.zip
+    url: https://github.com/cool-rdf/docs-antora-ui/releases/download/v1.0.0/ui-bundle.zip
     snapshot: true
   supplemental_files:
     - path: ui.yml

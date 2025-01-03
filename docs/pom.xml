@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2024 Andreas Textor
+  ~ Copyright 2025 Andreas Textor
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -40,12 +40,11 @@
         <npm.version>9.6.0</npm.version>
         <antora.version>3.0.0</antora.version>
 
-        <nodejs-directory>${project.basedir}/node</nodejs-directory>
-        <node-modules-directory>${project.basedir}/node_modules</node-modules-directory>
+        <nodejs-directory>${project.build.directory}/node</nodejs-directory>
+        <node-modules-directory>${project.build.directory}/node_modules</node-modules-directory>
         <antora-lunr-extension.version>1.0.0-alpha.1</antora-lunr-extension.version>
         <antora-mathjax-extension.version>0.0.9</antora-mathjax-extension.version>
         <antora-cli>${node-modules-directory}/@antora/cli/bin/antora</antora-cli>
-        <antora-playbook>antora-playbook.yml</antora-playbook>
     </properties>
 
     <dependencies>
@@ -69,49 +68,51 @@
 
         <plugins>
             <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-clean-plugin</artifactId>
-                <configuration>
-                    <filesets>
-                        <fileset>
-                            <directory>${nodejs-directory}</directory>
-                        </fileset>
-                        <fileset>
-                            <directory>${node-modules-directory}</directory>
-                        </fileset>
-                        <fileset>
-                            <!-- Where Antora writes its output -->
-                            <directory>${project.basedir}/build</directory>
-                        </fileset>
-                        <fileset>
-                            <!-- Antora's internal cache -->
-                            <directory>${project.basedir}/.cache</directory>
-                        </fileset>
-                        <fileset>
-                            <directory>${project.basedir}</directory>
-                            <includes>
-                                <include>package.json</include>
-                                <include>package-lock.json</include>
-                            </includes>
-                        </fileset>
-                    </filesets>
-                </configuration>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-resources</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
+                <artifactId>build-helper-maven-plugin</artifactId>
                 <executions>
                     <execution>
-                        <id>run-antora</id>
-                        <phase>generate-resources</phase>
+                        <id>add-antora-sources</id>
+                        <phase>initialize</phase>
                         <goals>
-                            <goal>exec</goal>
+                            <goal>add-resource</goal>
                         </goals>
                         <configuration>
-                            <executable>${antora-cli}</executable>
-                            <commandlineArgs>${antora-playbook} --stacktrace --fetch</commandlineArgs>
-                            <useMavenLogger>true</useMavenLogger>
+                            <resources>
+                                <resource>
+                                    <directory>src/docs/antora</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>add-antora-generated-sources</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>src-gen/docs/antora</directory>
+                                </resource>
+                            </resources>
                         </configuration>
                     </execution>
                 </executions>
@@ -127,7 +128,7 @@
                         <configuration>
                             <target name="main">
                                 <apply executable="java"
-                                       dest="${project.basedir}/src/docs/antora/modules/ROOT/assets/images/generated"
+                                       dest="${project.basedir}/src-gen/docs/antora/modules/ROOT/assets/images/generated"
                                        parallel="false"
                                        failonerror="true"
                                        failifexecutionfails="true"
@@ -209,7 +210,7 @@
             <id>download-nodejs</id>
             <activation>
                 <file>
-                    <missing>${basedir}/node/node</missing>
+                    <missing>${basedir}/target/node</missing>
                 </file>
             </activation>
             <build>
@@ -230,7 +231,7 @@
                                     </environmentVariables>
                                     <!-- frontend-maven-plugin will add a "/node" to the back -->
                                     <!-- of this path, so do NOT use ${node-directory} here -->
-                                    <installDirectory>${project.basedir}</installDirectory>
+                                    <installDirectory>target</installDirectory>
                                     <nodeVersion>v${nodejs.version}</nodeVersion>
                                     <npmVersion>${npm.version}</npmVersion>
                                 </configuration>
@@ -247,7 +248,7 @@
             <activation>
                 <file>
                     <!-- Note we can't use ${antora-cli} here because profile activation happens before variable interpolation :( -->
-                    <missing>${basedir}/node_modules/@antora/cli/bin/antora</missing>
+                    <missing>${basedir}/target/node_modules</missing>
                 </file>
             </activation>
             <build>
@@ -255,6 +256,10 @@
                     <plugin>
                         <groupId>com.github.eirslett</groupId>
                         <artifactId>frontend-maven-plugin</artifactId>
+                        <configuration>
+                            <installDirectory>target</installDirectory>
+                            <workingDirectory>target</workingDirectory>
+                        </configuration>
                         <executions>
                             <execution>
                                 <id>install-antora</id>
@@ -298,7 +303,9 @@
                                 </goals>
                                 <configuration>
                                     <!--suppress MavenModelInspection -->
-                                    <arguments>install @djencks/asciidoctor-mathjax@${antora-mathjax-extension.version} </arguments>
+                                    <arguments>install
+                                        @djencks/asciidoctor-mathjax@${antora-mathjax-extension.version}
+                                    </arguments>
                                 </configuration>
                             </execution>
                         </executions>
@@ -307,12 +314,59 @@
             </build>
         </profile>
 
-        <!-- Execute Antora to build documentation, but use site-local.yml -->
+        <profile>
+            <id>antora</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>run-antora</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <workingDirectory>${project.build.directory}</workingDirectory>
+                                    <executable>${antora-cli}</executable>
+                                    <commandlineArgs>antora-playbook.yml --stacktrace --fetch</commandlineArgs>
+                                    <useMavenLogger>true</useMavenLogger>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Execute Antora to build documentation, but use antora-local.yml -->
         <profile>
             <id>antora-local</id>
-            <properties>
-                <antora-playbook>antora-local.yml</antora-playbook>
-            </properties>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>run-antora</id>
+                                <phase>compile</phase>
+                                <goals>
+                                    <goal>exec</goal>
+                                </goals>
+                                <configuration>
+                                    <workingDirectory>${project.build.directory}</workingDirectory>
+                                    <executable>${antora-cli}</executable>
+                                    <commandlineArgs>antora-local.yml --stacktrace --fetch</commandlineArgs>
+                                    <useMavenLogger>true</useMavenLogger>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
         </profile>
     </profiles>
 </project>
