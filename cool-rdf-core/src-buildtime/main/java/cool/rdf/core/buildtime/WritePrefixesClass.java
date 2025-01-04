@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright 2025 Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.text.SimpleDateFormat;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
@@ -56,13 +55,15 @@ public class WritePrefixesClass {
 
         package ${package};
          
+        import javax.annotation.processing.Generated;
+                
         import cool.rdf.core.model.RdfPrefix;
 
         /**
          * Provides information about well-known RDF prefixes and namespaces.
          * Generated class, do not edit.
-         * Generated on ${buildDate}.
          */
+        @Generated( value = "${generatorClass}", date = "${isoBuildDate}" )
         public enum ${className} implements RdfPrefix {
         ${entries};
             
@@ -129,9 +130,12 @@ public class WritePrefixesClass {
                     : "    %s( \"%s\", \"%s\" )".formatted( entry.enumName(), entry.prefix(), entry.uri() ) )
             .collect( Collectors.joining( ",\n" ) );
 
+        final Date currentDate = new Date();
         final String content = PREFIXES_CLASS_TEMPLATE.apply( Map.of(
-            "year", new SimpleDateFormat( "yyyy" ).format( new Date() ),
-            "buildDate", new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" ).format( new Date() ),
+            "generatorClass", WritePrefixesClass.class.getCanonicalName(),
+            "year", DateFormats.YEAR_FORMAT.format( currentDate ),
+            "buildDate", DateFormats.SIMPLE_DATE_FORMAT.format( currentDate ),
+            "isoBuildDate", DateFormats.ISO_8601_FORMAT.format( currentDate ),
             "copyrightHolder", copyrightHolder,
             "package", packageName,
             "className", className,

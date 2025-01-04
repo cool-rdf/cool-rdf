@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!--
-  ~ Copyright 2024 Andreas Textor
+  ~ Copyright 2025 Andreas Textor
   ~
   ~ Licensed under the Apache License, Version 2.0 (the "License");
   ~ you may not use this file except in compliance with the License.
@@ -147,6 +147,26 @@
             </plugin>
 
             <plugin>
+                <groupId>org.codehaus.gmaven</groupId>
+                <artifactId>groovy-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>determine-project-developers</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>execute</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <source>
+                        def developers = project.developers.collect { it.name }.join(', ')
+                        project.properties.setProperty('developersString', developers)
+                    </source>
+                </configuration>
+            </plugin>
+
+            <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>exec-maven-plugin</artifactId>
                 <executions>
@@ -166,7 +186,8 @@
                                 <argument>${git-properties-filename}</argument>
                                 <argument>cool.rdf.core.Version</argument>
                                 <argument>${generated.sources}/main/java/cool/rdf/core/Version.java</argument>
-                                <argument>${project.developers}</argument>
+                                <!--suppress MavenModelInspection -->
+                                <argument>${developersString}</argument>
                             </arguments>
                         </configuration>
                     </execution>
@@ -186,7 +207,8 @@
                                 <argument>${build.time.sources}/main/resources</argument>
                                 <argument>cool.rdf.core.Prefixes</argument>
                                 <argument>${generated.sources}/main/java/cool/rdf/core/Prefixes.java</argument>
-                                <argument>${project.developers}</argument>
+                                <!--suppress MavenModelInspection -->
+                                <argument>${developersString}</argument>
                             </arguments>
                         </configuration>
                     </execution>

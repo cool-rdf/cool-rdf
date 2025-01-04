@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright 2025 Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,6 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 import java.util.Properties;
@@ -51,12 +50,14 @@ public class WriteVersionClass {
          */
 
          package ${package};
+         
+         import javax.annotation.processing.Generated;
 
          /**
           * Provides static build version information.
           * Generated class, do not edit.
-          * Generated on ${buildDate}.
           */
+         @Generated( value = "${generatorClass}", date = "${isoBuildDate}" )
          public class ${className} {
             /**
              * The version of the package
@@ -104,14 +105,18 @@ public class WriteVersionClass {
         final File targetFile = new File( args[2] );
         targetFile.getParentFile().mkdirs();
 
+        final Date currentDate = new Date();
+
         final String content = VERSION_CLASS_TEMPLATE.apply( Map.of(
-            "year", new SimpleDateFormat( "yyyy" ).format( new Date() ),
+            "generatorClass", WriteVersionClass.class.getCanonicalName(),
+            "year", DateFormats.YEAR_FORMAT.format( currentDate ),
             "copyrightHolder", copyrightHolder,
             "package", packageName,
             "className", className,
             "version", gitProperties.getProperty( "git.build.version" ),
             "commitId", gitProperties.getProperty( "git.commit.id" ),
-            "buildDate", new SimpleDateFormat( "yyyy-MM-dd HH:mm:ss" ).format( new Date() )
+            "buildDate", DateFormats.SIMPLE_DATE_FORMAT.format( currentDate ),
+            "isoBuildDate", DateFormats.ISO_8601_FORMAT.format( currentDate )
         ) );
 
         try {
