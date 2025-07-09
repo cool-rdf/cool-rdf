@@ -66,7 +66,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
      * need to escape single quotes.
      * </p>
      */
-    private static final Pattern STRING_ESCAPE_SEQUENCES = Pattern.compile( "[\t\b\n\r\f\"\\\\]" );
+    private static final Pattern STRING_ESCAPE_SEQUENCES = Pattern.compile( "(\r\n)|[\t\b\n\r\f\"\\\\]" );
 
     private final FormattingStyle style;
 
@@ -680,13 +680,15 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
         final String quote = switch ( style.quoteStyle ) {
             case ALWAYS_SINGE_QUOTES -> "\"";
             case ALWAYS_TRIPLE_QUOTES -> "\"\"\"";
-            case TRIPLE_QUOTES_FOR_MULTILINE -> value.contains( "\n" ) ? "\"\"\"" : "\"";
+            case TRIPLE_QUOTES_FOR_MULTILINE -> (value.contains( "\n" ) || value.contains("\r"))? "\"\"\"" : "\"";
         };
+
 
         final Map<String, String> characterReplacements = Map.of(
             "\t", "\\\\t",
             "\b", "\\\\b",
-            "\r", "\\\\r",
+            "\r", quote.equals( "\"" ) ? "\\\\r": "\n", // in multiline strings that were read with mac style endings, replace \r with \n
+            "\r\n", quote.equals( "\"" ) ? "\\\\r\\\\n": "\n", // in multiline strings that were read with windows style endings, replace \r\n with \n
             "\f", "\\\\f",
             "\n", quote.equals( "\"" ) ? "\\\\n" : "\n", // Don't escape line breaks in triple-quoted strings
             "\"", quote.equals( "\"" ) ? "\\\\\"" : "\"", // Don't escape quotes in triple-quoted strings

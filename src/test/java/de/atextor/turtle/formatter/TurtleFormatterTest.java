@@ -1230,6 +1230,98 @@ public class TurtleFormatterTest {
         assertThat(result.trim()).isEqualTo(expected);
     }
 
+    @Test
+    public void testMultilineStrings(){
+        String content =   """
+           @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+           @prefix : <http://example.com/ns#> .
+           :thing :value \"""
+                First Line
+                Second Line
+                Third Line
+           \""" .
+           """;
+        String expected = """
+           @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+           @prefix : <http://example.com/ns#> .
+           
+           :thing :value \"""
+                First Line
+                Second Line
+                Third Line
+           \""" .""";
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter(style);
+        final String result = formatter.applyToContent(content);
+        assertThat(result.trim()).isEqualTo(expected);
+    }
+
+    @Test
+    public void testStringsWithUnixStyleNewlinesToMultilineStrings(){
+        String content =   """
+           @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+           @prefix : <http://example.com/ns#> .
+           :thing :value "\\n     First Line\\n     Second Line\\n     Third Line\\n" .
+           """;
+        String expected = """
+           @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+           @prefix : <http://example.com/ns#> .
+           
+           :thing :value \"""
+                First Line
+                Second Line
+                Third Line
+           \""" .""";
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter(style);
+        final String result = formatter.applyToContent(content);
+        assertThat(result.trim()).isEqualTo(expected);
+    }
+
+    @Test
+    public void testStringsWithWindowsStyleNewlinesToMultilineStrings(){
+        String content =   """
+           @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+           @prefix : <http://example.com/ns#> .
+           :thing :value "\\r\\n     First Line\\r\\n     Second Line\\r\\n     Third Line\\r\\n" .
+           """;
+        String expected = """
+           @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+           @prefix : <http://example.com/ns#> .
+           
+           :thing :value \"""
+                First Line
+                Second Line
+                Third Line
+           \""" .""";
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter(style);
+        final String result = formatter.applyToContent(content);
+        assertThat(result.trim()).isEqualTo(expected);
+    }
+
+    @Test
+    public void testStringsWithMacStyleNewlinesToMultilineStrings(){
+        String content =   """
+           @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+           @prefix : <http://example.com/ns#> .
+           :thing :value "\\r     First Line\\r     Second Line\\r     Third Line\\r" .
+           """;
+        String expected = """
+           @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+           @prefix : <http://example.com/ns#> .
+           
+           :thing :value \"""
+                First Line
+                Second Line
+                Third Line
+           \""" .""";
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter(style);
+        final String result = formatter.applyToContent(content);
+        assertThat(result.trim()).isEqualTo(expected);
+    }
+
 
     private Model modelFromString( final String content ) {
         final Model model = ModelFactory.createDefaultModel();

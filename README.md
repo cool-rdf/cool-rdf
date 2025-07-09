@@ -708,6 +708,8 @@ elements in RDF lists.
 \* Adapted from [EditorConfig](https://editorconfig.org/#file-format-details)
 
 ## Release Notes
+* Unreleased
+  * Replace Platform-dependent line terminators in multiline strings with unix style newlines (`\n`, `\r`, and `\r\n` -> `\n`) 
 * 1.2.16:
   * Bugfix: Empty RDF lists are formatted as empty set of parenthesis again
 * 1.2.15:
