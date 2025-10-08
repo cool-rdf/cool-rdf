@@ -1,19 +1,3 @@
-/*
- * Copyright 2024 Andreas Textor
- *
- * Licensed under the Apache License, Version 2.0 (the "License");
- * you may not use this file except in compliance with the License.
- * You may obtain a copy of the License at
- *
- * http://www.apache.org/licenses/LICENSE-2.0
- *
- * Unless required by applicable law or agreed to in writing, software
- * distributed under the License is distributed on an "AS IS" BASIS,
- * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
- * See the License for the specific language governing permissions and
- * limitations under the License.
- */
-
 package cool.rdf.formatter;
 
 import cool.rdf.core.model.RdfModel;
@@ -25,11 +9,18 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.vocabulary.RDF;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.Arguments;
+import org.junit.jupiter.params.provider.MethodSource;
 
+import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Stream;
 
 import static org.apache.jena.rdf.model.ResourceFactory.createProperty;
 import static org.apache.jena.rdf.model.ResourceFactory.createResource;
@@ -731,6 +722,605 @@ public class TurtleFormatterTest {
         final TurtleFormatter formatter = new TurtleFormatter( style );
         final String result = formatter.apply( model );
         assertThat( result.trim() ).isEqualTo( modelString.trim() );
+    }
+
+    @Test
+    void testRdfListNonAnonymous(){
+        final String modelString = """
+            @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+            @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
+            @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+            @prefix qudt: <http://qudt.org/schema/qudt/> .
+            @prefix sh: <http://www.w3.org/ns/shacl#> .
+
+            qudt:IntegerUnionList a rdf:List ;
+              rdfs:label "Integer union list" ;
+              rdf:first [
+                sh:datatype xsd:nonNegativeInteger ;
+              ] ;
+              rdf:rest ( [
+                sh:datatype xsd:positiveInteger ;
+              ] [
+                sh:datatype xsd:integer ;
+              ] ) .
+            """;
+        final Model model = RdfModel.fromTurtle( modelString );
+
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter( style );
+        final String result = formatter.apply( model );
+        assertThat( result.trim() ).isEqualTo( modelString.trim() );
+    }
+
+    @Test
+    void testRdfListAnonymous(){
+        final String modelString = """
+            @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+            @prefix ex: <http://example.com/ns#> .
+
+            ex:something a ex:Thing ;
+              ex:hasList ( ex:one ex:two ) .
+            """;
+        final Model model = RdfModel.fromTurtle( modelString );
+
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter( style );
+        final String result = formatter.apply( model );
+        assertThat( result.trim() ).isEqualTo( modelString.trim() );
+    }
+
+    @ParameterizedTest
+    @MethodSource
+    void testConsistentBlankNodeOrdering(String content){
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter( style );
+        for (int i = 0; i < 1; i++) {
+            final String result = formatter.applyToContent(content);
+            assertThat(result.trim()).isEqualTo(content.trim());
+        }
+    }
+
+    static Stream<Arguments> testConsistentBlankNodeOrdering(){
+        return Stream.of(
+    """
+            @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+            @prefix ex: <http://example.com/ns#> .
+
+            [
+              a ex:Something ;
+            ] .
+
+            [
+              a ex:SomethingElse ;
+            ] .
+            """,
+
+            """
+            @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+            @prefix ex: <http://example.com/ns#> .
+
+            ex:aThing ex:has [
+                a ex:Something ;
+              ] ;
+              ex:has [
+                a ex:SomethingElse ;
+              ] .
+            """
+            ,
+           """
+           @prefix ex: <http://example.com/ns#> .
+
+           _:blank1 ex:has [
+               ex:has _:blank1 ;
+             ] ."""
+        ).map(s -> Arguments.of(s));
+    }
+
+    @Test
+    void testPreviouslyIdentifiedBlankNode(){
+        String content =   """
+           @prefix ex: <http://example.com/ns#> .
+
+           _:gen0 ex:has [
+               ex:has _:gen0 ;
+             ].""";
+        String expected = """
+          @prefix ex: <http://example.com/ns#> .
+
+          _:gen0 ex:has [
+              ex:has _:gen0 ;
+            ] .""";
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter( style );
+        for (int i = 0; i < 20; i++) {
+            final String result = formatter.applyToContent(content);
+            assertThat(result.trim()).isEqualTo(expected);
+        }
+    }
+
+    @Test
+    void testBlankNodeCycle(){
+        String content =   """
+           @prefix ex: <http://example.com/ns#> .
+
+           _:blank1 ex:has _:blank2 .
+
+           _:blank2 ex:has _:blank1 .
+           """;
+        String expected = """
+          @prefix ex: <http://example.com/ns#> .
+
+          _:blank1 ex:has [
+              ex:has _:blank1 ;
+            ] .""";
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter( style );
+        for (int i = 0; i < 20; i++) {
+            final String result = formatter.applyToContent(content);
+            assertThat(result.trim()).isEqualTo(expected);
+        }
+    }
+
+    @Test
+    void testNoBlankNodeCycle(){
+        String content =   """
+           @prefix ex: <http://example.com/ns#> .
+
+           _:one ex:has ex:A .
+           ex:A ex:has _:one .
+
+           """;
+        String expected = """
+          @prefix ex: <http://example.com/ns#> .
+
+          ex:A ex:has [
+              ex:has ex:A ;
+            ] .""";
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter( style );
+        for (int i = 0; i < 20; i++) {
+            final String result = formatter.applyToContent(content);
+            assertThat(result.trim()).isEqualTo(expected);
+        }
+    }
+
+    @Test
+    void testNoBlankNodeCycle2Blanks(){
+        String content =   """
+           @prefix ex: <http://example.com/ns#> .
+
+           _:one ex:has ex:A .
+           ex:A ex:has _:two .
+           _:two ex:has _:three .
+           _:three ex:has _:one .
+
+           """;
+        String expected = """
+          @prefix ex: <http://example.com/ns#> .
+
+          ex:A ex:has [
+              ex:has [
+                ex:has [
+                  ex:has ex:A ;
+                ] ;
+              ] ;
+            ] .""";
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter( style );
+        for (int i = 0; i < 20; i++) {
+            final String result = formatter.applyToContent(content);
+            assertThat(result.trim()).isEqualTo(expected);
+        }
+    }
+
+    @Test
+    void testBlankNodeCycle1ResBetween(){
+        String content =   """
+           @prefix ex: <http://example.com/ns#> .
+
+           _:one ex:has ex:A .
+           ex:A ex:has _:two .
+           _:two ex:has _:one .
+
+           """;
+        String expected = """
+        @prefix ex: <http://example.com/ns#> .
+
+        ex:A ex:has [
+            ex:has [
+              ex:has ex:A ;
+            ] ;
+          ] .""";
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter( style );
+        final String result = formatter.applyToContent(content);
+        assertThat(result.trim()).isEqualTo(expected);
+    }
+
+    @Test
+    void testBlankNodeCycle2ResBetween(){
+        String content =   """
+           @prefix ex: <http://example.com/ns#> .
+
+           _:one ex:has ex:A .
+           ex:A ex:has _:two .
+           _:two ex:has ex:B .
+           ex:B ex:has _:one .
+
+           """;
+        String expected = """
+        @prefix ex: <http://example.com/ns#> .
+
+        ex:A ex:has [
+            ex:has ex:B ;
+          ] .
+
+        ex:B ex:has [
+            ex:has ex:A ;
+          ] .""";
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter( style );
+        final String result = formatter.applyToContent(content);
+        assertThat(result.trim()).isEqualTo(expected);
+    }
+
+    @Test
+    void testBlankNodeTriangle1(){
+        String content =   """
+           @prefix : <http://example.com/ns#> .
+           _:b1 :foo _:b2, _:b3.
+           _:b2 :foo _:b3.
+
+           """;
+        String expected = """
+           @prefix : <http://example.com/ns#> .
+
+           [
+             :foo [
+               :foo _:b3 ;
+             ] ;
+             :foo _:b3 ;
+           ] .""";
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter(style);
+        for (int i = 0; i < 20; i++) {
+            final String result = formatter.applyToContent(content);
+            assertThat(result.trim()).isEqualTo(expected);
+        }
+    }
+
+    @Test
+    void testBlankNodeTriangleWithBlankNodeTriple(){
+        String content =   """
+           @prefix : <http://example.com/ns#> .
+           [] :foo [] .
+           _:b1 :foo _:b2, _:b3.
+           _:b2 :foo _:b3.
+
+           """;
+        String expected = """
+           @prefix : <http://example.com/ns#> .
+
+           [
+             :foo [];
+           ] .
+
+           [
+             :foo [
+               :foo _:b3 ;
+             ] ;
+             :foo _:b3 ;
+           ] .""";
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter(style);
+        for (int i = 0; i < 20; i++) {
+            final String result = formatter.applyToContent(content);
+            assertThat(result.trim()).isEqualTo(expected);
+        }
+    }
+
+    @Test
+    public void testEnableDoubleFormatting() {
+        final String modelString = """
+                       @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+                       @prefix ex: <http://example.com/ns#> .
+
+                       ex:something ex:decimalProp 0.0000000006241509074460762607776240980930446 ;
+                         ex:doubleProp 6.241509074460762607776240980930446E-10 .""";
+
+        final FormattingStyle style = FormattingStyle.builder().enableDoubleFormatting(false).build();
+
+        final TurtleFormatter formatter = new TurtleFormatter( style );
+        final String result = formatter.applyToContent( modelString );
+        assertThat(result.trim()).isEqualTo(modelString);
+    }
+
+    @Test
+    public void testDoubleFormattingDefault() {
+        final String modelString = """
+                       @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+                       @prefix ex: <http://example.com/ns#> .
+
+                       ex:something ex:decimalProp 0.0000000006241509074460762607776240980930446 ;
+                         ex:doubleProp 6.241509074460762607776240980930446E-10 .""";
+
+        final FormattingStyle style = FormattingStyle.builder().build();
+
+        final TurtleFormatter formatter = new TurtleFormatter( style );
+        final String result = formatter.applyToContent( modelString );
+        assertThat(result.trim()).isEqualTo(modelString);
+    }
+
+    @Test
+    public void testDisableDoubleFormatting() {
+        final String modelString = """
+                       @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+                       @prefix ex: <http://example.com/ns#> .
+
+                       ex:something ex:decimalProp 0.0000000006241509074460762607776240980930446 ;
+                         ex:doubleProp 6.2415E-10 .""";
+
+        final FormattingStyle style = FormattingStyle.builder().enableDoubleFormatting(true).build();
+
+        final TurtleFormatter formatter = new TurtleFormatter( style );
+        final String result = formatter.applyToContent( modelString );
+        assertThat(result.trim()).isEqualTo(modelString);
+    }
+
+    @Test
+    public void testIntegerLiteralWithLeadingZeros(){
+        String content =   """
+           @prefix : <http://example.com/ns#> .
+           :thing :value 060.
+
+           """;
+        String expected = """
+            @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+            @prefix : <http://example.com/ns#> .
+
+            :thing :value 060 .""";
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter(style);
+        final String result = formatter.applyToContent(content);
+        assertThat(result.trim()).isEqualTo(expected);
+    }
+
+    @Test
+    public void testDoubleLiteralWithoutFractions(){
+        String content =   """
+           @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+           @prefix : <http://example.com/ns#> .
+           :thing :value "40"^^xsd:double.
+           """;
+        String expected = """
+            @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+            @prefix : <http://example.com/ns#> .
+
+            :thing :value "40"^^xsd:double .""";
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter(style);
+        final String result = formatter.applyToContent(content);
+        assertThat(result.trim()).isEqualTo(expected);
+    }
+
+    @Test
+    public void testDoubleLiteralWithFractions(){
+        String content =   """
+           @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+           @prefix : <http://example.com/ns#> .
+           :thing :value "4.001E2"^^xsd:double.
+           """;
+        String expected = """
+            @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+            @prefix : <http://example.com/ns#> .
+
+            :thing :value 4.001E2 .""";
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter(style);
+        final String result = formatter.applyToContent(content);
+        assertThat(result.trim()).isEqualTo(expected);
+    }
+
+    @Test
+    public void testDecimalLiteralWithoutFractions(){
+        String content =   """
+           @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+           @prefix : <http://example.com/ns#> .
+           :thing :value "40"^^xsd:decimal.
+           """;
+        String expected = """
+            @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+            @prefix : <http://example.com/ns#> .
+
+            :thing :value "40"^^xsd:decimal .""";
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter(style);
+        final String result = formatter.applyToContent(content);
+        assertThat(result.trim()).isEqualTo(expected);
+    }
+
+    @Test
+    public void testDecimalLiteralWithFractions(){
+        String content =   """
+           @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+           @prefix : <http://example.com/ns#> .
+           :thing :value "40.0001"^^xsd:decimal.
+           """;
+        String expected = """
+            @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+            @prefix : <http://example.com/ns#> .
+
+            :thing :value 40.0001 .""";
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter(style);
+        final String result = formatter.applyToContent(content);
+        assertThat(result.trim()).isEqualTo(expected);
+    }
+
+
+    @Test
+    public void testListNodeWithAdditionalTriples(){
+        String content = """
+            @prefix : <http://example.com/ns#> .
+            @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+            :thing :hasList  [
+                a :SomeListClass ;
+                a rdf:List ;
+                :comment "a very special list";
+                rdf:first 1 ;
+                rdf:rest ( 2 3 4 );
+            ] .
+            """;
+        String expected = """
+           @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+           @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+           @prefix : <http://example.com/ns#> .
+
+           :thing :hasList [
+               a :SomeListClass, rdf:List ;
+               :comment "a very special list" ;
+               rdf:first 1 ;
+               rdf:rest ( 2 3 4 ) ;
+             ] .""";
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter(style);
+        final String result = formatter.applyToContent(content);
+        assertThat(result.trim()).isEqualTo(expected);
+    }
+
+    @Test
+    public void testEmptyList() {
+        var content =   """
+           @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+           @prefix : <http://example.com/ns#> .
+           :aThing a :element;
+            :has ();
+            :hasNil rdf:nil;
+            :numbers (1 2 3 );
+            :tests  ();
+            :hasList  [
+                 a :SomeListClass ;
+                 a rdf:List ;
+                 :numbersAgain ();
+                 :comment "a very special list";
+                 rdf:first 1 ;
+                 rdf:rest ( 2 3 4 )
+            ].
+           """;
+
+        final String expected = """
+              @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+              @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+              @prefix : <http://example.com/ns#> .
+
+              :aThing a :element ;
+                :has ( ) ;
+                :hasList [
+                  a :SomeListClass, rdf:List ;
+                  :comment "a very special list" ;
+                  :numbersAgain ( ) ;
+                  rdf:first 1 ;
+                  rdf:rest ( 2 3 4 ) ;
+                ] ;
+                :hasNil ( ) ;
+                :numbers ( 1 2 3 ) ;
+                :tests ( ) .""";
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter(style);
+        final String result = formatter.applyToContent(content);
+        assertThat(result.trim()).isEqualTo(expected);
+    }
+
+    @Test
+    public void testMultilineStrings(){
+        String content =   """
+           @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+           @prefix : <http://example.com/ns#> .
+           :thing :value \"""
+                First Line
+                Second Line
+                Third Line
+           \""" .
+           """;
+        String expected = """
+           @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+           @prefix : <http://example.com/ns#> .
+
+           :thing :value \"""
+                First Line
+                Second Line
+                Third Line
+           \""" .""";
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter(style);
+        final String result = formatter.applyToContent(content);
+        assertThat(result.trim()).isEqualTo(expected);
+    }
+
+    @Test
+    public void testStringsWithUnixStyleNewlinesToMultilineStrings(){
+        String content =   """
+           @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+           @prefix : <http://example.com/ns#> .
+           :thing :value "\\n     First Line\\n     Second Line\\n     Third Line\\n" .
+           """;
+        String expected = """
+           @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+           @prefix : <http://example.com/ns#> .
+
+           :thing :value \"""
+                First Line
+                Second Line
+                Third Line
+           \""" .""";
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter(style);
+        final String result = formatter.applyToContent(content);
+        assertThat(result.trim()).isEqualTo(expected);
+    }
+
+    @Test
+    public void testStringsWithWindowsStyleNewlinesToMultilineStrings(){
+        String content =   """
+           @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+           @prefix : <http://example.com/ns#> .
+           :thing :value "\\r\\n     First Line\\r\\n     Second Line\\r\\n     Third Line\\r\\n" .
+           """;
+        String expected = """
+           @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+           @prefix : <http://example.com/ns#> .
+
+           :thing :value \"""
+                First Line
+                Second Line
+                Third Line
+           \""" .""";
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter(style);
+        final String result = formatter.applyToContent(content);
+        assertThat(result.trim()).isEqualTo(expected);
+    }
+
+    @Test
+    public void testStringsWithMacStyleNewlinesToMultilineStrings(){
+        String content =   """
+           @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+           @prefix : <http://example.com/ns#> .
+           :thing :value "\\r     First Line\\r     Second Line\\r     Third Line\\r" .
+           """;
+        String expected = """
+           @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+           @prefix : <http://example.com/ns#> .
+
+           :thing :value \"""
+                First Line
+                Second Line
+                Third Line
+           \""" .""";
+        final FormattingStyle style = FormattingStyle.DEFAULT;
+        final TurtleFormatter formatter = new TurtleFormatter(style);
+        final String result = formatter.applyToContent(content);
+        assertThat(result.trim()).isEqualTo(expected);
     }
 
     private Model prefixModel() {

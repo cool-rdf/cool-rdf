@@ -26,10 +26,15 @@ import org.apache.jena.vocabulary.DCTerms;
 import org.apache.jena.vocabulary.OWL2;
 import org.apache.jena.vocabulary.RDF;
 import org.apache.jena.vocabulary.RDFS;
+import org.apache.jena.vocabulary.SKOS;
+import org.apache.jena.vocabulary.XSD;
 
+import java.net.URI;
 import java.text.DecimalFormat;
+import java.text.DecimalFormatSymbols;
 import java.text.NumberFormat;
 import java.util.List;
+import java.util.Locale;
 import java.util.Set;
 import java.util.function.BiFunction;
 
@@ -98,7 +103,10 @@ public class FormattingStyle {
     public Charset charset = Charset.UTF_8;
 
     @Builder.Default
-    public NumberFormat doubleFormat = new DecimalFormat( "0.####E0" );
+    public NumberFormat doubleFormat = new DecimalFormat("0.####E0" , DecimalFormatSymbols.getInstance(Locale.US));
+
+    @Builder.Default
+    public boolean enableDoubleFormatting = false;
 
     @Builder.Default
     public EndOfLineStyle endOfLine = EndOfLineStyle.LF;
@@ -170,8 +178,8 @@ public class FormattingStyle {
 
     @Builder.Default
     public List<Resource> subjectOrder = List.of(
-        RDFS.Class,
         OWL2.Ontology,
+        RDFS.Class,
         OWL2.Class,
         RDF.Property,
         OWL2.ObjectProperty,
@@ -206,7 +214,7 @@ public class FormattingStyle {
     );
 
     @Builder.Default
-    public BiFunction<Resource, Integer, String> anonymousNodeIdGenerator = ( resource, integer ) -> "_:gen" + integer;
+    public BiFunction<Resource, Integer, String> anonymousNodeIdGenerator = ( resource, integer ) -> "gen" + integer;
 
     public enum Alignment {
         LEFT,
