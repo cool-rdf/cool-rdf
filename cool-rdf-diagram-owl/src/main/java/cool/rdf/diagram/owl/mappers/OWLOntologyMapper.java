@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -30,10 +30,10 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 /**
- * Main class for mapping an {@link OWLOntology} to a {@link Graph}. The mapping is done in two steps:
- * First, all axioms in the ontology are separately mapped using the respective OWL*Mappers into nodes and edges.
- * Secondly, the {@link GraphTransformer}s clean up the graph by
- * performing changes that take the context of the whole graph into account.
+ * Main class for mapping an {@link OWLOntology} to a {@link Graph}. The mapping is done in two steps: First, all axioms
+ * in the ontology are separately mapped using the respective OWL*Mappers into nodes and edges. Secondly, the
+ * {@link GraphTransformer}s clean up the graph by performing changes that take the context of the whole graph into
+ * account.
  */
 public class OWLOntologyMapper implements Function<OWLOntology, Set<GraphElement>> {
     private final MappingConfiguration mappingConfiguration;
@@ -50,8 +50,7 @@ public class OWLOntologyMapper implements Function<OWLOntology, Set<GraphElement
         transformers = List.of(
             new PunningRemover( mappingConfiguration ),
             new IriReferenceResolver( mappingConfiguration ),
-            new PropertyMarkerMerger( mappingConfiguration )
-        );
+            new PropertyMarkerMerger( mappingConfiguration ) );
     }
 
     @Override

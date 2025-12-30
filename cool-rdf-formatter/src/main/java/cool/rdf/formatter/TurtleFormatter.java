@@ -1,3 +1,19 @@
+/*
+ * Copyright Andreas Textor
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ * http://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+
 package cool.rdf.formatter;
 
 import cool.rdf.core.model.RdfPrefix;
@@ -63,8 +79,8 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
     /**
      * String escape sequences as described in <a href="https://www.w3.org/TR/turtle/#sec-escapes">Escape Sequences</a>.
      * <p>
-     * ' (single quote) is not in the pattern, because we never write single quoted strings and therefore don't
-     * need to escape single quotes.
+     * ' (single quote) is not in the pattern, because we never write single quoted strings and therefore don't need to
+     * escape single quotes.
      * </p>
      */
     private static final Pattern STRING_ESCAPE_SEQUENCES = Pattern.compile( "(\r\n)|[\t\b\n\r\f\"\\\\]" );
@@ -103,17 +119,13 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
             case UTF_16_LE -> StandardCharsets.UTF_16LE;
         };
 
-        prefixOrder = Comparator.<Map.Entry<String, String>>comparingInt( entry ->
-            style.prefixOrder.contains( entry.getKey() )
-                ? style.prefixOrder.indexOf( entry.getKey() )
-                : Integer.MAX_VALUE
-        ).thenComparing( Map.Entry::getKey );
+        prefixOrder = Comparator.<Map.Entry<String, String>>comparingInt( entry -> style.prefixOrder.contains( entry.getKey() )
+            ? style.prefixOrder.indexOf( entry.getKey() )
+            : Integer.MAX_VALUE ).thenComparing( Map.Entry::getKey );
 
-        objectOrder = Comparator.comparingInt( object ->
-            style.objectOrder.contains( object )
-                ? style.objectOrder.indexOf( object )
-                : Integer.MAX_VALUE
-        );
+        objectOrder = Comparator.comparingInt( object -> style.objectOrder.contains( object )
+            ? style.objectOrder.indexOf( object )
+            : Integer.MAX_VALUE );
     }
 
     private static List<Statement> statements( final Model model ) {
@@ -125,9 +137,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
     }
 
     /**
-     * Serializes the specified model as TTL according to the {@link TurtleFormatter}'s {@link FormattingStyle}.
-     *
-     * <br>
+     * Serializes the specified model as TTL according to the {@link TurtleFormatter}'s {@link FormattingStyle}. <br>
      * Note: Using this method, ordering of blank nodes may differ between multiple runs using identical data.
      *
      * @param model the model to serialize.
@@ -156,8 +166,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
         if ( style.charset == FormattingStyle.Charset.UTF_8_BOM ) {
             writeByteOrderMark( outputStream );
         }
-        final BlankNodeOrderAwareTurtleParser.ParseResult result =
-            BlankNodeOrderAwareTurtleParser.parseModel( content );
+        final BlankNodeOrderAwareTurtleParser.ParseResult result = BlankNodeOrderAwareTurtleParser.parseModel( content );
         final Model model = result.getModel();
         final BlankNodeMetadata blankNodeMetadata = result.getBlankNodeMetadata();
         final PrefixMapping prefixMapping = buildPrefixMapping( model );
@@ -168,16 +177,15 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
 
     private void writeByteOrderMark( final OutputStream outputStream ) {
         try {
-            outputStream.write( new byte[]{ (byte) 0xEF, (byte) 0xBB, (byte) 0xBF } );
+            outputStream.write( new byte[] { (byte) 0xEF, (byte) 0xBB, (byte) 0xBF } );
         } catch ( final IOException exception ) {
             LOG.error( OUTPUT_ERROR_MESSAGE, exception );
         }
     }
 
     /**
-     * Serializes the specified model as TTL according to the {@link TurtleFormatter}'s {@link FormattingStyle}
-     * and writes it to the specified outputStream.
-     * <br>
+     * Serializes the specified model as TTL according to the {@link TurtleFormatter}'s {@link FormattingStyle} and
+     * writes it to the specified outputStream. <br>
      * Note: Using this method, ordering of blank nodes may differ between multiple runs using identical data.
      *
      * @param model the model to serialize.
@@ -196,11 +204,9 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
 
     private void doFormat( final Model model, final OutputStream outputStream, final PrefixMapping prefixMapping,
         final RDFNodeComparatorFactory RDFNodeComparatorFactory, final BlankNodeMetadata blankNodeMetadata ) {
-        final Comparator<Property> predicateOrder = Comparator.<Property>comparingInt( property ->
-            style.predicateOrder.contains( property )
-                ? style.predicateOrder.indexOf( property )
-                : Integer.MAX_VALUE
-        ).thenComparing( property -> prefixMapping.shortForm( property.getURI() ) );
+        final Comparator<Property> predicateOrder = Comparator.<Property>comparingInt( property -> style.predicateOrder.contains( property )
+            ? style.predicateOrder.indexOf( property )
+            : Integer.MAX_VALUE ).thenComparing( property -> prefixMapping.shortForm( property.getURI() ) );
         final State initialState = buildInitialState( model, outputStream, prefixMapping, predicateOrder,
             RDFNodeComparatorFactory, blankNodeMetadata );
         final State prefixesWritten = writePrefixes( initialState );
@@ -214,8 +220,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
 
     private State writeAnonymousResources( final State state ) {
         State currentState = state;
-        final List<Resource> sortedAnonymousIdentifiedResources = state
-            .identifiedAnonymousResources
+        final List<Resource> sortedAnonymousIdentifiedResources = state.identifiedAnonymousResources
             .keySet()
             .stream()
             .sorted( state.getRDFNodeComparatorFactory().comparator() )
@@ -249,10 +254,10 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
 
     private List<Statement> determineStatements( final Model model,
         final RDFNodeComparatorFactory rdfNodeComparatorFactory ) {
-        final Stream<Statement> wellKnownSubjects = style.subjectOrder.stream().flatMap( subjectType ->
-            statements( model, RDF.type, subjectType )
-                .stream()
-                .sorted( Comparator.comparing( Statement::getSubject, rdfNodeComparatorFactory.comparator() ) ) );
+        final Stream<Statement> wellKnownSubjects = style.subjectOrder.stream().flatMap( subjectType -> statements( model, RDF.type,
+            subjectType )
+            .stream()
+            .sorted( Comparator.comparing( Statement::getSubject, rdfNodeComparatorFactory.comparator() ) ) );
 
         final Stream<Statement> otherSubjects = statements( model ).stream()
             .filter( statement -> !( statement.getPredicate().equals( RDF.type )
@@ -288,8 +293,8 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
     }
 
     /**
-     * Anonymous resources that are referred to more than once need to be given an internal id and
-     * can not be serialized using [ ] notation.
+     * Anonymous resources that are referred to more than once need to be given an internal id and can not be serialized
+     * using [ ] notation.
      *
      * @param model the input model
      * @param currentState the state
@@ -303,15 +308,14 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
             .map( RDFNode::asResource )
             .filter( RDFNode::isAnon ).collect( Collectors.toSet() );
         candidates.removeAll( currentState.getBlankNodeMetadata().getLabeledBlankNodes() );
-        final List<Resource> candidatesInOrder =
-            Stream.concat(
-                    currentState.getBlankNodeMetadata().getLabeledBlankNodes()
-                        .stream()
-                        .sorted( currentState.getRDFNodeComparatorFactory().comparator() ),
-                    candidates
-                        .stream()
-                        .sorted( currentState.getRDFNodeComparatorFactory().comparator() ) )
-                .toList();
+        final List<Resource> candidatesInOrder = Stream.concat(
+            currentState.getBlankNodeMetadata().getLabeledBlankNodes()
+                .stream()
+                .sorted( currentState.getRDFNodeComparatorFactory().comparator() ),
+            candidates
+                .stream()
+                .sorted( currentState.getRDFNodeComparatorFactory().comparator() ) )
+            .toList();
         for ( final Resource candidate : candidatesInOrder ) {
             if ( identifiedResources.contains( candidate ) ) {
                 continue;
@@ -358,8 +362,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
 
     private State writePrefixes( final State state ) {
         final Map<String, String> prefixes = state.prefixMapping.getNsPrefixMap();
-        final int maxPrefixLength =
-            prefixes.keySet().stream().map( String::length ).max( Integer::compareTo ).orElse( 0 );
+        final int maxPrefixLength = prefixes.keySet().stream().map( String::length ).max( Integer::compareTo ).orElse( 0 );
         final String prefixFormat = switch ( style.alignPrefixes ) {
             case OFF -> "@prefix %s: <%s>" + beforeDot + "." + endOfLine;
             case LEFT -> "@prefix %-" + maxPrefixLength + "s: <%s>" + beforeDot + "." + endOfLine;
@@ -470,7 +473,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
         if ( !node.isResource() ) {
             return false;
         }
-        if( node.equals( RDF.nil ) ) {
+        if ( node.equals( RDF.nil ) ) {
             return true;
         }
         final boolean listNodeHasAdditionalTriples = state.model.listStatements( node.asResource(), null, (RDFNode) null )
@@ -497,10 +500,9 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
     }
 
     private State writeList( final Resource resource, final State state ) {
-        final FormattingStyle.GapStyle afterOpeningParenthesis =
-            style.wrapListItems == FormattingStyle.WrappingStyle.ALWAYS
-                ? FormattingStyle.GapStyle.NOTHING
-                : style.afterOpeningParenthesis;
+        final FormattingStyle.GapStyle afterOpeningParenthesis = style.wrapListItems == FormattingStyle.WrappingStyle.ALWAYS
+            ? FormattingStyle.GapStyle.NOTHING
+            : style.afterOpeningParenthesis;
         final State opened = writeDelimiter( "(", style.beforeOpeningParenthesis, afterOpeningParenthesis,
             continuationIndent( state.indentationLevel ), state );
         final java.util.List<RDFNode> elementList = resource.as( RDFList.class ).asJavaList();
@@ -531,8 +533,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
             case FOR_LONG_LINES:
                 final int alignmentAfterElementIsWritten = writeRdfNode( element,
                     state.withOutputStream( OutputStream.nullOutputStream() ) ).alignment;
-                final boolean wouldElementExceedLineLength =
-                    ( alignmentAfterElementIsWritten + 1 ) > style.maxLineLength;
+                final boolean wouldElementExceedLineLength = ( alignmentAfterElementIsWritten + 1 ) > style.maxLineLength;
                 yield writeRdfNode( element, wouldElementExceedLineLength
                     ? state.newLine().write( continuationIndent( state.indentationLevel ) )
                     : ( firstElement || state.getLastCharacter().equals( " " ) ? state : state.write( " " ) ) );
@@ -583,8 +584,8 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
     }
 
     /**
-     * Unfortunately, the logic in {@link PrefixMapAdapter#abbrev(String)} is broken and won't return a prefix
-     * even if one exists in the wrapped map; and the class is final, so we can't overwrite the method.
+     * Unfortunately, the logic in {@link PrefixMapAdapter#abbrev(String)} is broken and won't return a prefix even if
+     * one exists in the wrapped map; and the class is final, so we can't overwrite the method.
      */
     static class CustomPrefixMap extends PrefixMapBase implements PrefixMap {
         private final PrefixMapping mapping;
@@ -679,23 +680,23 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
         final String quote = switch ( style.quoteStyle ) {
             case ALWAYS_SINGE_QUOTES -> "\"";
             case ALWAYS_TRIPLE_QUOTES -> "\"\"\"";
-            case TRIPLE_QUOTES_FOR_MULTILINE -> (value.contains( "\n" ) || value.contains("\r"))? "\"\"\"" : "\"";
+            case TRIPLE_QUOTES_FOR_MULTILINE -> ( value.contains( "\n" ) || value.contains( "\r" ) ) ? "\"\"\"" : "\"";
         };
-
 
         final Map<String, String> characterReplacements = Map.of(
             "\t", "\\\\t",
             "\b", "\\\\b",
-            "\r", quote.equals( "\"" ) ? "\\\\r": "\n", // in multiline strings that were read with mac style endings, replace \r with \n
-            "\r\n", quote.equals( "\"" ) ? "\\\\r\\\\n": "\n", // in multiline strings that were read with windows style endings, replace \r\n with \n
+            "\r", quote.equals( "\"" ) ? "\\\\r" : "\n", // in multiline strings that were read with mac style endings,
+                                                         // replace \r with \n
+            "\r\n", quote.equals( "\"" ) ? "\\\\r\\\\n" : "\n", // in multiline strings that were read with windows
+                                                                // style endings, replace \r\n with \n
             "\f", "\\\\f",
             "\n", quote.equals( "\"" ) ? "\\\\n" : "\n", // Don't escape line breaks in triple-quoted strings
             "\"", quote.equals( "\"" ) ? "\\\\\"" : "\"", // Don't escape quotes in triple-quoted strings
-            "\\", "\\\\\\\\"
-        );
+            "\\", "\\\\\\\\" );
 
-        final String escapedValue = STRING_ESCAPE_SEQUENCES.matcher( value ).replaceAll( match ->
-            characterReplacements.getOrDefault( match.group(), match.group() ) );
+        final String escapedValue = STRING_ESCAPE_SEQUENCES.matcher( value ).replaceAll( match -> characterReplacements.getOrDefault( match
+            .group(), match.group() ) );
 
         // Special case: If the last character in the triple-quoted string is a quote, it must be escaped
         // See https://github.com/atextor/turtle-formatter/issues/9
@@ -747,8 +748,8 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
         // predicates and objects
         final Set<Property> properties = resource.listProperties().mapWith( Statement::getPredicate ).toSet();
 
-        final int maxPropertyWidth = properties.stream().map( property ->
-            uriResource( property, state ) ).map( String::length ).max( Integer::compareTo ).orElse( 0 );
+        final int maxPropertyWidth = properties.stream().map( property -> uriResource( property, state ) ).map( String::length ).max(
+            Integer::compareTo ).orElse( 0 );
 
         int index = 0;
         State currentState = gapAfterSubject.addIndentationLevel();
@@ -769,8 +770,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
     private State writeProperty( final Resource subject, final Property predicate, final boolean firstProperty,
         final boolean lastProperty, final int alignment,
         final String gapAfterPredicate, final State state ) {
-        final Set<RDFNode> objects =
-            subject.listProperties( predicate ).mapWith( Statement::getObject ).toSet();
+        final Set<RDFNode> objects = subject.listProperties( predicate ).mapWith( Statement::getObject ).toSet();
 
         final boolean useComma = ( style.useCommaByDefault && !style.noCommaForPredicate.contains( predicate ) )
             || ( !style.useCommaByDefault && style.commaForPredicate.contains( predicate ) );
@@ -829,21 +829,18 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
             }
 
             final boolean listWritten = isList && style.afterClosingParenthesis == FormattingStyle.GapStyle.NOTHING;
-            final boolean omitSpaceBeforeDelimiter =
-                object.isResource()
-                    && object.isAnon()
-                    && !listWritten
-                    && !currentState.identifiedAnonymousResources.containsKey( object.asResource() );
+            final boolean omitSpaceBeforeDelimiter = object.isResource()
+                && object.isAnon()
+                && !listWritten
+                && !currentState.identifiedAnonymousResources.containsKey( object.asResource() );
             if ( lastProperty && lastObject && objectWritten.indentationLevel == 1 && !inBrackets ) {
                 currentState = writeDot( objectWritten, omitSpaceBeforeDelimiter ).newLine();
                 index++;
                 continue;
             }
             final boolean doAlign = style.alignPredicates || subject.isAnon();
-            final boolean moreIdenticalPredicatesRemaining =
-                subject.listProperties( predicate ).toList().size() > 1 && !lastObject;
-            final boolean isAnonOrLastObject =
-                ( subject.isAnon() || lastObject ) && !moreIdenticalPredicatesRemaining;
+            final boolean moreIdenticalPredicatesRemaining = subject.listProperties( predicate ).toList().size() > 1 && !lastObject;
+            final boolean isAnonOrLastObject = ( subject.isAnon() || lastObject ) && !moreIdenticalPredicatesRemaining;
             final String nextLineIndentation = doAlign && isAnonOrLastObject
                 ? ""
                 : indent( objectWritten.indentationLevel );
@@ -939,7 +936,6 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
         int alignment;
 
         String lastCharacter;
-
 
         public State( final OutputStream outputStream, final Model model, final Comparator<Property> predicateOrder,
             final PrefixMapping prefixMapping, final RDFNodeComparatorFactory RDFNodeComparatorFactory,

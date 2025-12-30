@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ import cool.rdf.diagram.owl.graph.Node;
 import org.semanticweb.owlapi.model.IRI;
 
 /**
- * Creates {@link Node.Id}s for named nodes (i.e. for ontology elements that are identified by {@link IRI}s)
- * or anonymous nodes
+ * Creates {@link Node.Id}s for named nodes (i.e. for ontology elements that are identified by {@link IRI}s) or
+ * anonymous nodes
  */
 public interface IdentifierMapper {
     /**

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -94,7 +94,8 @@ public interface GraphElement {
     }
 
     /**
-     * Returns a view to this graph element: A stream containing this object cast to the given subclass if possible, empty stream otherwise
+     * Returns a view to this graph element: A stream containing this object cast to the given subclass if possible,
+     * empty stream otherwise
      *
      * @param class_ the subclass
      * @param <T> the type of the subclass

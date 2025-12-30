@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -103,7 +103,9 @@ public interface RdfModel extends Model {
 
     /**
      * Similar to {@link Model#listSubjects()}}, list all resources which are subjects of statements.
-     * <p>Subsequent operations on those resource may modify this model.</p>
+     * <p>
+     * Subsequent operations on those resource may modify this model.
+     * </p>
      *
      * @return a stream of resources which are subjects of statements
      */
@@ -118,7 +120,8 @@ public interface RdfModel extends Model {
     Stream<String> namespaces();
 
     /**
-     * Similar to {@link Model#listResourcesWithProperty(Property)}, list all resources in this model that have the property.
+     * Similar to {@link Model#listResourcesWithProperty(Property)}, list all resources in this model that have the
+     * property.
      *
      * @param property the property
      * @return a stream of resources with the property
@@ -126,8 +129,8 @@ public interface RdfModel extends Model {
     Stream<RdfResource> resourcesWithProperty( Property property );
 
     /**
-     * Similar to {@link Model#listResourcesWithProperty(Property, RDFNode)}, list all resources in this model that have the property
-     * with the object.
+     * Similar to {@link Model#listResourcesWithProperty(Property, RDFNode)}, list all resources in this model that have
+     * the property with the object.
      *
      * @param property the property
      * @param object the object
@@ -167,10 +170,11 @@ public interface RdfModel extends Model {
     Stream<RdfStatement> statements();
 
     /**
-     * Similar to {@link Model#listStatements(Resource, Property, RDFNode)}, list all statements matching a pattern.
-     * The statements selected are those whose subject matches the <code>subject</code> argument, whose predicate matches the
-     * <code>predicate</code> argument and whose object matches the <code>object</code> argument. If an argument is <code>null</code> it
-     * matches anything.</p>
+     * Similar to {@link Model#listStatements(Resource, Property, RDFNode)}, list all statements matching a pattern. The
+     * statements selected are those whose subject matches the <code>subject</code> argument, whose predicate matches
+     * the <code>predicate</code> argument and whose object matches the <code>object</code> argument. If an argument is
+     * <code>null</code> it matches anything.
+     * </p>
      *
      * @param subject the subject of the pattern
      * @param predicate the predicate of the pattern
@@ -180,8 +184,8 @@ public interface RdfModel extends Model {
     Stream<RdfStatement> statements( Resource subject, Property predicate, RDFNode object );
 
     /**
-     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listLiteralStatements(Resource, Property, boolean)}, list statements with
-     * given subject, predicate and object values.
+     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listLiteralStatements(Resource, Property, boolean)}, list
+     * statements with given subject, predicate and object values.
      *
      * @param subject the subject
      * @param predicate the predicate
@@ -191,8 +195,8 @@ public interface RdfModel extends Model {
     Stream<RdfStatement> literalStatements( Resource subject, Property predicate, boolean object );
 
     /**
-     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listLiteralStatements(Resource, Property, char)}, list statements with
-     * given subject, predicate and object values.
+     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listLiteralStatements(Resource, Property, char)}, list
+     * statements with given subject, predicate and object values.
      *
      * @param subject the subject
      * @param predicate the predicate
@@ -202,8 +206,8 @@ public interface RdfModel extends Model {
     Stream<RdfStatement> literalStatements( Resource subject, Property predicate, char object );
 
     /**
-     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listLiteralStatements(Resource, Property, long)}, list statements with
-     * given subject, predicate and object values.
+     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listLiteralStatements(Resource, Property, long)}, list
+     * statements with given subject, predicate and object values.
      *
      * @param subject the subject
      * @param predicate the predicate
@@ -213,8 +217,8 @@ public interface RdfModel extends Model {
     Stream<RdfStatement> literalStatements( Resource subject, Property predicate, long object );
 
     /**
-     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listLiteralStatements(Resource, Property, int)}, list statements with
-     * given subject, predicate and object values.
+     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listLiteralStatements(Resource, Property, int)}, list
+     * statements with given subject, predicate and object values.
      *
      * @param subject the subject
      * @param predicate the predicate
@@ -224,8 +228,8 @@ public interface RdfModel extends Model {
     Stream<RdfStatement> literalStatements( Resource subject, Property predicate, int object );
 
     /**
-     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listLiteralStatements(Resource, Property, float)}, list statements with
-     * given subject, predicate and object values.
+     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listLiteralStatements(Resource, Property, float)}, list
+     * statements with given subject, predicate and object values.
      *
      * @param subject the subject
      * @param predicate the predicate
@@ -235,8 +239,8 @@ public interface RdfModel extends Model {
     Stream<RdfStatement> literalStatements( Resource subject, Property predicate, float object );
 
     /**
-     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listLiteralStatements(Resource, Property, double)}, list statements with
-     * given subject, predicate and object values.
+     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listLiteralStatements(Resource, Property, double)}, list
+     * statements with given subject, predicate and object values.
      *
      * @param subject the subject
      * @param predicate the predicate
@@ -246,8 +250,8 @@ public interface RdfModel extends Model {
     Stream<RdfStatement> literalStatements( Resource subject, Property predicate, double object );
 
     /**
-     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listStatements(Resource, Property, String)}, list statements with
-     * given subject, predicate and object values.
+     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listStatements(Resource, Property, String)}, list statements
+     * with given subject, predicate and object values.
      *
      * @param subject the subject
      * @param predicate the predicate
@@ -257,8 +261,8 @@ public interface RdfModel extends Model {
     Stream<RdfStatement> literalStatements( Resource subject, Property predicate, String object );
 
     /**
-     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listStatements(Resource, Property, String, String)}, list statements with
-     * given subject, predicate and object values.
+     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listStatements(Resource, Property, String, String)}, list
+     * statements with given subject, predicate and object values.
      *
      * @param subject the subject
      * @param predicate the predicate
@@ -269,8 +273,8 @@ public interface RdfModel extends Model {
     Stream<RdfStatement> literalStatements( Resource subject, Property predicate, String object, String language );
 
     /**
-     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listResourcesWithProperty(Property, boolean)}, list the resources in this
-     * model which have value o' for property p, where o' is the type literal corresponding to o.
+     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listResourcesWithProperty(Property, boolean)}, list the
+     * resources in this model which have value o' for property p, where o' is the type literal corresponding to o.
      *
      * @param p the property
      * @param o the object
@@ -279,8 +283,8 @@ public interface RdfModel extends Model {
     Stream<RdfResource> resourcesWithProperty( Property p, boolean o );
 
     /**
-     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listResourcesWithProperty(Property, long)}, list the resources in this
-     * model which have value o' for property p, where o' is the type literal corresponding to o.
+     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listResourcesWithProperty(Property, long)}, list the
+     * resources in this model which have value o' for property p, where o' is the type literal corresponding to o.
      *
      * @param p the property
      * @param o the object
@@ -289,8 +293,8 @@ public interface RdfModel extends Model {
     Stream<RdfResource> resourcesWithProperty( Property p, long o );
 
     /**
-     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listResourcesWithProperty(Property, char)}, list the resources in this
-     * model which have value o' for property p, where o' is the type literal corresponding to o.
+     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listResourcesWithProperty(Property, char)}, list the
+     * resources in this model which have value o' for property p, where o' is the type literal corresponding to o.
      *
      * @param p the property
      * @param o the object
@@ -299,8 +303,8 @@ public interface RdfModel extends Model {
     Stream<RdfResource> resourcesWithProperty( Property p, char o );
 
     /**
-     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listResourcesWithProperty(Property, float)}, list the resources in this
-     * model which have value o' for property p, where o' is the type literal corresponding to o.
+     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listResourcesWithProperty(Property, float)}, list the
+     * resources in this model which have value o' for property p, where o' is the type literal corresponding to o.
      *
      * @param p the property
      * @param o the object
@@ -309,8 +313,8 @@ public interface RdfModel extends Model {
     Stream<RdfResource> resourcesWithProperty( Property p, float o );
 
     /**
-     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listResourcesWithProperty(Property, double)}, list the resources in this
-     * model which have value o' for property p, where o' is the type literal corresponding to o.
+     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listResourcesWithProperty(Property, double)}, list the
+     * resources in this model which have value o' for property p, where o' is the type literal corresponding to o.
      *
      * @param p the property
      * @param o the object
@@ -319,8 +323,8 @@ public interface RdfModel extends Model {
     Stream<RdfResource> resourcesWithProperty( Property p, double o );
 
     /**
-     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listResourcesWithProperty(Property, Object)}, list the resources in this
-     * model which have value o' for property p, where o' is the type literal corresponding to o.
+     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listResourcesWithProperty(Property, Object)}, list the
+     * resources in this model which have value o' for property p, where o' is the type literal corresponding to o.
      *
      * @param p the property
      * @param o the object
@@ -329,8 +333,8 @@ public interface RdfModel extends Model {
     Stream<RdfResource> resourcesWithProperty( Property p, Object o );
 
     /**
-     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listSubjectsWithProperty(Property, String)}, list subjects with a given
-     * property and value
+     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listSubjectsWithProperty(Property, String)}, list subjects
+     * with a given property and value
      *
      * @param p the property
      * @param o the object
@@ -339,8 +343,8 @@ public interface RdfModel extends Model {
     Stream<RdfResource> subjectsWithProperty( Property p, String o );
 
     /**
-     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listSubjectsWithProperty(Property, String, String)}, list subjects with a given
-     * property and value
+     * Similar to {@link org.apache.jena.rdf.model.ModelCon#listSubjectsWithProperty(Property, String, String)}, list
+     * subjects with a given property and value
      *
      * @param p the property
      * @param o the object

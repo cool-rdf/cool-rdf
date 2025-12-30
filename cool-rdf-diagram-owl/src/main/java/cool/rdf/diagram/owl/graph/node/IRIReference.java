@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,10 +24,9 @@ import lombok.With;
 import org.semanticweb.owlapi.model.IRI;
 
 /**
- * Represents a reference to some yet unknown other graph that has a {@link Node.Id} with a given {@link IRI}.
- * This type of node should never end up in the final graph, as it is resolved by the
- * {@link IriReferenceResolver} after the Axiom -> Graph Elements mapping
- * is done.
+ * Represents a reference to some yet unknown other graph that has a {@link Node.Id} with a given {@link IRI}. This type
+ * of node should never end up in the final graph, as it is resolved by the {@link IriReferenceResolver} after the Axiom
+ * -> Graph Elements mapping is done.
  */
 @Value
 @EqualsAndHashCode( callSuper = true )

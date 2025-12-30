@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,8 +36,8 @@ import java.util.function.Function;
 import java.util.stream.Stream;
 
 /**
- * Main diagram generator class: Loads an ontology, initializes and calls the {@link GraphvizGenerator} to transform
- * the ontology into a Graphviz document, writes the document to a file and calls the Graphviz (dot) binary.
+ * Main diagram generator class: Loads an ontology, initializes and calls the {@link GraphvizGenerator} to transform the
+ * ontology into a Graphviz document, writes the document to a file and calls the Graphviz (dot) binary.
  */
 public class DiagramGenerator {
     private final OWLOntologyMapper ontologyMapper;
@@ -102,8 +102,8 @@ public class DiagramGenerator {
             }
 
             final String svgOutput = new String( graphvizStdout, StandardCharsets.UTF_8 );
-            return postProcess( svgOutput ).flatMap( processedOutput ->
-                writeStreamToOutput( processedOutput, output ).flatMap( writingResult -> {
+            return postProcess( svgOutput ).flatMap( processedOutput -> writeStreamToOutput( processedOutput, output ).flatMap(
+                writingResult -> {
                     LOG.debug( "Writing to output {}", output );
                     try {
                         process.waitFor();

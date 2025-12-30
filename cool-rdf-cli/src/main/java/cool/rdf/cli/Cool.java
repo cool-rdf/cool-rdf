@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,15 +32,15 @@ import static cool.rdf.cli.StaticCliInfo.PROJECT_URL;
 /**
  * The main class for the command line interface
  */
-@CommandLine.Command( name = COMMAND_NAME,
+@CommandLine.Command(
+    name = COMMAND_NAME,
     description = "Command line tool for ontology engineering",
     subcommands = { CommandLine.HelpCommand.class },
     headerHeading = "@|bold Usage|@:%n%n",
     descriptionHeading = "%n@|bold Description|@:%n%n",
     parameterListHeading = "%n@|bold Parameters|@:%n",
     optionListHeading = "%n@|bold Options|@:%n",
-    footer = "%nSee the online documentation: " + PROJECT_URL
-)
+    footer = "%nSee the online documentation: " + PROJECT_URL )
 public class Cool implements Runnable {
     /**
      * The name of the top level command
@@ -57,19 +57,17 @@ public class Cool implements Runnable {
         }
     }
 
-    private static final CommandLine.IParameterExceptionHandler PARAMETER_EXCEPTION_HANDLER =
-        ( exception, args ) -> {
-            final CommandLine cmd = exception.getCommandLine();
-            printError( cmd, exception );
-            cmd.getErr().println( cmd.getHelp().fullSynopsis() );
-            return 1;
-        };
+    private static final CommandLine.IParameterExceptionHandler PARAMETER_EXCEPTION_HANDLER = ( exception, args ) -> {
+        final CommandLine cmd = exception.getCommandLine();
+        printError( cmd, exception );
+        cmd.getErr().println( cmd.getHelp().fullSynopsis() );
+        return 1;
+    };
 
-    private static final CommandLine.IExecutionExceptionHandler EXECUTION_EXCEPTION_HANDLER =
-        ( exception, commandLine, parseResult ) -> {
-            printError( commandLine, exception );
-            return 1;
-        };
+    private static final CommandLine.IExecutionExceptionHandler EXECUTION_EXCEPTION_HANDLER = ( exception, commandLine, parseResult ) -> {
+        printError( commandLine, exception );
+        return 1;
+    };
 
     private final CommandLine commandLine = new CommandLine( this );
 
@@ -112,8 +110,7 @@ public class Cool implements Runnable {
         final List<AbstractCommand> commands = List.of(
             new CoolDiagram(),
             new CoolWrite(),
-            new CoolInfer()
-        );
+            new CoolInfer() );
         final CommandLine cmd = commands.foldLeft( new Cool().commandLine, CommandLine::addSubcommand )
             .setParameterExceptionHandler( PARAMETER_EXCEPTION_HANDLER )
             .setExecutionExceptionHandler( EXECUTION_EXCEPTION_HANDLER )

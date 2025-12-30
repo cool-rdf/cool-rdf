@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,7 +36,8 @@ import java.util.List;
  */
 @SuppressWarnings( { "unused" } )
 @TargetClass( SubsystemRegistryServiceLoader.class )
-public final class Target_org_apache_jena_base_module_SubsystemRegistryServiceLoader<T extends SubsystemLifecycle> implements SubsystemRegistry<T> {
+public final class Target_org_apache_jena_base_module_SubsystemRegistryServiceLoader<T extends SubsystemLifecycle> implements
+    SubsystemRegistry<T> {
     @Override
     @Substitute
     @SuppressWarnings( "unchecked" )

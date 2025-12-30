@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -50,9 +50,9 @@ import java.util.stream.Collectors;
 import static io.vavr.API.TODO;
 
 /**
- * A mapper that translates SWRL rules into a {@link Graph}: The rule is represented as one distinct node that contains a
- * human-readable string representation of the rule, with outgoing edges to the nodes representing the elements (classes etc.)
- * that are referred to in the rule.
+ * A mapper that translates SWRL rules into a {@link Graph}: The rule is represented as one distinct node that contains
+ * a human-readable string representation of the rule, with outgoing edges to the nodes representing the elements
+ * (classes etc.) that are referred to in the rule.
  */
 public class SWRLObjectMapper implements SWRLObjectVisitorEx<Graph> {
     /**
@@ -61,16 +61,14 @@ public class SWRLObjectMapper implements SWRLObjectVisitorEx<Graph> {
     private static final IRI LITERAL_ID = IRI.create( "urn:owl-cli:literal-id" );
 
     /**
-     * During traversal of the rule expression tree, both Literal nodes and other GraphElements
-     * (mainly Edges) are collected. The values of the Literal nodes are concatenated in the end
-     * to render the final rule representation. In order to differentiate the to-be-concatenated
-     * Literal nodes from "regular" Literal nodes that might occur, they are given an internal
-     * identifier "marker" IRI. The concatenation is done in
+     * During traversal of the rule expression tree, both Literal nodes and other GraphElements (mainly Edges) are
+     * collected. The values of the Literal nodes are concatenated in the end to render the final rule representation.
+     * In order to differentiate the to-be-concatenated Literal nodes from "regular" Literal nodes that might occur,
+     * they are given an internal identifier "marker" IRI. The concatenation is done in
      * {@link OWLAxiomMapper#visit(SWRLRule)}.
      */
-    public static final Predicate<GraphElement> IS_RULE_SYNTAX_PART =
-        graphElement -> graphElement.is( Literal.class ) &&
-            graphElement.as( Literal.class ).getId().getIri().map( iri -> iri.equals( LITERAL_ID ) ).orElse( false );
+    public static final Predicate<GraphElement> IS_RULE_SYNTAX_PART = graphElement -> graphElement.is( Literal.class ) &&
+        graphElement.as( Literal.class ).getId().getIri().map( iri -> iri.equals( LITERAL_ID ) ).orElse( false );
 
     private final MappingConfiguration mappingConfig;
 
@@ -112,8 +110,7 @@ public class SWRLObjectMapper implements SWRLObjectVisitorEx<Graph> {
     }
 
     private List<GraphElement> argumentElements( final SWRLAtom atom ) {
-        return atom.allArguments().flatMap( argument ->
-            argument.accept( this ).toStream() ).collect( Collectors.toList() );
+        return atom.allArguments().flatMap( argument -> argument.accept( this ).toStream() ).collect( Collectors.toList() );
     }
 
     private String printArgumentElements( final List<GraphElement> argumentElements ) {
@@ -136,8 +133,7 @@ public class SWRLObjectMapper implements SWRLObjectVisitorEx<Graph> {
 
         final String label = String.format(
             "%s(%s)", predicate.accept( mappingConfig.getOwlPropertyExpressionPrinter() ), arguments );
-        final Node dataProperty =
-            predicate.accept( mappingConfig.getOwlPropertyExpressionMapper() ).getNode();
+        final Node dataProperty = predicate.accept( mappingConfig.getOwlPropertyExpressionMapper() ).getNode();
         final Literal literal = new Literal( mappingConfig.getIdentifierMapper()
             .getSyntheticIdForIri( LITERAL_ID ), label );
         final Edge edge = new Edge.Plain( Edge.Type.DASHED_ARROW, literal, dataProperty );
@@ -156,9 +152,8 @@ public class SWRLObjectMapper implements SWRLObjectVisitorEx<Graph> {
     public Graph visit( final @Nonnull SWRLBuiltInAtom atom ) {
         final List<GraphElement> argumentGraphElements = argumentElements( atom );
         final String arguments = printArgumentElements( argumentGraphElements );
-        final String builtin = Namespaces.SWRLB.inNamespace( atom.getPredicate() ) ?
-            String.format( "swrlb:%s", atom.getPredicate().getFragment() ) :
-            mappingConfig.getNameMapper().getName( atom.getPredicate() );
+        final String builtin = Namespaces.SWRLB.inNamespace( atom.getPredicate() ) ? String.format( "swrlb:%s", atom.getPredicate()
+            .getFragment() ) : mappingConfig.getNameMapper().getName( atom.getPredicate() );
         final String label = String.format( "%s(%s)", builtin, arguments );
         return Graph.of( new Literal( mappingConfig.getIdentifierMapper().getSyntheticIdForIri( LITERAL_ID ),
             label ) );

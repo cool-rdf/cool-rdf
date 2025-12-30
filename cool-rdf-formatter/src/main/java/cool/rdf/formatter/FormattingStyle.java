@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,8 +48,7 @@ public class FormattingStyle {
         Prefixes.RDFS,
         Prefixes.XSD,
         Prefixes.OWL,
-        Prefixes.DCTERMS
-    );
+        Prefixes.DCTERMS );
 
     @Builder.Default
     public String emptyRdfBase = TurtleFormatter.DEFAULT_EMPTY_BASE;
@@ -103,7 +102,7 @@ public class FormattingStyle {
     public Charset charset = Charset.UTF_8;
 
     @Builder.Default
-    public NumberFormat doubleFormat = new DecimalFormat("0.####E0" , DecimalFormatSymbols.getInstance(Locale.US));
+    public NumberFormat doubleFormat = new DecimalFormat( "0.####E0", DecimalFormatSymbols.getInstance( Locale.US ) );
 
     @Builder.Default
     public boolean enableDoubleFormatting = false;
@@ -173,8 +172,7 @@ public class FormattingStyle {
         "rdf",
         "rdfs",
         "xsd",
-        "owl"
-    );
+        "owl" );
 
     @Builder.Default
     public List<Resource> subjectOrder = List.of(
@@ -187,16 +185,14 @@ public class FormattingStyle {
         OWL2.AnnotationProperty,
         OWL2.NamedIndividual,
         OWL2.AllDifferent,
-        OWL2.Axiom
-    );
+        OWL2.Axiom );
 
     @Builder.Default
     public List<Property> predicateOrder = List.of(
         RDF.type,
         RDFS.label,
         RDFS.comment,
-        DCTerms.description
-    );
+        DCTerms.description );
 
     @Builder.Default
     public List<RDFNode> objectOrder = List.of(
@@ -210,8 +206,7 @@ public class FormattingStyle {
         OWL2.SymmetricProperty,
         OWL2.AsymmetricProperty,
         OWL2.ReflexiveProperty,
-        OWL2.IrreflexiveProperty
-    );
+        OWL2.IrreflexiveProperty );
 
     @Builder.Default
     public BiFunction<Resource, Integer, String> anonymousNodeIdGenerator = ( resource, integer ) -> "gen" + integer;

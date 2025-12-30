@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -100,7 +100,7 @@ public class OWLClassExpressionPrinter implements OWLClassExpressionVisitorEx<St
     }
 
     private <T extends HasCardinality & OWLRestriction & HasFiller<OWLClassExpression>>
-    String printQualifiedCardinalityRestriction( final T classExpression, final String restrictionType ) {
+        String printQualifiedCardinalityRestriction( final T classExpression, final String restrictionType ) {
         return String.format( "%s %s %d %s",
             classExpression.getProperty().accept( mappingConfig.getOwlPropertyExpressionPrinter() ),
             restrictionType,
@@ -109,7 +109,7 @@ public class OWLClassExpressionPrinter implements OWLClassExpressionVisitorEx<St
     }
 
     private <T extends HasCardinality & OWLRestriction>
-    String printUnqualifiedCardinalityRestriction( final T classExpression, final String restrictionType ) {
+        String printUnqualifiedCardinalityRestriction( final T classExpression, final String restrictionType ) {
         return String.format( "%s %s %d",
             classExpression.getProperty().accept( mappingConfig.getOwlPropertyExpressionPrinter() ),
             restrictionType,

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -64,7 +64,8 @@ public class Graph {
     }
 
     /**
-     * Builds a new graph by merging this graph with the other graph. This graph's focus node becomes the constructed graph's focus node.
+     * Builds a new graph by merging this graph with the other graph. This graph's focus node becomes the constructed
+     * graph's focus node.
      *
      * @param other the other graph
      * @return the new graph

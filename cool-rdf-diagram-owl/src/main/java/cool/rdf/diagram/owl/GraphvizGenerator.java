@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -88,12 +88,11 @@ public class GraphvizGenerator implements Function<Stream<GraphElement>, Graphvi
 
         final Function<Edge.Decorated, GraphvizDocument> decoratedEdgeToGraphviz = edge -> {
             final String label = edge.getLabel().getLabel();
-            final String edgeStyle =
-                edgeTypeToGraphviz( edge.getType() )
-                    .map( style -> String.format( "%s, fontsize=%d, fontname=\"%s\", color=\"%s\", fontcolor=\"%s\"",
-                        style, configuration.fontsize, configuration.fontname, configuration.fgColor,
-                        configuration.fgColor ) )
-                    .orElse( "" );
+            final String edgeStyle = edgeTypeToGraphviz( edge.getType() )
+                .map( style -> String.format( "%s, fontsize=%d, fontname=\"%s\", color=\"%s\", fontcolor=\"%s\"",
+                    style, configuration.fontsize, configuration.fontname, configuration.fgColor,
+                    configuration.fgColor ) )
+                .orElse( "" );
             return GraphvizDocument.withEdge( new GraphvizDocument.Statement(
                 String.format( "%s -> %s [label=\"%s\", %s]", escapeNodeId( edge.getFrom().getId() ),
                     escapeNodeId( edge.getTo().getId() ), label, edgeStyle ) ) );
@@ -181,8 +180,8 @@ public class GraphvizGenerator implements Function<Stream<GraphElement>, Graphvi
             }
 
             /**
-             * Returns a DOT fragment for an element with this symbol. Note that the referenced font 'owlcli'
-             * is injected during rendering using the {@link FontEmbedder}.
+             * Returns a DOT fragment for an element with this symbol. Note that the referenced font 'owlcli' is
+             * injected during rendering using the {@link FontEmbedder}.
              *
              * @param elementName the name of the element
              * @param configuration the diagram generation configuration
@@ -191,7 +190,7 @@ public class GraphvizGenerator implements Function<Stream<GraphElement>, Graphvi
             @SuppressWarnings( "SpellCheckingInspection" )
             String getNodeValue( final String elementName, final Configuration configuration ) {
                 return String.format( "<FONT POINT-SIZE=\"%d\" COLOR=\"%s\" FACE=\"owlcli\"><B>%s</B></FONT> " +
-                        "<FONT POINT-SIZE=\"%s\" COLOR=\"%s\" FACE=\"%s\">%s</FONT>",
+                    "<FONT POINT-SIZE=\"%s\" COLOR=\"%s\" FACE=\"%s\">%s</FONT>",
                     symbolSize, color, symbol, configuration.fontsize, configuration.fgColor, configuration.fontname,
                     elementName );
             }

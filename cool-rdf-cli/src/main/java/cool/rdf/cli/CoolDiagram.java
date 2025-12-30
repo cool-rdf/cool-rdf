@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,14 +40,14 @@ import static cool.rdf.cli.CoolDiagram.COMMAND_NAME;
  * The 'diagram' subcommand
  */
 @SuppressWarnings( "SpellCheckingInspection" )
-@CommandLine.Command( name = COMMAND_NAME,
+@CommandLine.Command(
+    name = COMMAND_NAME,
     description = "Generate automatically-layouted diagrams for an ontology",
     descriptionHeading = "%n@|bold Description|@:%n%n",
     parameterListHeading = "%n@|bold Parameters|@:%n",
     optionListHeading = "%n@|bold Options|@:%n",
     footer = "%nSee the online documentation for details:%n" +
-        "https://atextor.de/owl-cli/main/" + Version.VERSION + "/usage.html#diagram-command"
-)
+        "https://atextor.de/owl-cli/main/" + Version.VERSION + "/usage.html#diagram-command" )
 public class CoolDiagram extends AbstractCommand implements Runnable {
     /**
      * The name of this subcommand
@@ -91,12 +91,14 @@ public class CoolDiagram extends AbstractCommand implements Runnable {
     private String nodeStyle = config.nodeStyle;
 
     @SuppressWarnings( { "FieldMayBeFinal", "CanBeFinal" } )
-    @CommandLine.Option( names = { "--format" },
+    @CommandLine.Option(
+        names = { "--format" },
         description = "Output file format, one of ${COMPLETION-CANDIDATES} (Default: ${DEFAULT-VALUE})" )
     private Configuration.Format format = config.format;
 
     @SuppressWarnings( { "FieldMayBeFinal", "CanBeFinal" } )
-    @CommandLine.Option( names = { "--direction" },
+    @CommandLine.Option(
+        names = { "--direction" },
         description = "Diagram layout direction, one of ${COMPLETION-CANDIDATES} (Default: ${DEFAULT-VALUE})" )
     private Configuration.LayoutDirection layoutDirection = config.layoutDirection;
 
@@ -113,72 +115,75 @@ public class CoolDiagram extends AbstractCommand implements Runnable {
     private String bgColor = config.bgColor;
 
     @SuppressWarnings( "unused" )
-    @CommandLine.Parameters( paramLabel = "INPUT", description = "File name or - for stdin", arity = "1",
+    @CommandLine.Parameters(
+        paramLabel = "INPUT",
+        description = "File name or - for stdin",
+        arity = "1",
         index = "0" )
     private String input;
 
     @SuppressWarnings( "unused" )
-    @CommandLine.Parameters( paramLabel = "OUTPUT",
+    @CommandLine.Parameters(
+        paramLabel = "OUTPUT",
         description = "File name or - for stdout. If left out, the input file name is used, e.g. foo.ttl -> " +
             "foo.svg or stdout if INPUT is -.",
-        arity = "0..1", index = "1" )
+        arity = "0..1",
+        index = "1" )
     private String output;
 
     @Override
     public void run() {
         final MappingConfiguration mappingConfig = DefaultMappingConfiguration.builder().build();
         openInput( input ).flatMap( inputStream -> {
-                try {
-                    final Configuration.LayoutDirection configureLayoutdirection;
-                    final InputStream configuredInput;
-                    if ( layoutDirection == Configuration.LayoutDirection.DETECT ) {
-                        final byte[] bytes = IOUtils.toByteArray( inputStream );
-                        configuredInput = new ByteArrayInputStream( bytes );
-                        final String ontologyString = new String( bytes );
-                        final Pattern pattern = Pattern.compile( Configuration.LayoutDirection.HINT_PREFIX + "([a-z_]*)" );
-                        final Matcher matcher = pattern.matcher( ontologyString );
+            try {
+                final Configuration.LayoutDirection configureLayoutdirection;
+                final InputStream configuredInput;
+                if ( layoutDirection == Configuration.LayoutDirection.DETECT ) {
+                    final byte[] bytes = IOUtils.toByteArray( inputStream );
+                    configuredInput = new ByteArrayInputStream( bytes );
+                    final String ontologyString = new String( bytes );
+                    final Pattern pattern = Pattern.compile( Configuration.LayoutDirection.HINT_PREFIX + "([a-z_]*)" );
+                    final Matcher matcher = pattern.matcher( ontologyString );
 
-                        if ( matcher.find() ) {
-                            // Either we found a #pragma in the file
-                            configureLayoutdirection = Configuration.LayoutDirection.valueOf( matcher.group( 1 ).toUpperCase() );
-                            if ( configureLayoutdirection == Configuration.LayoutDirection.DETECT ) {
-                                throw new ErrorMessage( "pragma must not set layout direction to 'detect'" );
-                            }
-                        } else {
-                            // Or we use whatever was set via command line
-                            configureLayoutdirection = layoutDirection;
+                    if ( matcher.find() ) {
+                        // Either we found a #pragma in the file
+                        configureLayoutdirection = Configuration.LayoutDirection.valueOf( matcher.group( 1 ).toUpperCase() );
+                        if ( configureLayoutdirection == Configuration.LayoutDirection.DETECT ) {
+                            throw new ErrorMessage( "pragma must not set layout direction to 'detect'" );
                         }
                     } else {
+                        // Or we use whatever was set via command line
                         configureLayoutdirection = layoutDirection;
-                        configuredInput = inputStream;
                     }
-
-                    final Configuration configuration = Configuration.builder()
-                        .fontname( fontname )
-                        .fontsize( fontsize )
-                        .nodeFontname( nodeFontName )
-                        .nodeFontsize( nodeFontsize )
-                        .nodeShape( nodeShape )
-                        .nodeMargin( nodeMargin )
-                        .nodeStyle( nodeStyle )
-                        .format( format )
-                        .layoutDirection( configureLayoutdirection )
-                        .dotBinary( dotBinary )
-                        .fgColor( fgColor )
-                        .bgColor( bgColor )
-                        .build();
-
-                    return loadOntology( configuredInput ).flatMap( ontology ->
-                        openOutput( input, Optional.ofNullable( output ), format.toString() ).flatMap( outputStream ->
-                            new DiagramGenerator( configuration, mappingConfig )
-                                .generate( ontology, outputStream, configuration ) ) );
-                } catch ( final IOException exception ) {
-                    throw new ErrorMessage( "Could not open input" );
-                } catch ( final IllegalArgumentException exception ) {
-                    throw new RuntimeException( "Illegal pragma" );
+                } else {
+                    configureLayoutdirection = layoutDirection;
+                    configuredInput = inputStream;
                 }
+
+                final Configuration configuration = Configuration.builder()
+                    .fontname( fontname )
+                    .fontsize( fontsize )
+                    .nodeFontname( nodeFontName )
+                    .nodeFontsize( nodeFontsize )
+                    .nodeShape( nodeShape )
+                    .nodeMargin( nodeMargin )
+                    .nodeStyle( nodeStyle )
+                    .format( format )
+                    .layoutDirection( configureLayoutdirection )
+                    .dotBinary( dotBinary )
+                    .fgColor( fgColor )
+                    .bgColor( bgColor )
+                    .build();
+
+                return loadOntology( configuredInput ).flatMap( ontology -> openOutput( input, Optional.ofNullable( output ), format
+                    .toString() ).flatMap( outputStream -> new DiagramGenerator( configuration, mappingConfig )
+                        .generate( ontology, outputStream, configuration ) ) );
+            } catch ( final IOException exception ) {
+                throw new ErrorMessage( "Could not open input" );
+            } catch ( final IllegalArgumentException exception ) {
+                throw new RuntimeException( "Illegal pragma" );
             }
-        ).onFailure( throwable -> exitWithErrorMessage( LOG, loggingMixin, throwable ) );
+        } ).onFailure( throwable -> exitWithErrorMessage( LOG, loggingMixin, throwable ) );
     }
 
     @Override

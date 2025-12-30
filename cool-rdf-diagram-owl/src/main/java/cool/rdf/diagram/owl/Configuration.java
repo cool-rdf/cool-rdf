@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -58,13 +58,15 @@ public class Configuration {
     public int nodeFontsize = 12;
 
     /**
-     * The default node shape, see <a href="https://graphviz.org/doc/info/shapes.html">Node Shapes</a> for the possible options
+     * The default node shape, see <a href="https://graphviz.org/doc/info/shapes.html">Node Shapes</a> for the possible
+     * options
      */
     @Builder.Default
     public String nodeShape = "box";
 
     /**
-     * The margin values to be used for shapes, see <a href="https://graphviz.org/docs/attrs/margin/">margin</a> for syntax
+     * The margin values to be used for shapes, see <a href="https://graphviz.org/docs/attrs/margin/">margin</a> for
+     * syntax
      */
     @SuppressWarnings( "CanBeFinal" )
     @Builder.Default

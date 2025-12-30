@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,9 +29,9 @@ import java.util.stream.Stream;
 
 /**
  * Implements a graph transformer that resolves
- * <a href="https://www.w3.org/TR/owl2-new-features/#F12:_Punning">Punning</a> in a graph: An input ontology that
- * uses punning for e.g. an individual and a class results in a graph that contains both the individual and the class
- * as nodes, but both share the same {@link Node.Id}, as it is derived from the element's
+ * <a href="https://www.w3.org/TR/owl2-new-features/#F12:_Punning">Punning</a> in a graph: An input ontology that uses
+ * punning for e.g. an individual and a class results in a graph that contains both the individual and the class as
+ * nodes, but both share the same {@link Node.Id}, as it is derived from the element's
  * {@link org.semanticweb.owlapi.model.IRI}. This transformer replaces the nodes with new, uniquely identified nodes
  * (that keep the original IRI in their IDs) and updates all edges in the graph accordingly.
  */
@@ -58,7 +58,8 @@ public class PunningRemover extends GraphTransformer {
     @Override
     public Set<GraphElement> apply( final Set<GraphElement> graph ) {
         LOG.debug( "Removing punning in {}", graph );
-        @SuppressWarnings( "OptionalGetWithoutIsPresent" ) final Set<GraphElement> result = graph.stream()
+        @SuppressWarnings( "OptionalGetWithoutIsPresent" )
+        final Set<GraphElement> result = graph.stream()
             .filter( GraphElement::isNode )
             .map( GraphElement::asNode )
             .filter( node -> node.getId().getIri().isPresent() )
@@ -81,8 +82,7 @@ public class PunningRemover extends GraphTransformer {
     }
 
     private Node.Id buildNewNodeId( final Node.Id original ) {
-        return original.getIri().map( iri ->
-                mappingConfiguration.getIdentifierMapper().getSyntheticIdForIri( iri ) )
+        return original.getIri().map( iri -> mappingConfiguration.getIdentifierMapper().getSyntheticIdForIri( iri ) )
             .orElseGet( () -> mappingConfiguration.getIdentifierMapper().getSyntheticId() );
     }
 }

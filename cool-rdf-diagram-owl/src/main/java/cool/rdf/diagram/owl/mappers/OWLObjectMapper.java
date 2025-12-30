@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -53,8 +53,8 @@ import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
 import javax.annotation.Nonnull;
 
 /**
- * Dispatcher of multiple types of OWL objects; this is called in some generic mapping operations.
- * Maps {@link org.semanticweb.owlapi.model.OWLObject}s to {@link Graph}s.
+ * Dispatcher of multiple types of OWL objects; this is called in some generic mapping operations. Maps
+ * {@link org.semanticweb.owlapi.model.OWLObject}s to {@link Graph}s.
  */
 public class OWLObjectMapper implements OWLObjectVisitorEx<Graph> {
     private final MappingConfiguration mappingConfig;

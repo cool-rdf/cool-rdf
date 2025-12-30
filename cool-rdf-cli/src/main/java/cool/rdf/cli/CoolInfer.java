@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -32,14 +32,14 @@ import static cool.rdf.cli.CoolInfer.COMMAND_NAME;
 /**
  * The 'infer' subcommand
  */
-@CommandLine.Command( name = COMMAND_NAME,
+@CommandLine.Command(
+    name = COMMAND_NAME,
     description = "Runs an OWL reasoner on an ontology",
     descriptionHeading = "%n@|bold Description|@:%n%n",
     parameterListHeading = "%n@|bold Parameters|@:%n",
     optionListHeading = "%n@|bold Options|@:%n",
     footer = "%nSee the online documentation for details:%n" +
-        "https://atextor.de/owl-cli/main/" + Version.VERSION + "/usage.html#infer-command"
-)
+        "https://atextor.de/owl-cli/main/" + Version.VERSION + "/usage.html#infer-command" )
 public class CoolInfer extends AbstractCommand implements Runnable {
     /**
      * The name of this subcommand
@@ -56,14 +56,19 @@ public class CoolInfer extends AbstractCommand implements Runnable {
     LoggingMixin loggingMixin;
 
     @SuppressWarnings( "unused" )
-    @CommandLine.Parameters( paramLabel = "INPUT", description = "File name, URL, or - for stdin", arity = "1",
+    @CommandLine.Parameters(
+        paramLabel = "INPUT",
+        description = "File name, URL, or - for stdin",
+        arity = "1",
         index = "0" )
     private String input;
 
     @SuppressWarnings( "unused" )
-    @CommandLine.Parameters( paramLabel = "OUTPUT",
+    @CommandLine.Parameters(
+        paramLabel = "OUTPUT",
         description = "File name or - for stdout. If left out, output is written to stdout.",
-        arity = "0..1", index = "1" )
+        arity = "0..1",
+        index = "1" )
     private String output;
 
     @Override
@@ -86,11 +91,10 @@ public class CoolInfer extends AbstractCommand implements Runnable {
         }
 
         openInput( input ).flatMap( inputStream -> {
-                final Configuration configuration = configurationBuilder.build();
-                return openOutput( input, output != null ? Optional.of( output ) : Optional.of( "-" ), "ttl" )
-                    .flatMap( outputStream -> inferrer.infer( inputStream, outputStream, configuration ) );
-            }
-        ).onFailure( throwable -> exitWithErrorMessage( LOG, loggingMixin, throwable ) );
+            final Configuration configuration = configurationBuilder.build();
+            return openOutput( input, output != null ? Optional.of( output ) : Optional.of( "-" ), "ttl" )
+                .flatMap( outputStream -> inferrer.infer( inputStream, outputStream, configuration ) );
+        } ).onFailure( throwable -> exitWithErrorMessage( LOG, loggingMixin, throwable ) );
     }
 
     @Override

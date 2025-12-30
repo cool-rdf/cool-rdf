@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -36,8 +36,8 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 /**
- * The RDF Writer is used to serialize RDF documents into various formats, while using configurable formatting for RDF/Turtle
- * specifically, using the {@link TurtleFormatter}.
+ * The RDF Writer is used to serialize RDF documents into various formats, while using configurable formatting for
+ * RDF/Turtle specifically, using the {@link TurtleFormatter}.
  */
 public class RdfWriter {
     /**

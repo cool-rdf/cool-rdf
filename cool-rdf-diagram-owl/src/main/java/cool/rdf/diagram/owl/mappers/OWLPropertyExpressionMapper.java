@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -49,11 +49,9 @@ public class OWLPropertyExpressionMapper implements OWLPropertyExpressionVisitor
 
     @Override
     public Graph visit( final @Nonnull OWLObjectInverseOf property ) {
-        final Node inverseNode =
-            new Inverse( mappingConfig.getIdentifierMapper().getSyntheticId() );
+        final Node inverseNode = new Inverse( mappingConfig.getIdentifierMapper().getSyntheticId() );
         final OWLPropertyExpression invertedProperty = property.getInverseProperty();
-        final Graph propertyVisitorGraph =
-            invertedProperty.accept( mappingConfig.getOwlPropertyExpressionMapper() );
+        final Graph propertyVisitorGraph = invertedProperty.accept( mappingConfig.getOwlPropertyExpressionMapper() );
         final Edge propertyEdge = new Edge.Plain( Edge.Type.DEFAULT_ARROW, inverseNode, propertyVisitorGraph
             .getNode() );
         return Graph.of( inverseNode ).and( propertyVisitorGraph ).and( propertyEdge );

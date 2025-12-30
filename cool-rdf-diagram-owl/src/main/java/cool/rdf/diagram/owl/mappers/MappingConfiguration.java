@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -40,7 +40,8 @@ public interface MappingConfiguration {
     OWLAxiomVisitorEx<Graph> getOwlAxiomMapper();
 
     /**
-     * The OWL class expression mapper translates OWL class expressions (declarations, but also unions, intersections etc.) to graphs
+     * The OWL class expression mapper translates OWL class expressions (declarations, but also unions, intersections
+     * etc.) to graphs
      *
      * @return the mapper
      */
@@ -61,7 +62,8 @@ public interface MappingConfiguration {
     OWLPropertyExpressionVisitorEx<Graph> getOwlPropertyExpressionMapper();
 
     /**
-     * The OWL object mapper unifies the interfaces for various other mappers, and translates the corresponding OWL objects to graphs
+     * The OWL object mapper unifies the interfaces for various other mappers, and translates the corresponding OWL
+     * objects to graphs
      *
      * @return the mapper
      */
@@ -117,14 +119,16 @@ public interface MappingConfiguration {
     NameMapper getNameMapper();
 
     /**
-     * The OWL data printer translates data axioms, such as data unions and complements, to expression String representations
+     * The OWL data printer translates data axioms, such as data unions and complements, to expression String
+     * representations
      *
      * @return the printer
      */
     OWLDataVisitorEx<String> getOwlDataPrinter();
 
     /**
-     * The OWL property expression printer translates OWL object properties and data properties to expression String representations
+     * The OWL property expression printer translates OWL object properties and data properties to expression String
+     * representations
      *
      * @return the printer
      */

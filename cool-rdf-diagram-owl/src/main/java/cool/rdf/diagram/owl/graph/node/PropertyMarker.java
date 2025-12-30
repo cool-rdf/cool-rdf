@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,8 +24,8 @@ import lombok.With;
 import java.util.Set;
 
 /**
- * Represents a property marker node in the graph, i.e. a node that contains the list of attributes that a given
- * OWL Object Property or OWL Data Property has.
+ * Represents a property marker node in the graph, i.e. a node that contains the list of attributes that a given OWL
+ * Object Property or OWL Data Property has.
  */
 @Value
 @EqualsAndHashCode( callSuper = true )

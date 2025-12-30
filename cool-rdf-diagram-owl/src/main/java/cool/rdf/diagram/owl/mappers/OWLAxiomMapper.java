@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -130,8 +130,8 @@ public class OWLAxiomMapper implements OWLAxiomVisitorEx<Graph> {
     }
 
     private <P extends OWLPropertyExpression, O extends OWLPropertyAssertionObject> Stream<GraphElement>
-    propertyStructure( final OWLPropertyAssertionAxiom<P, O> axiom, final Node thirdNode,
-        final Edge.Type subjectToThirdNodeType ) {
+        propertyStructure( final OWLPropertyAssertionAxiom<P, O> axiom, final Node thirdNode,
+            final Edge.Type subjectToThirdNodeType ) {
 
         final Graph subjectGraph = axiom.getSubject().accept( mappingConfig.getOwlIndividualMapper() );
         final Graph propertyGraph = axiom.getProperty().accept( mappingConfig.getOwlPropertyExpressionMapper() );
@@ -181,7 +181,8 @@ public class OWLAxiomMapper implements OWLAxiomVisitorEx<Graph> {
         return domainGraph.and( propertyGraph ).and( domainEdge );
     }
 
-    private <P extends OWLPropertyExpression, R extends OWLPropertyRange, A extends OWLPropertyRangeAxiom<P, R>> Graph propertyRange( final A axiom ) {
+    private <P extends OWLPropertyExpression, R extends OWLPropertyRange, A extends OWLPropertyRangeAxiom<P, R>> Graph propertyRange(
+        final A axiom ) {
         final Graph propertyGraph = axiom.getProperty().accept( mappingConfig.getOwlPropertyExpressionMapper() );
         final Graph rangeGraph = axiom.getRange().accept( mappingConfig.getOwlObjectMapper() );
         final Edge rangeEdge = new Edge.Decorated( Edge.Type.DEFAULT_ARROW, propertyGraph.getNode(),
@@ -298,8 +299,8 @@ public class OWLAxiomMapper implements OWLAxiomVisitorEx<Graph> {
     }
 
     /**
-     * Shared logic for axioms that generate sets of nodes that are pairwise equivalent,
-     * e.g. {@link org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom}s.
+     * Shared logic for axioms that generate sets of nodes that are pairwise equivalent, e.g.
+     * {@link org.semanticweb.owlapi.model.OWLEquivalentClassesAxiom}s.
      *
      * @param axiom The axiom to generate results for
      * @param visitor The visitor that handles the type of axiom
@@ -309,7 +310,7 @@ public class OWLAxiomMapper implements OWLAxiomVisitorEx<Graph> {
      * @return the graph representing the equivalency
      */
     private <O extends OWLObject, A extends OWLNaryAxiom<O>, V extends OWLObjectVisitorEx<Graph>>
-    Graph pairwiseEquivalent( final A axiom, final V visitor ) {
+        Graph pairwiseEquivalent( final A axiom, final V visitor ) {
 
         final Map<O, Graph> operands = axiom.operands().collect( Collectors.toMap( Function.identity(),
             object -> object.accept( visitor ) ) );
@@ -321,11 +322,10 @@ public class OWLAxiomMapper implements OWLAxiomVisitorEx<Graph> {
                 final List<O> newList = new ArrayList<>( expressionsList );
                 newList.sort( Comparator.comparing( o -> operands.get( o ).getNode().getId().getId() ) );
                 return newList;
-            }
-        ).filter( expressionsList -> {
-            final Iterator<O> iterator = expressionsList.iterator();
-            return !iterator.next().equals( iterator.next() );
-        } ).collect( Collectors.toSet() );
+            } ).filter( expressionsList -> {
+                final Iterator<O> iterator = expressionsList.iterator();
+                return !iterator.next().equals( iterator.next() );
+            } ).collect( Collectors.toSet() );
 
         // For each of the combinations, create a corresponding edge
         final Stream<GraphElement> edges = combinations.stream().map( expressionsList -> {
@@ -349,8 +349,7 @@ public class OWLAxiomMapper implements OWLAxiomVisitorEx<Graph> {
         final OWLIndividual individual = axiom.getIndividual();
         final OWLClassExpression classExpression = axiom.getClassExpression();
         final Graph individualGraph = individual.accept( mappingConfig.getOwlIndividualMapper() );
-        final Graph classExpressionGraph =
-            classExpression.accept( mappingConfig.getOwlClassExpressionMapper() );
+        final Graph classExpressionGraph = classExpression.accept( mappingConfig.getOwlClassExpressionMapper() );
 
         final Edge edge = new Edge.Plain( Edge.Type.DEFAULT_ARROW, individualGraph.getNode(),
             classExpressionGraph.getNode() );
@@ -507,44 +506,42 @@ public class OWLAxiomMapper implements OWLAxiomVisitorEx<Graph> {
 
     @Override
     public Graph visit( final @Nonnull SWRLRule rule ) {
-        final Function<Stream<GraphElement>, String> reduceWithConjunction = stream ->
-            stream.map( element -> element.as( Literal.class ) )
-                .map( Literal::getValue )
-                .collect( Collectors.joining( " " + Rule.CONJUNCTION_SYMBOL + " " ) );
+        final Function<Stream<GraphElement>, String> reduceWithConjunction = stream -> stream.map( element -> element.as( Literal.class ) )
+            .map( Literal::getValue )
+            .collect( Collectors.joining( " " + Rule.CONJUNCTION_SYMBOL + " " ) );
 
-        final Map<Boolean, List<GraphElement>> partitionedBodyElements =
-            rule.body().flatMap( atom -> atom.accept( mappingConfig.getSwrlObjectMapper() ).toStream() )
-                .collect( Collectors.partitioningBy( SWRLObjectMapper.IS_RULE_SYNTAX_PART ) );
+        final Map<Boolean, List<GraphElement>> partitionedBodyElements = rule.body().flatMap( atom -> atom.accept( mappingConfig
+            .getSwrlObjectMapper() ).toStream() )
+            .collect( Collectors.partitioningBy( SWRLObjectMapper.IS_RULE_SYNTAX_PART ) );
 
         final String bodyExpression = reduceWithConjunction.apply( partitionedBodyElements.get( true ).stream() );
 
-        final Map<Boolean, List<GraphElement>> partitionedHeadElements =
-            rule.head().flatMap( atom -> atom.accept( mappingConfig.getSwrlObjectMapper() ).toStream() )
-                .collect( Collectors.partitioningBy( SWRLObjectMapper.IS_RULE_SYNTAX_PART ) );
+        final Map<Boolean, List<GraphElement>> partitionedHeadElements = rule.head().flatMap( atom -> atom.accept( mappingConfig
+            .getSwrlObjectMapper() ).toStream() )
+            .collect( Collectors.partitioningBy( SWRLObjectMapper.IS_RULE_SYNTAX_PART ) );
 
         final String headExpression = reduceWithConjunction.apply( partitionedHeadElements.get( true ).stream() );
 
         final Node ruleNode = new Rule( mappingConfig.getIdentifierMapper().getSyntheticId(),
             String.format( "%s %s %s", bodyExpression, Rule.IMPLICATION_SYMBOL, headExpression ) );
 
-        final Set<Node> allSyntaxParts =
-            Stream.of( partitionedBodyElements.get( true ), partitionedHeadElements.get( true ) )
-                .flatMap( List::stream )
-                .map( GraphElement::asNode )
-                .collect( Collectors.toSet() );
+        final Set<Node> allSyntaxParts = Stream.of( partitionedBodyElements.get( true ), partitionedHeadElements.get( true ) )
+            .flatMap( List::stream )
+            .map( GraphElement::asNode )
+            .collect( Collectors.toSet() );
 
-        final Stream<GraphElement> remainingElements =
-            Stream.of( partitionedBodyElements.get( false ), partitionedHeadElements.get( false ) )
-                .flatMap( List::stream )
-                .map( element -> {
-                    if ( element.isEdge() ) {
-                        final Edge edge = element.asEdge();
-                        if ( allSyntaxParts.contains( edge.getFrom() ) ) {
-                            return edge.setFrom( ruleNode );
-                        }
+        final Stream<GraphElement> remainingElements = Stream.of( partitionedBodyElements.get( false ), partitionedHeadElements.get(
+            false ) )
+            .flatMap( List::stream )
+            .map( element -> {
+                if ( element.isEdge() ) {
+                    final Edge edge = element.asEdge();
+                    if ( allSyntaxParts.contains( edge.getFrom() ) ) {
+                        return edge.setFrom( ruleNode );
                     }
-                    return element;
-                } );
+                }
+                return element;
+            } );
 
         return Graph.of( ruleNode, remainingElements );
     }

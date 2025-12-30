@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -46,8 +46,8 @@ public abstract class GraphTransformer implements UnaryOperator<Set<GraphElement
     }
 
     /**
-     * Calculates a {@link ChangeSet} for a given graph in which all edges pointing to a given node are instead now pointing to a diffent
-     * node
+     * Calculates a {@link ChangeSet} for a given graph in which all edges pointing to a given node are instead now
+     * pointing to a diffent node
      *
      * @param graph the graph
      * @param oldToNode the old node
@@ -59,8 +59,8 @@ public abstract class GraphTransformer implements UnaryOperator<Set<GraphElement
     }
 
     /**
-     * Calculates a {@link ChangeSet} for a given graph in which all edges outgoing from a given node are instead now outgoing from a
-     * different node
+     * Calculates a {@link ChangeSet} for a given graph in which all edges outgoing from a given node are instead now
+     * outgoing from a different node
      *
      * @param graph the graph
      * @param oldFromNode the old node

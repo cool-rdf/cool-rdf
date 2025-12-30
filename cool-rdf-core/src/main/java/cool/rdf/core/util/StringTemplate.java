@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,8 +20,8 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * Minimalistic String template. The template string can contain references to (e.g. ${foo}) that are replaced
- * with values on calling {@link #apply(Map)}.
+ * Minimalistic String template. The template string can contain references to (e.g. ${foo}) that are replaced with
+ * values on calling {@link #apply(Map)}.
  */
 public class StringTemplate implements Function<Map<String, Object>, String> {
     final private String template;

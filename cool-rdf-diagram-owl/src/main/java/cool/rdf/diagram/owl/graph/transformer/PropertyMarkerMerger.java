@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -31,8 +31,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Implements a graph transformer that merges multiple {@link PropertyMarker}s on a given Object property
- * or Data Property into one Property Marker
+ * Implements a graph transformer that merges multiple {@link PropertyMarker}s on a given Object property or Data
+ * Property into one Property Marker
  */
 public class PropertyMarkerMerger extends GraphTransformer {
     private final MappingConfiguration mappingConfiguration;
@@ -63,10 +63,9 @@ public class PropertyMarkerMerger extends GraphTransformer {
     }
 
     private ChangeSet mergePropertyMarkers( final Set<Tuple2<Edge, PropertyMarker>> propertyMarkers ) {
-        final Set<PropertyMarker.Kind> mergedKindSet =
-            propertyMarkers.stream().flatMap( marker -> marker._2().getKind().stream() ).collect( Collectors.toSet() );
-        final PropertyMarker newMarker =
-            new PropertyMarker( mappingConfiguration.getIdentifierMapper().getSyntheticId(), mergedKindSet );
+        final Set<PropertyMarker.Kind> mergedKindSet = propertyMarkers.stream().flatMap( marker -> marker._2().getKind().stream() ).collect(
+            Collectors.toSet() );
+        final PropertyMarker newMarker = new PropertyMarker( mappingConfiguration.getIdentifierMapper().getSyntheticId(), mergedKindSet );
 
         final Edge newEdge = propertyMarkers.iterator().next()._1().setTo( newMarker );
 

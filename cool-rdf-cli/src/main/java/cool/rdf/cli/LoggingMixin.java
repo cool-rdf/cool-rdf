@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,13 +29,12 @@ import picocli.CommandLine;
 import static picocli.CommandLine.Spec.Target.MIXEE;
 
 /**
- * A <a href="https://picocli.info/#_mixing_options_and_positional_parameters">mixin</a> for logging functionality that is
- * shared across commands. The mixin sets up and uses logback.
+ * A <a href="https://picocli.info/#_mixing_options_and_positional_parameters">mixin</a> for logging functionality that
+ * is shared across commands. The mixin sets up and uses logback.
  */
 public class LoggingMixin {
     @SuppressWarnings( { "unused", "SpellCheckingInspection" } )
-    private @CommandLine.Spec( MIXEE )
-    CommandLine.Model.CommandSpec mixee;
+    private @CommandLine.Spec( MIXEE ) CommandLine.Model.CommandSpec mixee;
 
     private boolean[] verbosity = new boolean[0];
 
@@ -60,9 +59,11 @@ public class LoggingMixin {
      * @param verbosity the verbosity, one array entry for every stacked -v occurrence
      */
     @SuppressWarnings( "unused" )
-    @CommandLine.Option( names = { "-v", "--verbose" }, description = {
-        "Specify multiple -v options to increase verbosity,",
-        "e.g. use `-v`, `-vv` or `-vvv` for more details" } )
+    @CommandLine.Option(
+        names = { "-v", "--verbose" },
+        description = {
+                "Specify multiple -v options to increase verbosity,",
+                "e.g. use `-v`, `-vv` or `-vvv` for more details" } )
     public void setVerbose( final boolean[] verbosity ) {
         getTopLevelCommandLoggingMixin( mixee ).verbosity = verbosity;
     }

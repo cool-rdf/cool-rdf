@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -114,8 +114,7 @@ public class GraphvizDocument implements Function<Configuration, String> {
     @Override
     public String apply( final Configuration configuration ) {
         final Map<String, Object> templateMap = new ImmutableMap.Builder<String, Object>()
-            .put( "rankdir", configuration.layoutDirection == Configuration.LayoutDirection.TOP_TO_BOTTOM ? "TB" :
-                "LR" )
+            .put( "rankdir", configuration.layoutDirection == Configuration.LayoutDirection.TOP_TO_BOTTOM ? "TB" : "LR" )
             .put( "fontname", configuration.fontname )
             .put( "fontsize", configuration.fontsize )
             .put( "nodeFontname", configuration.nodeFontname )

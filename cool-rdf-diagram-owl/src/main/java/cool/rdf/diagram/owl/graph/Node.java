@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -356,8 +356,8 @@ public abstract class Node implements GraphElement {
     }
 
     /**
-     * ID of a node that has the (unique) internal identifier string, and if present, the {@link IRI} of the
-     * ontology element that is represented by the node having this ID.
+     * ID of a node that has the (unique) internal identifier string, and if present, the {@link IRI} of the ontology
+     * element that is represented by the node having this ID.
      */
     @Getter
     @EqualsAndHashCode

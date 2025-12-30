@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -66,8 +66,7 @@ public class OWLDataMapper implements OWLDataVisitorEx<Graph> {
 
     @Override
     public Graph visit( final @Nonnull OWLDataComplementOf dataRange ) {
-        final Node complementNode =
-            new Complement( mappingConfig.getIdentifierMapper().getSyntheticId() );
+        final Node complementNode = new Complement( mappingConfig.getIdentifierMapper().getSyntheticId() );
         final Stream<GraphElement> remainingElements = createEdgeToDataRange( complementNode,
             dataRange.getDataRange() );
         return Graph.of( complementNode, remainingElements );
@@ -75,8 +74,7 @@ public class OWLDataMapper implements OWLDataVisitorEx<Graph> {
 
     @Override
     public Graph visit( final @Nonnull OWLDataOneOf dataRange ) {
-        final Node restrictionNode =
-            new ClosedClass( mappingConfig.getIdentifierMapper().getSyntheticId() );
+        final Node restrictionNode = new ClosedClass( mappingConfig.getIdentifierMapper().getSyntheticId() );
         return dataRange.values().map( value -> {
             final Graph valueGraph = value.accept( mappingConfig.getOwlDataMapper() );
             final Edge vEdge = new Edge.Plain( Edge.Type.DEFAULT_ARROW, restrictionNode, valueGraph.getNode() );
@@ -86,18 +84,17 @@ public class OWLDataMapper implements OWLDataVisitorEx<Graph> {
 
     @Override
     public Graph visit( final @Nonnull OWLDataIntersectionOf dataRange ) {
-        final Node intersectionNode =
-            new Intersection( mappingConfig.getIdentifierMapper().getSyntheticId() );
-        final Stream<GraphElement> remainingElements = dataRange.operands().flatMap( operand ->
-            createEdgeToDataRange( intersectionNode, operand ) );
+        final Node intersectionNode = new Intersection( mappingConfig.getIdentifierMapper().getSyntheticId() );
+        final Stream<GraphElement> remainingElements = dataRange.operands().flatMap( operand -> createEdgeToDataRange( intersectionNode,
+            operand ) );
         return Graph.of( intersectionNode, remainingElements );
     }
 
     @Override
     public Graph visit( final @Nonnull OWLDataUnionOf dataRange ) {
         final Node unionNode = new Union( mappingConfig.getIdentifierMapper().getSyntheticId() );
-        final Stream<GraphElement> remainingElements = dataRange.operands().flatMap( operand ->
-            createEdgeToDataRange( unionNode, operand ) );
+        final Stream<GraphElement> remainingElements = dataRange.operands().flatMap( operand -> createEdgeToDataRange( unionNode,
+            operand ) );
         return Graph.of( unionNode, remainingElements );
     }
 

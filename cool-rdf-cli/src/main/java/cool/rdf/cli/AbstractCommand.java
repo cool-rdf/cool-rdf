@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -60,7 +60,8 @@ public abstract class AbstractCommand {
      * Try to open an output stream
      *
      * @param input the original input: file path or "-" for stdin
-     * @param output the designated output: an absolute or relative path or "-" for stdout. If empty, determine the output from the input
+     * @param output the designated output: an absolute or relative path or "-" for stdout. If empty, determine the
+     * output from the input
      * @param targetFileExtension the target file extension to use, if the output is empty
      * @return if successful, the output stream
      */
@@ -142,19 +143,19 @@ public abstract class AbstractCommand {
             .add( new OWLOntologyFactoryImpl( new NonConcurrentOWLOntologyBuilder() ) )
             .build();
 
-        @SuppressWarnings( "SpellCheckingInspection" ) final Set<OWLStorerFactory> storerFactories =
-            ImmutableSet.<OWLStorerFactory>builder()
-                .add( new org.semanticweb.owlapi.rdf.rdfxml.renderer.RDFXMLStorerFactory() )
-                .add( new org.semanticweb.owlapi.owlxml.renderer.OWLXMLStorerFactory() )
-                .add( new org.semanticweb.owlapi.functional.renderer.FunctionalSyntaxStorerFactory() )
-                .add( new org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterSyntaxStorerFactory() )
-                .add( new org.semanticweb.owlapi.krss2.renderer.KRSS2OWLSyntaxStorerFactory() )
-                .add( new org.semanticweb.owlapi.rdf.turtle.renderer.TurtleStorerFactory() )
-                .add( new org.semanticweb.owlapi.latex.renderer.LatexStorerFactory() )
-                .add( new org.semanticweb.owlapi.dlsyntax.renderer.DLSyntaxHTMLStorerFactory() )
-                .add( new org.semanticweb.owlapi.dlsyntax.renderer.DLSyntaxStorerFactory() )
-                .add( new org.semanticweb.owlapi.oboformat.OBOFormatStorerFactory() )
-                .build();
+        @SuppressWarnings( "SpellCheckingInspection" )
+        final Set<OWLStorerFactory> storerFactories = ImmutableSet.<OWLStorerFactory>builder()
+            .add( new org.semanticweb.owlapi.rdf.rdfxml.renderer.RDFXMLStorerFactory() )
+            .add( new org.semanticweb.owlapi.owlxml.renderer.OWLXMLStorerFactory() )
+            .add( new org.semanticweb.owlapi.functional.renderer.FunctionalSyntaxStorerFactory() )
+            .add( new org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterSyntaxStorerFactory() )
+            .add( new org.semanticweb.owlapi.krss2.renderer.KRSS2OWLSyntaxStorerFactory() )
+            .add( new org.semanticweb.owlapi.rdf.turtle.renderer.TurtleStorerFactory() )
+            .add( new org.semanticweb.owlapi.latex.renderer.LatexStorerFactory() )
+            .add( new org.semanticweb.owlapi.dlsyntax.renderer.DLSyntaxHTMLStorerFactory() )
+            .add( new org.semanticweb.owlapi.dlsyntax.renderer.DLSyntaxStorerFactory() )
+            .add( new org.semanticweb.owlapi.oboformat.OBOFormatStorerFactory() )
+            .build();
 
         final OWLDataFactory dataFactory = new OWLDataFactoryImpl();
         final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();

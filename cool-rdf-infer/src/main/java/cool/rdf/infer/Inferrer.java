@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -48,7 +48,8 @@ public class Inferrer {
     private static final Logger LOG = LoggerFactory.getLogger( Inferrer.class );
 
     /**
-     * Writes an inferred OWL document given by an input URL, to an output stream using a writing/formatting configuration
+     * Writes an inferred OWL document given by an input URL, to an output stream using a writing/formatting
+     * configuration
      *
      * @param inputUrl the input URL
      * @param output the output stream
@@ -84,7 +85,8 @@ public class Inferrer {
     }
 
     /**
-     * Writes an inferred OWL document given by an input stream, to an output stream using a writing/formatting configuration
+     * Writes an inferred OWL document given by an input stream, to an output stream using a writing/formatting
+     * configuration
      *
      * @param input the input stream
      * @param output the output stream

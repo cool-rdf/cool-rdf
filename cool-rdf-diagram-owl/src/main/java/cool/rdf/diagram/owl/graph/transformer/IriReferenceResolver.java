@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,9 +29,9 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 /**
- * Implements a graph transformation that removes all nodes of type {@link IRIReference} from a graph and
- * replaces them with the corresponding direct links to the referenced nodes where possible, and with literal
- * nodes representing the reference IRI otherwise
+ * Implements a graph transformation that removes all nodes of type {@link IRIReference} from a graph and replaces them
+ * with the corresponding direct links to the referenced nodes where possible, and with literal nodes representing the
+ * reference IRI otherwise
  */
 public class IriReferenceResolver extends GraphTransformer {
     private final MappingConfiguration mappingConfiguration;

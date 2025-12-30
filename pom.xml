@@ -66,6 +66,7 @@
         <maven.shade.skip>false</maven.shade.skip>
         <native.build.skip>false</native.build.skip>
         <jacoco.skip>false</jacoco.skip>
+        <eclipse-code-formatter.version>4.38</eclipse-code-formatter.version>
 
         <!-- General dependency versions -->
         <asciidoctorj.version>2.5.11</asciidoctorj.version>
@@ -581,7 +582,6 @@
                 <artifactId>spotless-maven-plugin</artifactId>
                 <configuration>
                     <formats>
-                        <!-- you can define as many formats as you want, each is independent -->
                         <format>
                             <!-- define the files to apply to -->
                             <includes>
@@ -598,12 +598,14 @@
                             <include>src/main/java/**/*.java</include>
                         </includes>
                         <eclipse>
-                            <version>4.38</version>
+                            <version>${eclipse-code-formatter.version}</version>
                             <file>${maven.multiModuleProjectDirectory}/.development/eclipse-code-style.xml</file>
                         </eclipse>
                         <licenseHeader>
                             <file>${maven.multiModuleProjectDirectory}/.development/license-header</file>
                         </licenseHeader>
+                        <trimTrailingWhitespace/>
+                        <endWithNewline/>
                     </java>
                 </configuration>
             </plugin>
