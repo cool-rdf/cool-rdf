@@ -18,13 +18,31 @@ package cool.rdf.cli;
 
 import com.google.common.collect.ImmutableSet;
 import io.vavr.control.Try;
+import org.semanticweb.owlapi.dlsyntax.parser.DLSyntaxOWLParserFactory;
+import org.semanticweb.owlapi.dlsyntax.renderer.DLSyntaxHTMLStorerFactory;
+import org.semanticweb.owlapi.dlsyntax.renderer.DLSyntaxStorerFactory;
+import org.semanticweb.owlapi.functional.parser.OWLFunctionalSyntaxOWLParserFactory;
+import org.semanticweb.owlapi.functional.renderer.FunctionalSyntaxStorerFactory;
 import org.semanticweb.owlapi.io.OWLParserFactory;
+import org.semanticweb.owlapi.krss2.parser.KRSS2OWLParserFactory;
+import org.semanticweb.owlapi.krss2.renderer.KRSS2OWLSyntaxStorerFactory;
+import org.semanticweb.owlapi.latex.renderer.LatexStorerFactory;
+import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntaxOntologyParserFactory;
+import org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterSyntaxStorerFactory;
 import org.semanticweb.owlapi.model.OWLDataFactory;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
 import org.semanticweb.owlapi.model.OWLOntologyFactory;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
 import org.semanticweb.owlapi.model.OWLStorerFactory;
+import org.semanticweb.owlapi.oboformat.OBOFormatOWLAPIParserFactory;
+import org.semanticweb.owlapi.oboformat.OBOFormatStorerFactory;
+import org.semanticweb.owlapi.owlxml.parser.OWLXMLParserFactory;
+import org.semanticweb.owlapi.owlxml.renderer.OWLXMLStorerFactory;
+import org.semanticweb.owlapi.rdf.rdfxml.parser.RDFXMLParserFactory;
+import org.semanticweb.owlapi.rdf.rdfxml.renderer.RDFXMLStorerFactory;
+import org.semanticweb.owlapi.rdf.turtle.parser.TurtleOntologyParserFactory;
+import org.semanticweb.owlapi.rdf.turtle.renderer.TurtleStorerFactory;
 import org.slf4j.Logger;
 import picocli.CommandLine;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
@@ -48,12 +66,17 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
  * Base class for commands that bundles common functionality
  */
 public abstract class AbstractCommand {
+    protected final Runtime runtime;
+
+    protected AbstractCommand( final Runtime runtime ) {
+        this.runtime = runtime;
+    }
 
     /**
      * Will exit the program with status code 1
      */
     protected void commandFailed() {
-        System.exit( 1 );
+        runtime.exit( 1 );
     }
 
     /**
@@ -129,14 +152,14 @@ public abstract class AbstractCommand {
      */
     protected OWLOntologyManager createOWLOntologyManager() {
         final ImmutableSet<OWLParserFactory> parserFactories = ImmutableSet.<OWLParserFactory>builder()
-            .add( new org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntaxOntologyParserFactory() )
-            .add( new org.semanticweb.owlapi.krss2.parser.KRSS2OWLParserFactory() )
-            .add( new org.semanticweb.owlapi.rdf.turtle.parser.TurtleOntologyParserFactory() )
-            .add( new org.semanticweb.owlapi.functional.parser.OWLFunctionalSyntaxOWLParserFactory() )
-            .add( new org.semanticweb.owlapi.owlxml.parser.OWLXMLParserFactory() )
-            .add( new org.semanticweb.owlapi.rdf.rdfxml.parser.RDFXMLParserFactory() )
-            .add( new org.semanticweb.owlapi.dlsyntax.parser.DLSyntaxOWLParserFactory() )
-            .add( new org.semanticweb.owlapi.oboformat.OBOFormatOWLAPIParserFactory() )
+            .add( new ManchesterOWLSyntaxOntologyParserFactory() )
+            .add( new KRSS2OWLParserFactory() )
+            .add( new TurtleOntologyParserFactory() )
+            .add( new OWLFunctionalSyntaxOWLParserFactory() )
+            .add( new OWLXMLParserFactory() )
+            .add( new RDFXMLParserFactory() )
+            .add( new DLSyntaxOWLParserFactory() )
+            .add( new OBOFormatOWLAPIParserFactory() )
             .build();
 
         final Set<OWLOntologyFactory> ontologyFactories = ImmutableSet.<OWLOntologyFactory>builder()
@@ -145,16 +168,16 @@ public abstract class AbstractCommand {
 
         @SuppressWarnings( "SpellCheckingInspection" )
         final Set<OWLStorerFactory> storerFactories = ImmutableSet.<OWLStorerFactory>builder()
-            .add( new org.semanticweb.owlapi.rdf.rdfxml.renderer.RDFXMLStorerFactory() )
-            .add( new org.semanticweb.owlapi.owlxml.renderer.OWLXMLStorerFactory() )
-            .add( new org.semanticweb.owlapi.functional.renderer.FunctionalSyntaxStorerFactory() )
-            .add( new org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterSyntaxStorerFactory() )
-            .add( new org.semanticweb.owlapi.krss2.renderer.KRSS2OWLSyntaxStorerFactory() )
-            .add( new org.semanticweb.owlapi.rdf.turtle.renderer.TurtleStorerFactory() )
-            .add( new org.semanticweb.owlapi.latex.renderer.LatexStorerFactory() )
-            .add( new org.semanticweb.owlapi.dlsyntax.renderer.DLSyntaxHTMLStorerFactory() )
-            .add( new org.semanticweb.owlapi.dlsyntax.renderer.DLSyntaxStorerFactory() )
-            .add( new org.semanticweb.owlapi.oboformat.OBOFormatStorerFactory() )
+            .add( new RDFXMLStorerFactory() )
+            .add( new OWLXMLStorerFactory() )
+            .add( new FunctionalSyntaxStorerFactory() )
+            .add( new ManchesterSyntaxStorerFactory() )
+            .add( new KRSS2OWLSyntaxStorerFactory() )
+            .add( new TurtleStorerFactory() )
+            .add( new LatexStorerFactory() )
+            .add( new DLSyntaxHTMLStorerFactory() )
+            .add( new DLSyntaxStorerFactory() )
+            .add( new OBOFormatStorerFactory() )
             .build();
 
         final OWLDataFactory dataFactory = new OWLDataFactoryImpl();

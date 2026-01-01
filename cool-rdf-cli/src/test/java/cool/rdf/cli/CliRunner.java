@@ -16,8 +16,9 @@
 
 package cool.rdf.cli;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.Mockito.doThrow;
+import static org.mockito.Mockito.spy;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
@@ -26,10 +27,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintStream;
 import java.io.Serial;
+import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.nio.charset.StandardCharsets;
-import java.security.Permission;
 import java.util.List;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutionException;
@@ -40,15 +41,15 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Convenient test runner to execute a command line interface either via main class, executable jar or native binary.
- * Arguments and stdin can be provided, return code, stderr and stdout are captured.
- * This class uses {@link System#getSecurityManager()} and {@link System#setSecurityManager(SecurityManager)} that
- * are deprecated as of Java 17. However, until
- * <a href="https://bugs.openjdk.java.net/browse/JDK-8199704">JDK-8199704</a> is addressed,
- * we have still to rely on it.
+ * Arguments and stdin can be provided, return code, stderr and stdout are captured. This class uses Mockito to capture
+ * calls to {@link Runtime#exit(int)}: It relies on the tested class having a non-final field "java.lang.Runtime
+ * runtime" which is used to calling exit().
  */
-@SuppressWarnings( "removal" )
 public class CliRunner {
     private static final Logger LOG = LoggerFactory.getLogger( CliRunner.class );
 
@@ -57,7 +58,7 @@ public class CliRunner {
      *
      * @param raw the raw byte content
      */
-    record StreamContent( byte[] raw ) {
+    public record StreamContent( byte[] raw ) {
         /**
          * Returns the stream content as UTF-8 string
          *
@@ -77,7 +78,7 @@ public class CliRunner {
         }
     }
 
-    record ExecArguments( List<String> arguments, StreamContent stdin, File workingDirectory ) {
+    public record ExecArguments( List<String> arguments, StreamContent stdin, File workingDirectory ) {
         public ExecArguments( final List<String> arguments, final StreamContent stdin ) {
             this( arguments, stdin, new File( "." ).getAbsoluteFile() );
         }
@@ -91,39 +92,18 @@ public class CliRunner {
         }
     }
 
-    record Result( int exitStatus, StreamContent stdOut, StreamContent stdErr ) {
-    }
-
-    private static class CaptureSystemExitSecurityManager extends SecurityManager {
-        private final SecurityManager delegateSecurityManager;
-
-        private int exitCode = 0;
-
-        CaptureSystemExitSecurityManager( final SecurityManager delegateSecurityManager ) {
-            this.delegateSecurityManager = delegateSecurityManager;
-        }
-
-        int getExitCode() {
-            return exitCode;
-        }
-
-        @Override
-        public void checkPermission( final Permission permission ) {
-            if ( delegateSecurityManager != null ) {
-                delegateSecurityManager.checkPermission( permission );
-            }
-        }
-
-        @Override
-        public void checkExit( final int i ) {
-            exitCode = i;
-            throw new SystemExitCapturedException();
-        }
+    public record Result( int exitStatus, StreamContent stdOut, StreamContent stdErr ) {
     }
 
     private static class SystemExitCapturedException extends RuntimeException {
         @Serial
         private static final long serialVersionUID = 6080552325336609875L;
+
+        private final int returnCode;
+
+        private SystemExitCapturedException( final int returnCode ) {
+            this.returnCode = returnCode;
+        }
     }
 
     private record StreamCollector( InputStream in ) implements Callable<ByteArrayOutputStream> {
@@ -143,10 +123,6 @@ public class CliRunner {
      * @return the execution result
      */
     public static Result runMainClass( final Class<?> clazz, final ExecArguments execArguments ) {
-        final SecurityManager originalSecurityManager = System.getSecurityManager();
-        final CaptureSystemExitSecurityManager securityManager = new CaptureSystemExitSecurityManager( originalSecurityManager );
-        System.setSecurityManager( securityManager );
-
         final PrintStream originalStdout = System.out;
         final PrintStream originalStderr = System.err;
         final InputStream originalStdin = System.in;
@@ -156,8 +132,7 @@ public class CliRunner {
             final ByteArrayOutputStream stdoutBuffer = new ByteArrayOutputStream();
             final ByteArrayOutputStream stderrBuffer = new ByteArrayOutputStream();
             final PrintStream outStream = new PrintStream( stdoutBuffer );
-            final PrintStream errStream = new PrintStream( stderrBuffer )
-        ) {
+            final PrintStream errStream = new PrintStream( stderrBuffer ) ) {
             System.setOut( outStream );
             System.setErr( errStream );
 
@@ -167,21 +142,38 @@ public class CliRunner {
 
             System.setProperty( "user.dir", execArguments.workingDirectory().getAbsolutePath() );
             final Method method = clazz.getMethod( "main", String[].class );
+
+            // Mock runtime for the tested class, in order to capture
+            // calls to System.exit()
+            try {
+                final Runtime spyRuntime = spy( Runtime.getRuntime() );
+                final Field runtime = clazz.getDeclaredField( "runtime" );
+                runtime.setAccessible( true );
+                runtime.set( null, spyRuntime );
+                doThrow( new SystemExitCapturedException( -1 ) ).when( spyRuntime ).exit( anyInt() );
+                doThrow( new SystemExitCapturedException( 1 ) ).when( spyRuntime ).exit( 1 );
+                doThrow( new SystemExitCapturedException( 0 ) ).when( spyRuntime ).exit( 0 );
+            } catch ( final NoSuchFieldException exception ) {
+                throw new RuntimeException( exception );
+            }
+
+            int returnCode = 0;
             try {
                 method.invoke( null, (Object) execArguments.arguments().toArray( new String[0] ) );
             } catch ( final InvocationTargetException exception ) {
                 // Ignore System.exit, throw everything else
-                if ( !exception.getCause().getClass().equals( SystemExitCapturedException.class ) ) {
+                if ( exception.getCause() instanceof SystemExitCapturedException systemExitCapturedException ) {
+                    returnCode = systemExitCapturedException.returnCode;
+                } else {
                     throw new RuntimeException( exception );
                 }
             }
-            return new Result( securityManager.getExitCode(),
+            return new Result( returnCode,
                 new StreamContent( stdoutBuffer.toByteArray() ),
                 new StreamContent( stderrBuffer.toByteArray() ) );
         } catch ( final NoSuchMethodException | IllegalAccessException | IOException exception ) {
             throw new RuntimeException( exception );
         } finally {
-            System.setSecurityManager( originalSecurityManager );
             System.setOut( originalStdout );
             System.setErr( originalStderr );
             if ( execArguments.stdin().raw().length > 0 ) {
@@ -190,7 +182,6 @@ public class CliRunner {
             System.setProperty( "user.dir", originalUserDir );
         }
     }
-
 
     /**
      * Executes a command line interface via its executable jar
@@ -206,8 +197,7 @@ public class CliRunner {
         final List<String> javaExecArguments = Stream.of(
             jvmArguments.stream(),
             Stream.of( "-jar", jarFile.toString() ),
-            execArguments.arguments().stream()
-        ).flatMap( Function.identity() ).toList();
+            execArguments.arguments().stream() ).flatMap( Function.identity() ).toList();
 
         return runBinary( javaBinary, new ExecArguments( javaExecArguments, execArguments.stdin(), execArguments.workingDirectory() ) );
     }
@@ -225,8 +215,8 @@ public class CliRunner {
                 .map( argument -> '"' + argument + '"' )
                 .collect( Collectors.joining( " " ) ) );
         try {
-            final List<String> commandWithAllArguments =
-                Stream.concat( Stream.of( binary.toString() ), executionArgument.arguments().stream() ).toList();
+            final List<String> commandWithAllArguments = Stream.concat( Stream.of( binary.toString() ), executionArgument.arguments()
+                .stream() ).toList();
             final Process process = Runtime.getRuntime()
                 .exec( commandWithAllArguments.toArray( new String[0] ), null, executionArgument.workingDirectory() );
             if ( executionArgument.stdin().raw().length > 0 ) {

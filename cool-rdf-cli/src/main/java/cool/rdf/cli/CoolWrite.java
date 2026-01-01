@@ -243,6 +243,10 @@ public class CoolWrite extends AbstractCommand implements Runnable {
         index = "1" )
     private String output;
 
+    protected CoolWrite( final Runtime runtime ) {
+        super( runtime );
+    }
+
     @Override
     public void run() {
         final FormattingStyle style = FormattingStyle.builder()

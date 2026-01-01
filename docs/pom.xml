@@ -35,7 +35,7 @@
         <maven.javadoc.skip>true</maven.javadoc.skip>
         <jacoco.skip>true</jacoco.skip>
 
-        <frontend-maven-plugin.version>1.15.1</frontend-maven-plugin.version>
+        <frontend-maven-plugin.version>2.0.0</frontend-maven-plugin.version>
         <nodejs.version>16.18.0</nodejs.version>
         <npm.version>9.6.0</npm.version>
         <antora.version>3.0.0</antora.version>

@@ -46,6 +46,8 @@ public class Cool implements Runnable {
      * The name of the top level command
      */
     private static final Logger LOG = LoggerFactory.getLogger( Cool.class );
+    @SuppressWarnings( "FieldMayBeFinal" )
+    private static Runtime runtime = Runtime.getRuntime();
 
     private static void printError( final CommandLine commandLine, final Exception exception ) {
         final Level logLevel = ( (LoggingMixin) commandLine.getMixins().values().iterator().next() ).calcLogLevel();
@@ -108,9 +110,9 @@ public class Cool implements Runnable {
 
         LogManager.getLogManager().reset();
         final List<AbstractCommand> commands = List.of(
-            new CoolDiagram(),
-            new CoolWrite(),
-            new CoolInfer() );
+            new CoolDiagram( runtime ),
+            new CoolWrite( runtime ),
+            new CoolInfer( runtime ) );
         final CommandLine cmd = commands.foldLeft( new Cool().commandLine, CommandLine::addSubcommand )
             .setParameterExceptionHandler( PARAMETER_EXCEPTION_HANDLER )
             .setExecutionExceptionHandler( EXECUTION_EXCEPTION_HANDLER )
@@ -119,19 +121,19 @@ public class Cool implements Runnable {
         commands.forEach( command -> command.registerTypeConverters( cmd ) );
 
         final int resultCode = cmd.execute( args );
-        System.exit( resultCode );
+        runtime.exit( resultCode );
     }
 
     @Override
     public void run() {
         if ( helpRequested ) {
-            System.exit( 0 );
+            runtime.exit( 0 );
         }
 
         if ( version ) {
             System.out.printf( "%s %s%n  commit: %s%n  build date: %s%n", COMMAND_NAME,
                 Version.VERSION, Version.COMMIT_ID.substring( 0, 7 ), Version.BUILD_DATE );
-            System.exit( 0 );
+            runtime.exit( 0 );
         }
 
         System.out.println( commandLine.getHelp().fullSynopsis() );

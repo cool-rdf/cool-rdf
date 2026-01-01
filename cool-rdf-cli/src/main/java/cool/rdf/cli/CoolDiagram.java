@@ -131,6 +131,10 @@ public class CoolDiagram extends AbstractCommand implements Runnable {
         index = "1" )
     private String output;
 
+    protected CoolDiagram( final Runtime runtime ) {
+        super( runtime );
+    }
+
     @Override
     public void run() {
         final MappingConfiguration mappingConfig = DefaultMappingConfiguration.builder().build();

@@ -71,6 +71,10 @@ public class CoolInfer extends AbstractCommand implements Runnable {
         index = "1" )
     private String output;
 
+    protected CoolInfer( final Runtime runtime ) {
+        super( runtime );
+    }
+
     @Override
     public void run() {
         final Configuration.ConfigurationBuilder configurationBuilder = Configuration.builder();
