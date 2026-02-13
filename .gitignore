@@ -18,5 +18,5 @@ docs/package-lock.json
 **/src/generated/java
 */lombok.config
 **/.flattened-pom.xml
-*/target
+**/target
 **/src-gen
