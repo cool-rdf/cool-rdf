@@ -94,6 +94,6 @@ public class BlankNodeMetadata {
     }
 
     public Set<String> getAllBlankNodeLabels() {
-        return Collections.unmodifiableSet( new HashSet<>( blankNodeLabels.values() ) );
+        return Set.copyOf( blankNodeLabels.values() );
     }
 }

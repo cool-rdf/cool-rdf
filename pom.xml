@@ -79,7 +79,7 @@
         <graalvm.version>23.0.1</graalvm.version>
         <guava.version>33.5.0-jre</guava.version>
         <httpclient.version>4.5.14</httpclient.version>
-        <jena.version>4.10.0</jena.version>
+        <jena.version>5.6.0</jena.version>
         <jackson-databind.version>2.20.1</jackson-databind.version>
         <jruby.version>10.0.2.0</jruby.version>
         <logback.version>1.5.23</logback.version>

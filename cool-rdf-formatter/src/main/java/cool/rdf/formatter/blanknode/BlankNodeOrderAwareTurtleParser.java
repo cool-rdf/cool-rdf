@@ -32,12 +32,15 @@ import org.apache.jena.riot.RDFParserRegistry;
 import org.apache.jena.riot.ReaderRIOT;
 import org.apache.jena.riot.lang.LabelToNode;
 import org.apache.jena.riot.lang.LangRIOT;
+import org.apache.jena.riot.lang.LangTurtle;
 import org.apache.jena.riot.lang.RiotParsers;
 import org.apache.jena.riot.system.ParserProfile;
 import org.apache.jena.riot.system.ParserProfileWrapper;
 import org.apache.jena.riot.system.StreamRDF;
 import org.apache.jena.riot.tokens.Token;
 import org.apache.jena.riot.tokens.TokenType;
+import org.apache.jena.riot.tokens.Tokenizer;
+import org.apache.jena.riot.tokens.TokenizerText;
 import org.apache.jena.sparql.util.Context;
 
 public class BlankNodeOrderAwareTurtleParser {
@@ -87,14 +90,16 @@ public class BlankNodeOrderAwareTurtleParser {
                 @Override
                 public void read( final InputStream in, final String baseURI, final ContentType ct, final StreamRDF output,
                     final Context context ) {
-                    final LangRIOT parser = RiotParsers.createParser( in, Lang.TTL, output, profileWrapper );
+                    Tokenizer tokenizer = TokenizerText.create().source( in ).errorHandler( profileWrapper.getErrorHandler() ).build();
+                    LangRIOT parser = new LangTurtle( tokenizer, profileWrapper, output );
                     parser.parse();
                 }
 
                 @Override
                 public void read( final Reader reader, final String baseURI, final ContentType ct, final StreamRDF output,
                     final Context context ) {
-                    final LangRIOT parser = RiotParsers.createParser( reader, Lang.TTL, output, profileWrapper );
+                    Tokenizer tokenizer = TokenizerText.create().source( reader ).errorHandler( profileWrapper.getErrorHandler() ).build();
+                    LangRIOT parser = new LangTurtle( tokenizer, profileWrapper, output );
                     parser.parse();
                 }
             };
