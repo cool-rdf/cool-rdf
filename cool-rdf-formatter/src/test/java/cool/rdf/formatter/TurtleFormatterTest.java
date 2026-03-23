@@ -9,6 +9,7 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.vocabulary.RDF;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.condition.DisabledIf;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.MethodSource;
@@ -501,6 +502,7 @@ public class TurtleFormatterTest {
     }
 
     @Test
+    @DisabledIf(value = "cool.rdf.core.test.shared.TestUtil#systemUsesProxy")
     public void testFormatting() {
         final Model model = ModelFactory.createDefaultModel();
         model

@@ -30,9 +30,10 @@
     <name>Cool RDF Core</name>
 
     <properties>
-        <git-properties-filename>${project.basedir}/src-gen/main/resources/git.properties</git-properties-filename>
         <generated.sources>${project.basedir}/src-gen</generated.sources>
         <build.time.sources>${project.basedir}/src-buildtime</build.time.sources>
+        <shared.test.sources>${project.basedir}/src/test-shared</shared.test.sources>
+        <git-properties-filename>${generated.sources}/main/resources/git.properties</git-properties-filename>
     </properties>
 
     <dependencies>
@@ -94,7 +95,19 @@
                             </sources>
                         </configuration>
                     </execution>
-                </executions>
+                    <execution>
+                        <id>add-shared-test-sources</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>add-test-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${shared.test.sources}/java</source>
+                            </sources>
+                        </configuration>
+                     </execution>
+                 </executions>
             </plugin>
 
             <plugin>
@@ -141,6 +154,25 @@
                         <configuration>
                             <compileSourceRoots>${build.time.sources},${basedir}/src</compileSourceRoots>
                         </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>package-test-jar</id>
+                        <phase>package</phase>
+                        <configuration>
+                            <includes>
+                                <include>**/shared/**</include>
+                            </includes>
+                        </configuration>
+                        <goals>
+                            <goal>test-jar</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
