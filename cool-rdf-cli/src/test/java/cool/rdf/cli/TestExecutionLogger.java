@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,29 +16,29 @@
 
 package cool.rdf.cli;
 
+import java.util.Optional;
+
 import org.junit.jupiter.api.extension.AfterTestExecutionCallback;
 import org.junit.jupiter.api.extension.BeforeTestExecutionCallback;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Optional;
-
 public class TestExecutionLogger implements BeforeTestExecutionCallback, AfterTestExecutionCallback {
-    private static final Logger LOG = LoggerFactory.getLogger( TestExecutionLogger.class );
+   private static final Logger LOG = LoggerFactory.getLogger( TestExecutionLogger.class );
 
-    @Override
-    public void beforeTestExecution( final ExtensionContext context ) throws Exception {
-        LOG.info( "Run test " + context.getDisplayName() );
-    }
+   @Override
+   public void beforeTestExecution( final ExtensionContext context ) throws Exception {
+      LOG.info( "Run test " + context.getDisplayName() );
+   }
 
-    @Override
-    public void afterTestExecution( final ExtensionContext context ) {
-        final Optional<Throwable> executionException = context.getExecutionException();
-        if ( executionException.isPresent() ) {
-            LOG.info( "Exception in test {}:", context.getDisplayName(), executionException.get() );
-        } else {
-            LOG.info( "         {}: success", context.getDisplayName() );
-        }
-    }
+   @Override
+   public void afterTestExecution( final ExtensionContext context ) {
+      final Optional<Throwable> executionException = context.getExecutionException();
+      if ( executionException.isPresent() ) {
+         LOG.info( "Exception in test {}:", context.getDisplayName(), executionException.get() );
+      } else {
+         LOG.info( "         {}: success", context.getDisplayName() );
+      }
+   }
 }

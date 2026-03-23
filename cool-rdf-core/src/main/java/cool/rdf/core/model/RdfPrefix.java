@@ -17,7 +17,7 @@
 package cool.rdf.core.model;
 
 public interface RdfPrefix {
-    String prefix();
+   String prefix();
 
-    String uri();
+   String uri();
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,12 +16,10 @@
 
 package cool.rdf.diagram.owl;
 
-import cool.rdf.diagram.owl.graph.Graph;
-import cool.rdf.diagram.owl.graph.node.AnnotationProperty;
-import cool.rdf.diagram.owl.graph.node.DataProperty;
-import cool.rdf.diagram.owl.graph.node.Inverse;
-import cool.rdf.diagram.owl.mappers.OWLPropertyExpressionMapper;
-import cool.rdf.diagram.owl.graph.node.ObjectProperty;
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.util.stream.Collectors;
+
 import org.junit.jupiter.api.Test;
 import org.semanticweb.owlapi.model.AxiomType;
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
@@ -30,76 +28,79 @@ import org.semanticweb.owlapi.model.OWLDeclarationAxiom;
 import org.semanticweb.owlapi.model.OWLEquivalentObjectPropertiesAxiom;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 
-import java.util.stream.Collectors;
-
-import static org.assertj.core.api.Assertions.assertThat;
+import cool.rdf.diagram.owl.graph.Graph;
+import cool.rdf.diagram.owl.graph.node.AnnotationProperty;
+import cool.rdf.diagram.owl.graph.node.DataProperty;
+import cool.rdf.diagram.owl.graph.node.Inverse;
+import cool.rdf.diagram.owl.graph.node.ObjectProperty;
+import cool.rdf.diagram.owl.mappers.OWLPropertyExpressionMapper;
 
 public class OWLPropertyExpressionMapperTest extends MapperTestBase {
-    private final OWLPropertyExpressionMapper mapper =
-        new OWLPropertyExpressionMapper( createTestMappingConfiguration() );
+   private final OWLPropertyExpressionMapper mapper =
+         new OWLPropertyExpressionMapper( createTestMappingConfiguration() );
 
-    @Test
-    public void testOWLObjectInverseOf() {
-        final String ontology = """
-            :foo a owl:ObjectProperty .
-            :bar a owl:ObjectProperty ;
-               owl:equivalentProperty [
-                  owl:inverseOf :foo
-               ] .
-            """;
-        final OWLEquivalentObjectPropertiesAxiom axiom = getAxiom( ontology, AxiomType.EQUIVALENT_OBJECT_PROPERTIES );
-        final Graph graph = axiom.operands().filter( operand -> !operand.isNamed() ).findFirst().get()
+   @Test
+   public void testOWLObjectInverseOf() {
+      final String ontology = """
+         :foo a owl:ObjectProperty .
+         :bar a owl:ObjectProperty ;
+            owl:equivalentProperty [
+               owl:inverseOf :foo
+            ] .
+         """;
+      final OWLEquivalentObjectPropertiesAxiom axiom = getAxiom( ontology, AxiomType.EQUIVALENT_OBJECT_PROPERTIES );
+      final Graph graph = axiom.operands().filter( operand -> !operand.isNamed() ).findFirst().get()
             .accept( mapper );
 
-        assertThat( graph.getNode().getClass() ).isEqualTo( Inverse.class );
-        assertThat( graph.getOtherElements().collect( Collectors.toSet() ) ).hasSize( 2 );
-    }
+      assertThat( graph.getNode().getClass() ).isEqualTo( Inverse.class );
+      assertThat( graph.getOtherElements().collect( Collectors.toSet() ) ).hasSize( 2 );
+   }
 
-    @Test
-    public void testOWLObjectProperty() {
-        final String ontology = """
-            :foo a owl:ObjectProperty .
-            """;
-        final OWLDeclarationAxiom axiom = getAxiom( ontology, AxiomType.DECLARATION );
-        final OWLObjectProperty property = axiom.getEntity().asOWLObjectProperty();
+   @Test
+   public void testOWLObjectProperty() {
+      final String ontology = """
+         :foo a owl:ObjectProperty .
+         """;
+      final OWLDeclarationAxiom axiom = getAxiom( ontology, AxiomType.DECLARATION );
+      final OWLObjectProperty property = axiom.getEntity().asOWLObjectProperty();
 
-        final Graph graph = property.accept( mapper );
+      final Graph graph = property.accept( mapper );
 
-        assertThat( graph.getNode().getClass() ).isEqualTo( ObjectProperty.class );
+      assertThat( graph.getNode().getClass() ).isEqualTo( ObjectProperty.class );
 
-        assertThat( ( (ObjectProperty) graph.getNode() ).getName() ).isEqualTo( "foo" );
-        assertThat( graph.getOtherElements() ).isEmpty();
-    }
+      assertThat( ( (ObjectProperty) graph.getNode() ).getName() ).isEqualTo( "foo" );
+      assertThat( graph.getOtherElements() ).isEmpty();
+   }
 
-    @Test
-    public void testOWLDataProperty() {
-        final String ontology = """
-            :foo a owl:DatatypeProperty .
-            """;
-        final OWLDeclarationAxiom axiom = getAxiom( ontology, AxiomType.DECLARATION );
-        final OWLDataProperty property = axiom.getEntity().asOWLDataProperty();
+   @Test
+   public void testOWLDataProperty() {
+      final String ontology = """
+         :foo a owl:DatatypeProperty .
+         """;
+      final OWLDeclarationAxiom axiom = getAxiom( ontology, AxiomType.DECLARATION );
+      final OWLDataProperty property = axiom.getEntity().asOWLDataProperty();
 
-        final Graph graph = property.accept( mapper );
+      final Graph graph = property.accept( mapper );
 
-        assertThat( graph.getNode().getClass() ).isEqualTo( DataProperty.class );
+      assertThat( graph.getNode().getClass() ).isEqualTo( DataProperty.class );
 
-        assertThat( ( (DataProperty) graph.getNode() ).getName() ).isEqualTo( "foo" );
-        assertThat( graph.getOtherElements() ).isEmpty();
-    }
+      assertThat( ( (DataProperty) graph.getNode() ).getName() ).isEqualTo( "foo" );
+      assertThat( graph.getOtherElements() ).isEmpty();
+   }
 
-    @Test
-    public void testOWLAnnotationProperty() {
-        final String ontology = """
-            :foo a owl:AnnotationProperty .
-            """;
-        final OWLDeclarationAxiom axiom = getAxiom( ontology, AxiomType.DECLARATION );
-        final OWLAnnotationProperty property = axiom.getEntity().asOWLAnnotationProperty();
+   @Test
+   public void testOWLAnnotationProperty() {
+      final String ontology = """
+         :foo a owl:AnnotationProperty .
+         """;
+      final OWLDeclarationAxiom axiom = getAxiom( ontology, AxiomType.DECLARATION );
+      final OWLAnnotationProperty property = axiom.getEntity().asOWLAnnotationProperty();
 
-        final Graph graph = property.accept( mapper );
+      final Graph graph = property.accept( mapper );
 
-        assertThat( graph.getNode().getClass() ).isEqualTo( AnnotationProperty.class );
+      assertThat( graph.getNode().getClass() ).isEqualTo( AnnotationProperty.class );
 
-        assertThat( ( (AnnotationProperty) graph.getNode() ).getName() ).isEqualTo( "foo" );
-        assertThat( graph.getOtherElements() ).isEmpty();
-    }
+      assertThat( ( (AnnotationProperty) graph.getNode() ).getName() ).isEqualTo( "foo" );
+      assertThat( graph.getOtherElements() ).isEmpty();
+   }
 }

@@ -18,5 +18,6 @@ package cool.rdf.core.model.impl;
 
 import cool.rdf.core.model.RdfPrefix;
 
-public record DefaultRdfPrefix( String prefix, String uri ) implements RdfPrefix {
-}
+public record DefaultRdfPrefix(
+      String prefix, String uri
+) implements RdfPrefix {}

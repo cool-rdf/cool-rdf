@@ -16,9 +16,8 @@
 
 package cool.rdf.diagram.owl.mappers;
 
-import cool.rdf.diagram.owl.graph.Graph;
-import cool.rdf.diagram.owl.graph.Node;
-import cool.rdf.diagram.owl.graph.node.IRIReference;
+import javax.annotation.Nonnull;
+
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationObjectVisitorEx;
@@ -26,42 +25,44 @@ import org.semanticweb.owlapi.model.OWLAnnotationSubjectVisitorEx;
 import org.semanticweb.owlapi.model.OWLAnonymousIndividual;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
-import javax.annotation.Nonnull;
+import cool.rdf.diagram.owl.graph.Graph;
+import cool.rdf.diagram.owl.graph.Node;
+import cool.rdf.diagram.owl.graph.node.IRIReference;
 
 /**
  * Maps {@link org.semanticweb.owlapi.model.OWLAnnotationObject}s to {@link Graph}s
  */
 public class OWLAnnotationObjectMapper implements OWLAnnotationObjectVisitorEx<Graph>,
-    OWLAnnotationSubjectVisitorEx<Graph> {
-    private final MappingConfiguration mappingConfig;
+      OWLAnnotationSubjectVisitorEx<Graph> {
+   private final MappingConfiguration mappingConfig;
 
-    /**
-     * Creates a new annotation object mapper given a mapping config
-     *
-     * @param mappingConfig the config
-     */
-    public OWLAnnotationObjectMapper( final MappingConfiguration mappingConfig ) {
-        this.mappingConfig = mappingConfig;
-    }
+   /**
+    * Creates a new annotation object mapper given a mapping config
+    *
+    * @param mappingConfig the config
+    */
+   public OWLAnnotationObjectMapper( final MappingConfiguration mappingConfig ) {
+      this.mappingConfig = mappingConfig;
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLAnnotation annotation ) {
-        return annotation.getProperty().accept( mappingConfig.getOwlPropertyExpressionMapper() );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLAnnotation annotation ) {
+      return annotation.getProperty().accept( mappingConfig.getOwlPropertyExpressionMapper() );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull IRI iri ) {
-        final Node.Id id = mappingConfig.getIdentifierMapper().getSyntheticId();
-        return Graph.of( new IRIReference( id, iri ) );
-    }
+   @Override
+   public Graph visit( final @Nonnull IRI iri ) {
+      final Node.Id id = mappingConfig.getIdentifierMapper().getSyntheticId();
+      return Graph.of( new IRIReference( id, iri ) );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLAnonymousIndividual individual ) {
-        return individual.accept( mappingConfig.getOwlIndividualMapper() );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLAnonymousIndividual individual ) {
+      return individual.accept( mappingConfig.getOwlIndividualMapper() );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLLiteral node ) {
-        return node.accept( mappingConfig.getOwlDataMapper() );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLLiteral node ) {
+      return node.accept( mappingConfig.getOwlDataMapper() );
+   }
 }

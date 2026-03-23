@@ -17,7 +17,7 @@
 package cool.rdf.formatter;
 
 public class FMT {
-    public static final String FMT = "http://purl.org/atextor/ontology/turtle-formatting";
+   public static final String FMT = "http://purl.org/atextor/ontology/turtle-formatting";
 
-    public static final String NS = FMT + "#";
+   public static final String NS = FMT + "#";
 }

@@ -16,16 +16,10 @@
 
 package cool.rdf.diagram.owl.mappers;
 
-import cool.rdf.diagram.owl.graph.Edge;
-import cool.rdf.diagram.owl.graph.Graph;
-import cool.rdf.diagram.owl.graph.GraphElement;
-import cool.rdf.diagram.owl.graph.Node;
-import cool.rdf.diagram.owl.graph.node.ClosedClass;
-import cool.rdf.diagram.owl.graph.node.Complement;
-import cool.rdf.diagram.owl.graph.node.Datatype;
-import cool.rdf.diagram.owl.graph.node.Intersection;
-import cool.rdf.diagram.owl.graph.node.Literal;
-import cool.rdf.diagram.owl.graph.node.Union;
+import java.util.stream.Stream;
+
+import javax.annotation.Nonnull;
+
 import org.semanticweb.owlapi.model.OWLDataComplementOf;
 import org.semanticweb.owlapi.model.OWLDataIntersectionOf;
 import org.semanticweb.owlapi.model.OWLDataOneOf;
@@ -36,83 +30,91 @@ import org.semanticweb.owlapi.model.OWLDatatype;
 import org.semanticweb.owlapi.model.OWLDatatypeRestriction;
 import org.semanticweb.owlapi.model.OWLLiteral;
 
-import javax.annotation.Nonnull;
-import java.util.stream.Stream;
+import cool.rdf.diagram.owl.graph.Edge;
+import cool.rdf.diagram.owl.graph.Graph;
+import cool.rdf.diagram.owl.graph.GraphElement;
+import cool.rdf.diagram.owl.graph.Node;
+import cool.rdf.diagram.owl.graph.node.ClosedClass;
+import cool.rdf.diagram.owl.graph.node.Complement;
+import cool.rdf.diagram.owl.graph.node.Datatype;
+import cool.rdf.diagram.owl.graph.node.Intersection;
+import cool.rdf.diagram.owl.graph.node.Literal;
+import cool.rdf.diagram.owl.graph.node.Union;
 
 /**
  * Maps OWL Data objects to {@link Graph}s
  */
 public class OWLDataMapper implements OWLDataVisitorEx<Graph> {
-    private final MappingConfiguration mappingConfig;
+   private final MappingConfiguration mappingConfig;
 
-    /**
-     * Creates a new data mapper from a given mapping config
-     *
-     * @param mappingConfig the config
-     */
-    public OWLDataMapper( final MappingConfiguration mappingConfig ) {
-        this.mappingConfig = mappingConfig;
-    }
+   /**
+    * Creates a new data mapper from a given mapping config
+    *
+    * @param mappingConfig the config
+    */
+   public OWLDataMapper( final MappingConfiguration mappingConfig ) {
+      this.mappingConfig = mappingConfig;
+   }
 
-    private Stream<GraphElement> createEdgeToDataRange( final Node sourceNode,
-        final OWLDataRange classExpression ) {
-        final Graph diagramPartsForDataRange = classExpression.accept( this );
-        final Node targetNode = diagramPartsForDataRange.getNode();
-        final Stream<GraphElement> remainingElements = diagramPartsForDataRange.getOtherElements();
-        final Edge operandEdge = new Edge.Plain( Edge.Type.DEFAULT_ARROW, sourceNode, targetNode );
+   private Stream<GraphElement> createEdgeToDataRange( final Node sourceNode,
+         final OWLDataRange classExpression ) {
+      final Graph diagramPartsForDataRange = classExpression.accept( this );
+      final Node targetNode = diagramPartsForDataRange.getNode();
+      final Stream<GraphElement> remainingElements = diagramPartsForDataRange.getOtherElements();
+      final Edge operandEdge = new Edge.Plain( Edge.Type.DEFAULT_ARROW, sourceNode, targetNode );
 
-        return Stream.concat( Stream.of( sourceNode, targetNode, operandEdge ), remainingElements );
-    }
+      return Stream.concat( Stream.of( sourceNode, targetNode, operandEdge ), remainingElements );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLDataComplementOf dataRange ) {
-        final Node complementNode = new Complement( mappingConfig.getIdentifierMapper().getSyntheticId() );
-        final Stream<GraphElement> remainingElements = createEdgeToDataRange( complementNode,
+   @Override
+   public Graph visit( final @Nonnull OWLDataComplementOf dataRange ) {
+      final Node complementNode = new Complement( mappingConfig.getIdentifierMapper().getSyntheticId() );
+      final Stream<GraphElement> remainingElements = createEdgeToDataRange( complementNode,
             dataRange.getDataRange() );
-        return Graph.of( complementNode, remainingElements );
-    }
+      return Graph.of( complementNode, remainingElements );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLDataOneOf dataRange ) {
-        final Node restrictionNode = new ClosedClass( mappingConfig.getIdentifierMapper().getSyntheticId() );
-        return dataRange.values().map( value -> {
-            final Graph valueGraph = value.accept( mappingConfig.getOwlDataMapper() );
-            final Edge vEdge = new Edge.Plain( Edge.Type.DEFAULT_ARROW, restrictionNode, valueGraph.getNode() );
-            return valueGraph.and( vEdge );
-        } ).reduce( Graph.of( restrictionNode ), Graph::and );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLDataOneOf dataRange ) {
+      final Node restrictionNode = new ClosedClass( mappingConfig.getIdentifierMapper().getSyntheticId() );
+      return dataRange.values().map( value -> {
+         final Graph valueGraph = value.accept( mappingConfig.getOwlDataMapper() );
+         final Edge vEdge = new Edge.Plain( Edge.Type.DEFAULT_ARROW, restrictionNode, valueGraph.getNode() );
+         return valueGraph.and( vEdge );
+      } ).reduce( Graph.of( restrictionNode ), Graph::and );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLDataIntersectionOf dataRange ) {
-        final Node intersectionNode = new Intersection( mappingConfig.getIdentifierMapper().getSyntheticId() );
-        final Stream<GraphElement> remainingElements = dataRange.operands().flatMap( operand -> createEdgeToDataRange( intersectionNode,
+   @Override
+   public Graph visit( final @Nonnull OWLDataIntersectionOf dataRange ) {
+      final Node intersectionNode = new Intersection( mappingConfig.getIdentifierMapper().getSyntheticId() );
+      final Stream<GraphElement> remainingElements = dataRange.operands().flatMap( operand -> createEdgeToDataRange( intersectionNode,
             operand ) );
-        return Graph.of( intersectionNode, remainingElements );
-    }
+      return Graph.of( intersectionNode, remainingElements );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLDataUnionOf dataRange ) {
-        final Node unionNode = new Union( mappingConfig.getIdentifierMapper().getSyntheticId() );
-        final Stream<GraphElement> remainingElements = dataRange.operands().flatMap( operand -> createEdgeToDataRange( unionNode,
+   @Override
+   public Graph visit( final @Nonnull OWLDataUnionOf dataRange ) {
+      final Node unionNode = new Union( mappingConfig.getIdentifierMapper().getSyntheticId() );
+      final Stream<GraphElement> remainingElements = dataRange.operands().flatMap( operand -> createEdgeToDataRange( unionNode,
             operand ) );
-        return Graph.of( unionNode, remainingElements );
-    }
+      return Graph.of( unionNode, remainingElements );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLDatatypeRestriction restriction ) {
-        final Node typeNode = new Datatype( mappingConfig.getIdentifierMapper().getSyntheticId(),
+   @Override
+   public Graph visit( final @Nonnull OWLDatatypeRestriction restriction ) {
+      final Node typeNode = new Datatype( mappingConfig.getIdentifierMapper().getSyntheticId(),
             restriction.accept( mappingConfig.getOwlDataPrinter() ) );
-        return Graph.of( typeNode );
-    }
+      return Graph.of( typeNode );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLDatatype node ) {
-        return node.accept( mappingConfig.getOwlEntityMapper() );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLDatatype node ) {
+      return node.accept( mappingConfig.getOwlEntityMapper() );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLLiteral node ) {
-        final Node.Id id = mappingConfig.getIdentifierMapper().getSyntheticId();
-        return Graph.of( new Literal( id, node.getLiteral() ) );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLLiteral node ) {
+      final Node.Id id = mappingConfig.getIdentifierMapper().getSyntheticId();
+      return Graph.of( new Literal( id, node.getLiteral() ) );
+   }
 }

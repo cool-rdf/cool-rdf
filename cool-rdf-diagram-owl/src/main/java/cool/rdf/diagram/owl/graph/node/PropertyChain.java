@@ -28,17 +28,17 @@ import lombok.With;
 @EqualsAndHashCode( callSuper = true )
 @With
 public class PropertyChain extends Node {
-    /**
-     * The symbol that represents property chains when they are rendered to strings
-     */
-    public static final String OPERATOR_SYMBOL = "o";
+   /**
+    * The symbol that represents property chains when they are rendered to strings
+    */
+   public static final String OPERATOR_SYMBOL = "o";
 
-    Id id;
+   Id id;
 
-    String value;
+   String value;
 
-    @Override
-    public <T> T accept( final Visitor<T> visitor ) {
-        return visitor.visit( this );
-    }
+   @Override
+   public <T> T accept( final Visitor<T> visitor ) {
+      return visitor.visit( this );
+   }
 }

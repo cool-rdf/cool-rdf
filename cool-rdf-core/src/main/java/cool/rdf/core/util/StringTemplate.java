@@ -20,33 +20,34 @@ import java.util.Map;
 import java.util.function.Function;
 
 /**
- * Minimalistic String template. The template string can contain references to (e.g. ${foo}) that are replaced with
+ * Minimalistic String template. The template string can contain references to (e.g. ${foo}) that
+ * are replaced with
  * values on calling {@link #apply(Map)}.
  */
 public class StringTemplate implements Function<Map<String, Object>, String> {
-    final private String template;
+   private final String template;
 
-    /**
-     * Construct the template from the template string
-     *
-     * @param template the template string
-     */
-    public StringTemplate( final String template ) {
-        this.template = template;
-    }
+   /**
+    * Construct the template from the template string
+    *
+    * @param template the template string
+    */
+   public StringTemplate( final String template ) {
+      this.template = template;
+   }
 
-    /**
-     * Apply the context to the template and return the resulting string
-     *
-     * @param context the context
-     * @return the resulting string
-     */
-    @Override
-    public String apply( final Map<String, Object> context ) {
-        String result = template;
-        for ( final Map.Entry<String, Object> entry : context.entrySet() ) {
-            result = result.replace( "${" + entry.getKey() + "}", entry.getValue().toString() );
-        }
-        return result;
-    }
+   /**
+    * Apply the context to the template and return the resulting string
+    *
+    * @param context the context
+    * @return the resulting string
+    */
+   @Override
+   public String apply( final Map<String, Object> context ) {
+      String result = template;
+      for ( final Map.Entry<String, Object> entry : context.entrySet() ) {
+         result = result.replace( "${" + entry.getKey() + "}", entry.getValue().toString() );
+      }
+      return result;
+   }
 }

@@ -16,50 +16,54 @@
 
 package cool.rdf.diagram.owl.graph.transformer;
 
-import cool.rdf.diagram.owl.graph.GraphElement;
-import cool.rdf.diagram.owl.graph.Node;
-import cool.rdf.diagram.owl.mappers.MappingConfiguration;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import cool.rdf.diagram.owl.graph.GraphElement;
+import cool.rdf.diagram.owl.graph.Node;
+import cool.rdf.diagram.owl.mappers.MappingConfiguration;
+
 /**
  * Implements a graph transformer that resolves
- * <a href="https://www.w3.org/TR/owl2-new-features/#F12:_Punning">Punning</a> in a graph: An input ontology that uses
- * punning for e.g. an individual and a class results in a graph that contains both the individual and the class as
+ * <a href="https://www.w3.org/TR/owl2-new-features/#F12:_Punning">Punning</a> in a graph: An input
+ * ontology that uses
+ * punning for e.g. an individual and a class results in a graph that contains both the individual
+ * and the class as
  * nodes, but both share the same {@link Node.Id}, as it is derived from the element's
- * {@link org.semanticweb.owlapi.model.IRI}. This transformer replaces the nodes with new, uniquely identified nodes
+ * {@link org.semanticweb.owlapi.model.IRI}. This transformer replaces the nodes with new, uniquely
+ * identified nodes
  * (that keep the original IRI in their IDs) and updates all edges in the graph accordingly.
  */
 public class PunningRemover extends GraphTransformer {
-    private final MappingConfiguration mappingConfiguration;
+   private final MappingConfiguration mappingConfiguration;
 
-    private static final Logger LOG = LoggerFactory.getLogger( PunningRemover.class );
+   private static final Logger LOG = LoggerFactory.getLogger( PunningRemover.class );
 
-    /**
-     * Initialize the transformer
-     *
-     * @param mappingConfiguration the context mapping configuration
-     */
-    public PunningRemover( final MappingConfiguration mappingConfiguration ) {
-        this.mappingConfiguration = mappingConfiguration;
-    }
+   /**
+    * Initialize the transformer
+    *
+    * @param mappingConfiguration the context mapping configuration
+    */
+   public PunningRemover( final MappingConfiguration mappingConfiguration ) {
+      this.mappingConfiguration = mappingConfiguration;
+   }
 
-    /**
-     * Apply this transformer to the given input graph
-     *
-     * @param graph the input graph
-     * @return the resulting graph that has no more nodes with duplicate {@link Node.Id}s due to punning
-     */
-    @Override
-    public Set<GraphElement> apply( final Set<GraphElement> graph ) {
-        LOG.debug( "Removing punning in {}", graph );
-        @SuppressWarnings( "OptionalGetWithoutIsPresent" )
-        final Set<GraphElement> result = graph.stream()
+   /**
+    * Apply this transformer to the given input graph
+    *
+    * @param graph the input graph
+    * @return the resulting graph that has no more nodes with duplicate {@link Node.Id}s due to punning
+    */
+   @Override
+   public Set<GraphElement> apply( final Set<GraphElement> graph ) {
+      LOG.debug( "Removing punning in {}", graph );
+      @SuppressWarnings( "OptionalGetWithoutIsPresent" )
+      final Set<GraphElement> result = graph.stream()
             .filter( GraphElement::isNode )
             .map( GraphElement::asNode )
             .filter( node -> node.getId().getIri().isPresent() )
@@ -70,19 +74,19 @@ public class PunningRemover extends GraphTransformer {
             .flatMap( iri -> findNodesWithIri( graph, iri ).flatMap( node -> updateNode( graph, node ) ) )
             .reduce( ChangeSet.EMPTY, ChangeSet::merge )
             .applyTo( graph );
-        LOG.debug( "Processed graph: {}", graph );
-        return result;
-    }
+      LOG.debug( "Processed graph: {}", graph );
+      return result;
+   }
 
-    private Stream<ChangeSet> updateNode( final Set<GraphElement> graph, final Node node ) {
-        final Node newNode = node.withId( buildNewNodeId( node.getId() ) );
-        final ChangeSet updatedToEdges = updateEdgesTo( graph, node, newNode );
-        final ChangeSet updatedNode = new ChangeSet( Set.of( newNode ), Set.of( node ) );
-        return Stream.of( updatedNode, updatedToEdges );
-    }
+   private Stream<ChangeSet> updateNode( final Set<GraphElement> graph, final Node node ) {
+      final Node newNode = node.withId( buildNewNodeId( node.getId() ) );
+      final ChangeSet updatedToEdges = updateEdgesTo( graph, node, newNode );
+      final ChangeSet updatedNode = new ChangeSet( Set.of( newNode ), Set.of( node ) );
+      return Stream.of( updatedNode, updatedToEdges );
+   }
 
-    private Node.Id buildNewNodeId( final Node.Id original ) {
-        return original.getIri().map( iri -> mappingConfiguration.getIdentifierMapper().getSyntheticIdForIri( iri ) )
+   private Node.Id buildNewNodeId( final Node.Id original ) {
+      return original.getIri().map( iri -> mappingConfiguration.getIdentifierMapper().getSyntheticIdForIri( iri ) )
             .orElseGet( () -> mappingConfiguration.getIdentifierMapper().getSyntheticId() );
-    }
+   }
 }

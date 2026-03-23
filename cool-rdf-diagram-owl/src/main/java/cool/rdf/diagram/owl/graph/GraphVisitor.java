@@ -16,11 +16,11 @@
 
 package cool.rdf.diagram.owl.graph;
 
+import java.util.function.Function;
+
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.experimental.FieldDefaults;
-
-import java.util.function.Function;
 
 /**
  * Visitor for elements of a graph
@@ -28,26 +28,27 @@ import java.util.function.Function;
  * @param <T> the result type of the visit operation
  */
 @AllArgsConstructor
-@FieldDefaults( makeFinal = true, level = AccessLevel.PRIVATE )
+@FieldDefaults( makeFinal = true,
+   level = AccessLevel.PRIVATE )
 public class GraphVisitor<T> implements GraphElement.Visitor<T> {
-    Node.Visitor<T> nodeTypeVisitor;
+   Node.Visitor<T> nodeTypeVisitor;
 
-    Function<Edge.Plain, T> plainEdgeHandler;
+   Function<Edge.Plain, T> plainEdgeHandler;
 
-    Function<Edge.Decorated, T> decoratedEdgeHandler;
+   Function<Edge.Decorated, T> decoratedEdgeHandler;
 
-    @Override
-    public T visit( final Edge.Plain edge ) {
-        return plainEdgeHandler.apply( edge );
-    }
+   @Override
+   public T visit( final Edge.Plain edge ) {
+      return plainEdgeHandler.apply( edge );
+   }
 
-    @Override
-    public T visit( final Edge.Decorated decoratedEdge ) {
-        return decoratedEdgeHandler.apply( decoratedEdge );
-    }
+   @Override
+   public T visit( final Edge.Decorated decoratedEdge ) {
+      return decoratedEdgeHandler.apply( decoratedEdge );
+   }
 
-    @Override
-    public T visit( final Node node ) {
-        return node.accept( nodeTypeVisitor );
-    }
+   @Override
+   public T visit( final Node node ) {
+      return node.accept( nodeTypeVisitor );
+   }
 }

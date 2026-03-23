@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,19 +16,20 @@
 
 package cool.rdf.diagram.owl;
 
-import cool.rdf.diagram.owl.mappers.NameMapper;
 import org.semanticweb.owlapi.model.HasIRI;
 import org.semanticweb.owlapi.model.IRI;
 
+import cool.rdf.diagram.owl.mappers.NameMapper;
+
 public class TestNameMapper implements NameMapper {
 
-    @Override
-    public String getName( final HasIRI object ) {
-        return getName( object.getIRI() );
-    }
+   @Override
+   public String getName( final HasIRI object ) {
+      return getName( object.getIRI() );
+   }
 
-    @Override
-    public String getName( final IRI object ) {
-        return object.getFragment();
-    }
+   @Override
+   public String getName( final IRI object ) {
+      return object.getFragment();
+   }
 }

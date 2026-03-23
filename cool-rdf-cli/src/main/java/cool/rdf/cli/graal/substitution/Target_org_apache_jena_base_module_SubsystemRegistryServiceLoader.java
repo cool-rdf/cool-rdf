@@ -16,9 +16,8 @@
 
 package cool.rdf.cli.graal.substitution;
 
-import com.oracle.svm.core.annotate.Alias;
-import com.oracle.svm.core.annotate.Substitute;
-import com.oracle.svm.core.annotate.TargetClass;
+import java.util.List;
+
 import org.apache.jena.base.module.SubsystemLifecycle;
 import org.apache.jena.base.module.SubsystemRegistry;
 import org.apache.jena.base.module.SubsystemRegistryServiceLoader;
@@ -27,7 +26,9 @@ import org.apache.jena.riot.system.InitRIOT;
 import org.apache.jena.sparql.system.InitARQ;
 import org.apache.jena.sys.InitJenaCore;
 
-import java.util.List;
+import com.oracle.svm.core.annotate.Alias;
+import com.oracle.svm.core.annotate.Substitute;
+import com.oracle.svm.core.annotate.TargetClass;
 
 /**
  * Substitution class for {@link SubsystemRegistryServiceLoader}
@@ -37,49 +38,48 @@ import java.util.List;
 @SuppressWarnings( { "unused" } )
 @TargetClass( SubsystemRegistryServiceLoader.class )
 public final class Target_org_apache_jena_base_module_SubsystemRegistryServiceLoader<T extends SubsystemLifecycle> implements
-    SubsystemRegistry<T> {
-    @Override
-    @Substitute
-    @SuppressWarnings( "unchecked" )
-    public void load() {
-        add( (T) new InitJenaCore() );
-        add( (T) new InitRIOT() );
-        add( (T) new InitARQ() );
-        add( (T) new InitRDFS() );
-    }
+      SubsystemRegistry<T> {
+   @Override
+   @Substitute
+   @SuppressWarnings( "unchecked" )
+   public void load() {
+      add( (T) new InitJenaCore() );
+      add( (T) new InitRIOT() );
+      add( (T) new InitARQ() );
+      add( (T) new InitRDFS() );
+   }
 
-    @Override
-    @Alias
-    public void add( final T module ) {
-    }
+   @Override
+   @Alias
+   public void add( final T module ) {}
 
-    @Override
-    @Alias
-    public boolean isRegistered( final T module ) {
-        return false;
-    }
+   @Override
+   @Alias
+   public boolean isRegistered( final T module ) {
+      return false;
+   }
 
-    @Override
-    @Alias
-    public void remove( final T module ) {
+   @Override
+   @Alias
+   public void remove( final T module ) {
 
-    }
+   }
 
-    @Override
-    @Alias
-    public int size() {
-        return 0;
-    }
+   @Override
+   @Alias
+   public int size() {
+      return 0;
+   }
 
-    @Override
-    @Alias
-    public boolean isEmpty() {
-        return false;
-    }
+   @Override
+   @Alias
+   public boolean isEmpty() {
+      return false;
+   }
 
-    @Override
-    @Alias
-    public List<T> snapshot() {
-        return null;
-    }
+   @Override
+   @Alias
+   public List<T> snapshot() {
+      return null;
+   }
 }

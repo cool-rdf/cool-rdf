@@ -16,14 +16,15 @@
 
 package cool.rdf.cli.graal.substitution;
 
-import com.oracle.svm.core.annotate.Alias;
-import com.oracle.svm.core.annotate.RecomputeFieldValue;
-import com.oracle.svm.core.annotate.TargetClass;
+import java.io.Serial;
+
 import org.apache.jena.riot.system.stream.JenaIOEnvironment;
 import org.slf4j.Logger;
 import org.slf4j.helpers.NOPLogger;
 
-import java.io.Serial;
+import com.oracle.svm.core.annotate.Alias;
+import com.oracle.svm.core.annotate.RecomputeFieldValue;
+import com.oracle.svm.core.annotate.TargetClass;
 
 /**
  * Substitution class for {@link JenaIOEnvironment}
@@ -31,10 +32,10 @@ import java.io.Serial;
 @SuppressWarnings( "unused" )
 @TargetClass( JenaIOEnvironment.class )
 public final class Target_org_apache_jena_riot_system_stream_JenaIOEnvironment {
-    @Alias
-    @RecomputeFieldValue( kind = RecomputeFieldValue.Kind.FromAlias )
-    static Logger log = new NOPLogger() {
-        @Serial
-        private static final long serialVersionUID = 5468256729459336798L;
-    };
+   @Alias
+   @RecomputeFieldValue( kind = RecomputeFieldValue.Kind.FromAlias )
+   static Logger log = new NOPLogger() {
+      @Serial
+      private static final long serialVersionUID = 5468256729459336798L;
+   };
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,68 +16,69 @@
 
 package cool.rdf.diagram.owl;
 
-import cool.rdf.diagram.owl.graph.Graph;
-import cool.rdf.diagram.owl.graph.GraphElement;
-import cool.rdf.diagram.owl.graph.Node;
-import cool.rdf.diagram.owl.mappers.OWLAnnotationObjectMapper;
-import cool.rdf.diagram.owl.graph.node.AnnotationProperty;
-import org.junit.jupiter.api.Test;
-import org.semanticweb.owlapi.model.AxiomType;
-import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
+import static org.assertj.core.api.Assertions.assertThat;
 
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import org.junit.jupiter.api.Test;
+import org.semanticweb.owlapi.model.AxiomType;
+import org.semanticweb.owlapi.model.OWLAnnotationAssertionAxiom;
+
+import cool.rdf.diagram.owl.graph.Graph;
+import cool.rdf.diagram.owl.graph.GraphElement;
+import cool.rdf.diagram.owl.graph.Node;
+import cool.rdf.diagram.owl.graph.node.AnnotationProperty;
+import cool.rdf.diagram.owl.mappers.OWLAnnotationObjectMapper;
 
 public class OWLAnnotationObjectMapperTest extends MapperTestBase {
-    private final OWLAnnotationObjectMapper mapper = new OWLAnnotationObjectMapper( createTestMappingConfiguration() );
+   private final OWLAnnotationObjectMapper mapper = new OWLAnnotationObjectMapper( createTestMappingConfiguration() );
 
-    @Test
-    public void testOWLAnnotation() {
-        final String ontology = """
-            :comment a owl:AnnotationProperty .
-            :Dog a owl:Class ;
-                :comment :Foo .
-            """;
+   @Test
+   public void testOWLAnnotation() {
+      final String ontology = """
+         :comment a owl:AnnotationProperty .
+         :Dog a owl:Class ;
+             :comment :Foo .
+         """;
 
-        final String fooId = "Foo";
-        testIdentifierMapper.pushAnonId( new Node.Id( fooId, iri( "Foo" ) ) );
+      final String fooId = "Foo";
+      testIdentifierMapper.pushAnonId( new Node.Id( fooId, iri( "Foo" ) ) );
 
-        final OWLAnnotationAssertionAxiom axiom = getAxiom( ontology, AxiomType.ANNOTATION_ASSERTION );
-        final Graph graph = mapper.visit( axiom.getAnnotation() );
+      final OWLAnnotationAssertionAxiom axiom = getAxiom( ontology, AxiomType.ANNOTATION_ASSERTION );
+      final Graph graph = mapper.visit( axiom.getAnnotation() );
 
-        assertThat( graph.getNode().getClass() ).isEqualTo( AnnotationProperty.class );
+      assertThat( graph.getNode().getClass() ).isEqualTo( AnnotationProperty.class );
 
-        final Set<GraphElement> remainingElements = graph.getOtherElements().collect( Collectors.toSet() );
-        assertThat( remainingElements ).isEmpty();
-    }
+      final Set<GraphElement> remainingElements = graph.getOtherElements().collect( Collectors.toSet() );
+      assertThat( remainingElements ).isEmpty();
+   }
 
-    @Test
-    public void testIRI() {
-        final String ontology = """
-            :comment a owl:AnnotationProperty .
-            :Dog a owl:Class ;
-                :comment :Foo .
-            """;
+   @Test
+   public void testIRI() {
+      final String ontology = """
+         :comment a owl:AnnotationProperty .
+         :Dog a owl:Class ;
+             :comment :Foo .
+         """;
 
-        final String fooId = "Foo";
-        testIdentifierMapper.pushAnonId( new Node.Id( fooId, iri( "Foo" ) ) );
+      final String fooId = "Foo";
+      testIdentifierMapper.pushAnonId( new Node.Id( fooId, iri( "Foo" ) ) );
 
-        final OWLAnnotationAssertionAxiom axiom = getAxiom( ontology, AxiomType.ANNOTATION_ASSERTION );
-        final Graph graph = mapper.visit( axiom.getValue().asIRI().get() );
+      final OWLAnnotationAssertionAxiom axiom = getAxiom( ontology, AxiomType.ANNOTATION_ASSERTION );
+      final Graph graph = mapper.visit( axiom.getValue().asIRI().get() );
 
-        assertThat( graph.getNode() ).matches( isNodeWithId( fooId ) );
-        assertThat( graph.getOtherElements() ).isEmpty();
-    }
+      assertThat( graph.getNode() ).matches( isNodeWithId( fooId ) );
+      assertThat( graph.getOtherElements() ).isEmpty();
+   }
 
-    @Test
-    public void testOWLAnonymousIndividual() {
-        new OWLIndividualMapperTest().testOWLAnonymousIndividual();
-    }
+   @Test
+   public void testOWLAnonymousIndividual() {
+      new OWLIndividualMapperTest().testOWLAnonymousIndividual();
+   }
 
-    @Test
-    public void testOWLLiteral() {
-        new OWLDataMapperTest().testOWLLiteral();
-    }
+   @Test
+   public void testOWLLiteral() {
+      new OWLDataMapperTest().testOWLLiteral();
+   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,32 +16,32 @@
 
 package cool.rdf.cli;
 
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.extension.ExtendWith;
+import static org.assertj.core.api.Assumptions.assumeThat;
 
 import java.io.File;
 import java.util.List;
 
-import static org.assertj.core.api.Assumptions.assumeThat;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.extension.ExtendWith;
 
 @ExtendWith( TestExecutionLogger.class )
 public class ExecutableJarTest extends CoolTest {
-    private static File executableJar;
+   private static File executableJar;
 
-    @BeforeAll
-    static void beforeMethod() {
-        final String executableJarPath = System.getProperty( "executableJar" );
-        assumeThat( executableJarPath ).isNotNull();
-        executableJar = new File( executableJarPath );
-        assumeThat( executableJar ).isFile();
-        assumeThat( executableJar ).exists();
+   @BeforeAll
+   static void beforeMethod() {
+      final String executableJarPath = System.getProperty( "executableJar" );
+      assumeThat( executableJarPath ).isNotNull();
+      executableJar = new File( executableJarPath );
+      assumeThat( executableJar ).isFile();
+      assumeThat( executableJar ).exists();
 
-        final String packaging = System.getProperty( "packaging.type" );
-        assumeThat( packaging ).isEqualTo( "jar" );
-    }
+      final String packaging = System.getProperty( "packaging.type" );
+      assumeThat( packaging ).isEqualTo( "jar" );
+   }
 
-    @Override
-    protected CliRunner.Result runCli( final CliRunner.ExecArguments arguments ) {
-        return CliRunner.runJar( executableJar, arguments, List.of() );
-    }
+   @Override
+   protected CliRunner.Result runCli( final CliRunner.ExecArguments arguments ) {
+      return CliRunner.runJar( executableJar, arguments, List.of() );
+   }
 }

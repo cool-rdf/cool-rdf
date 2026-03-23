@@ -24,52 +24,52 @@ import lombok.Builder;
  */
 @Builder
 public class Configuration {
-    /**
-     * The format used to parse the input
-     */
-    @SuppressWarnings( "CanBeFinal" )
-    @Builder.Default
-    public Format inputFormat = Format.TURTLE;
+   /**
+    * The format used to parse the input
+    */
+   @SuppressWarnings( "CanBeFinal" )
+   @Builder.Default
+   public Format inputFormat = Format.TURTLE;
 
-    /**
-     * The RDF base URL
-     */
-    @SuppressWarnings( "CanBeFinal" )
-    @Builder.Default
-    public String base = TurtleFormatter.DEFAULT_EMPTY_BASE;
+   /**
+    * The RDF base URL
+    */
+   @SuppressWarnings( "CanBeFinal" )
+   @Builder.Default
+   public String base = TurtleFormatter.DEFAULT_EMPTY_BASE;
 
-    /**
-     * The possible input formats
-     */
-    public enum Format {
-        /**
-         * RDF/Turtle
-         */
-        TURTLE,
+   /**
+    * The possible input formats
+    */
+   public enum Format {
+      /**
+       * RDF/Turtle
+       */
+      TURTLE,
 
-        /**
-         * RDF/XML
-         */
-        RDFXML,
+      /**
+       * RDF/XML
+       */
+      RDFXML,
 
-        /**
-         * N-Triple
-         */
-        NTRIPLE,
+      /**
+       * N-Triple
+       */
+      NTRIPLE,
 
-        /**
-         * N3 format
-         */
-        N3;
+      /**
+       * N3 format
+       */
+      N3;
 
-        @Override
-        public String toString() {
-            return switch ( this ) {
-                case TURTLE -> "turtle";
-                case RDFXML -> "rdfxml";
-                case NTRIPLE -> "ntriple";
-                case N3 -> "n3";
-            };
-        }
-    }
+      @Override
+      public String toString() {
+         return switch ( this ) {
+            case TURTLE -> "turtle";
+            case RDFXML -> "rdfxml";
+            case NTRIPLE -> "ntriple";
+            case N3 -> "n3";
+         };
+      }
+   }
 }

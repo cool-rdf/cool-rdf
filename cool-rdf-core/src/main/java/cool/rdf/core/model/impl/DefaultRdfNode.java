@@ -16,14 +16,15 @@
 
 package cool.rdf.core.model.impl;
 
-import cool.rdf.core.model.RdfNode;
-import lombok.experimental.Delegate;
 import org.apache.jena.rdf.model.RDFNode;
 
-public class DefaultRdfNode implements RdfNode {
-    private final @Delegate RDFNode rdfNode;
+import cool.rdf.core.model.RdfNode;
+import lombok.experimental.Delegate;
 
-    public DefaultRdfNode( final RDFNode rdfNode ) {
-        this.rdfNode = rdfNode;
-    }
+public class DefaultRdfNode implements RdfNode {
+   private final @Delegate RDFNode rdfNode;
+
+   public DefaultRdfNode( final RDFNode rdfNode ) {
+      this.rdfNode = rdfNode;
+   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,42 +16,43 @@
 
 package cool.rdf.diagram.owl;
 
-import cool.rdf.diagram.owl.graph.Node;
-import cool.rdf.diagram.owl.mappers.IdentifierMapper;
-import org.semanticweb.owlapi.model.IRI;
-
 import java.util.Stack;
 import java.util.UUID;
 
+import org.semanticweb.owlapi.model.IRI;
+
+import cool.rdf.diagram.owl.graph.Node;
+import cool.rdf.diagram.owl.mappers.IdentifierMapper;
+
 public class TestIdentifierMapper implements IdentifierMapper {
-    private final Stack<Node.Id> preconfiguredAnonIds = new Stack<>();
+   private final Stack<Node.Id> preconfiguredAnonIds = new Stack<>();
 
-    @Override
-    public Node.Id getIdForIri( final IRI iri ) {
-        return new Node.Id( iri.getFragment(), iri );
-    }
+   @Override
+   public Node.Id getIdForIri( final IRI iri ) {
+      return new Node.Id( iri.getFragment(), iri );
+   }
 
-    void pushAnonId( final Node.Id id ) {
-        preconfiguredAnonIds.push( id );
-    }
+   void pushAnonId( final Node.Id id ) {
+      preconfiguredAnonIds.push( id );
+   }
 
-    private String getRandomIdString() {
-        return "_" + UUID.randomUUID().toString().replace( "-", "" );
-    }
+   private String getRandomIdString() {
+      return "_" + UUID.randomUUID().toString().replace( "-", "" );
+   }
 
-    @Override
-    public Node.Id getSyntheticId() {
-        if ( preconfiguredAnonIds.empty() ) {
-            return new Node.Id( getRandomIdString() );
-        }
-        return preconfiguredAnonIds.pop();
-    }
+   @Override
+   public Node.Id getSyntheticId() {
+      if ( preconfiguredAnonIds.empty() ) {
+         return new Node.Id( getRandomIdString() );
+      }
+      return preconfiguredAnonIds.pop();
+   }
 
-    @Override
-    public Node.Id getSyntheticIdForIri( final IRI iri ) {
-        if ( preconfiguredAnonIds.empty() ) {
-            return new Node.Id( getRandomIdString(), iri );
-        }
-        return preconfiguredAnonIds.pop();
-    }
+   @Override
+   public Node.Id getSyntheticIdForIri( final IRI iri ) {
+      if ( preconfiguredAnonIds.empty() ) {
+         return new Node.Id( getRandomIdString(), iri );
+      }
+      return preconfiguredAnonIds.pop();
+   }
 }

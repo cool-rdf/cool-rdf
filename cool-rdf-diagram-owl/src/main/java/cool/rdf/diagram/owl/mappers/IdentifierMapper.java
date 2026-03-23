@@ -16,34 +16,36 @@
 
 package cool.rdf.diagram.owl.mappers;
 
-import cool.rdf.diagram.owl.graph.Node;
 import org.semanticweb.owlapi.model.IRI;
 
+import cool.rdf.diagram.owl.graph.Node;
+
 /**
- * Creates {@link Node.Id}s for named nodes (i.e. for ontology elements that are identified by {@link IRI}s) or
+ * Creates {@link Node.Id}s for named nodes (i.e. for ontology elements that are identified by
+ * {@link IRI}s) or
  * anonymous nodes
  */
 public interface IdentifierMapper {
-    /**
-     * Builds a deterministic ID from a given IRI
-     *
-     * @param iri the IRI
-     * @return the ID
-     */
-    Node.Id getIdForIri( final IRI iri );
+   /**
+    * Builds a deterministic ID from a given IRI
+    *
+    * @param iri the IRI
+    * @return the ID
+    */
+   Node.Id getIdForIri( final IRI iri );
 
-    /**
-     * Builds a synthetic (nondeterministic) ID for some model element
-     *
-     * @return the ID
-     */
-    Node.Id getSyntheticId();
+   /**
+    * Builds a synthetic (nondeterministic) ID for some model element
+    *
+    * @return the ID
+    */
+   Node.Id getSyntheticId();
 
-    /**
-     * Build a synthetic (nondeterministic) ID for the model element with the given IRI
-     *
-     * @param iri the iri
-     * @return the ID
-     */
-    Node.Id getSyntheticIdForIri( final IRI iri );
+   /**
+    * Build a synthetic (nondeterministic) ID for the model element with the given IRI
+    *
+    * @param iri the iri
+    * @return the ID
+    */
+   Node.Id getSyntheticIdForIri( final IRI iri );
 }

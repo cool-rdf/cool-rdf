@@ -19,5 +19,5 @@ package cool.rdf.core.model;
 import org.apache.jena.rdf.model.RDFNode;
 
 public interface RdfNode extends RDFNode {
-    // TODO: Add token information
+   // TODO: Add token information
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,10 +19,10 @@ package cool.rdf.infer;
 import org.junit.jupiter.api.Test;
 
 public class InferrerTest {
-    private final Inferrer writer = new Inferrer();
+   private final Inferrer writer = new Inferrer();
 
-    @Test
-    public void testFoo() {
-        // TODO
-    }
+   @Test
+   public void testFoo() {
+      // TODO
+   }
 }

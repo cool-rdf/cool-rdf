@@ -16,67 +16,68 @@
 
 package cool.rdf.diagram.owl.graph.node;
 
+import java.util.Set;
+
 import cool.rdf.diagram.owl.graph.Node;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import lombok.With;
 
-import java.util.Set;
-
 /**
- * Represents a property marker node in the graph, i.e. a node that contains the list of attributes that a given OWL
+ * Represents a property marker node in the graph, i.e. a node that contains the list of attributes
+ * that a given OWL
  * Object Property or OWL Data Property has.
  */
 @Value
 @EqualsAndHashCode( callSuper = true )
 @With
 public class PropertyMarker extends Node {
-    /**
-     * The various kinds of markers
-     */
-    public enum Kind {
-        /**
-         * The marked property is functional
-         */
-        FUNCTIONAL,
+   /**
+    * The various kinds of markers
+    */
+   public enum Kind {
+      /**
+       * The marked property is functional
+       */
+      FUNCTIONAL,
 
-        /**
-         * The marked property is inverse functional
-         */
-        INVERSE_FUNCTIONAL,
+      /**
+       * The marked property is inverse functional
+       */
+      INVERSE_FUNCTIONAL,
 
-        /**
-         * The marked property is transitive
-         */
-        TRANSITIVE,
+      /**
+       * The marked property is transitive
+       */
+      TRANSITIVE,
 
-        /**
-         * The marked property is symmetric
-         */
-        SYMMETRIC,
+      /**
+       * The marked property is symmetric
+       */
+      SYMMETRIC,
 
-        /**
-         * The marked property is asymmetric
-         */
-        ASYMMETRIC,
+      /**
+       * The marked property is asymmetric
+       */
+      ASYMMETRIC,
 
-        /**
-         * The marked property is reflexive
-         */
-        REFLEXIVE,
+      /**
+       * The marked property is reflexive
+       */
+      REFLEXIVE,
 
-        /**
-         * The marked property is irreflexive
-         */
-        IRREFLEXIVE
-    }
+      /**
+       * The marked property is irreflexive
+       */
+      IRREFLEXIVE
+   }
 
-    Id id;
+   Id id;
 
-    Set<Kind> kind;
+   Set<Kind> kind;
 
-    @Override
-    public <T> T accept( final Visitor<T> visitor ) {
-        return visitor.visit( this );
-    }
+   @Override
+   public <T> T accept( final Visitor<T> visitor ) {
+      return visitor.visit( this );
+   }
 }

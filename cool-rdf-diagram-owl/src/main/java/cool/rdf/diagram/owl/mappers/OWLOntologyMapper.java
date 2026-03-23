@@ -16,50 +16,54 @@
 
 package cool.rdf.diagram.owl.mappers;
 
-import cool.rdf.diagram.owl.graph.transformer.GraphTransformer;
-import cool.rdf.diagram.owl.graph.Graph;
-import cool.rdf.diagram.owl.graph.GraphElement;
-import cool.rdf.diagram.owl.graph.transformer.IriReferenceResolver;
-import cool.rdf.diagram.owl.graph.transformer.PropertyMarkerMerger;
-import cool.rdf.diagram.owl.graph.transformer.PunningRemover;
-import org.semanticweb.owlapi.model.OWLOntology;
-
 import java.util.List;
 import java.util.Set;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import org.semanticweb.owlapi.model.OWLOntology;
+
+import cool.rdf.diagram.owl.graph.Graph;
+import cool.rdf.diagram.owl.graph.GraphElement;
+import cool.rdf.diagram.owl.graph.transformer.GraphTransformer;
+import cool.rdf.diagram.owl.graph.transformer.IriReferenceResolver;
+import cool.rdf.diagram.owl.graph.transformer.PropertyMarkerMerger;
+import cool.rdf.diagram.owl.graph.transformer.PunningRemover;
+
 /**
- * Main class for mapping an {@link OWLOntology} to a {@link Graph}. The mapping is done in two steps: First, all axioms
- * in the ontology are separately mapped using the respective OWL*Mappers into nodes and edges. Secondly, the
- * {@link GraphTransformer}s clean up the graph by performing changes that take the context of the whole graph into
+ * Main class for mapping an {@link OWLOntology} to a {@link Graph}. The mapping is done in two
+ * steps: First, all axioms
+ * in the ontology are separately mapped using the respective OWL*Mappers into nodes and edges.
+ * Secondly, the
+ * {@link GraphTransformer}s clean up the graph by performing changes that take the context of the
+ * whole graph into
  * account.
  */
 public class OWLOntologyMapper implements Function<OWLOntology, Set<GraphElement>> {
-    private final MappingConfiguration mappingConfiguration;
+   private final MappingConfiguration mappingConfiguration;
 
-    private final List<Function<Set<GraphElement>, Set<GraphElement>>> transformers;
+   private final List<Function<Set<GraphElement>, Set<GraphElement>>> transformers;
 
-    /**
-     * Creates a new ontology mapper from a given mapping config
-     *
-     * @param mappingConfiguration the config
-     */
-    public OWLOntologyMapper( final MappingConfiguration mappingConfiguration ) {
-        this.mappingConfiguration = mappingConfiguration;
-        transformers = List.of(
+   /**
+    * Creates a new ontology mapper from a given mapping config
+    *
+    * @param mappingConfiguration the config
+    */
+   public OWLOntologyMapper( final MappingConfiguration mappingConfiguration ) {
+      this.mappingConfiguration = mappingConfiguration;
+      transformers = List.of(
             new PunningRemover( mappingConfiguration ),
             new IriReferenceResolver( mappingConfiguration ),
             new PropertyMarkerMerger( mappingConfiguration ) );
-    }
+   }
 
-    @Override
-    public Set<GraphElement> apply( final OWLOntology ontology ) {
-        final Set<GraphElement> elements = ontology.axioms()
+   @Override
+   public Set<GraphElement> apply( final OWLOntology ontology ) {
+      final Set<GraphElement> elements = ontology.axioms()
             .map( axiom -> axiom.accept( mappingConfiguration.getOwlAxiomMapper() ) )
             .flatMap( Graph::toStream )
             .collect( Collectors.toSet() );
 
-        return transformers.stream().sequential().reduce( Function.identity(), Function::andThen ).apply( elements );
-    }
+      return transformers.stream().sequential().reduce( Function.identity(), Function::andThen ).apply( elements );
+   }
 }

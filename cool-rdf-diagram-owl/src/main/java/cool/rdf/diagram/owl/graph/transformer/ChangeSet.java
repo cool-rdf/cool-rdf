@@ -16,34 +16,37 @@
 
 package cool.rdf.diagram.owl.graph.transformer;
 
-import com.google.common.collect.Sets;
-import cool.rdf.diagram.owl.graph.GraphElement;
-
 import java.util.Set;
+
+import com.google.common.collect.Sets;
+
+import cool.rdf.diagram.owl.graph.GraphElement;
 
 /**
  * Represents additions and deletions to perform on a set of {@link GraphElement}s
  */
-record ChangeSet( Set<GraphElement> additions, Set<GraphElement> deletions ) {
-    public static final ChangeSet EMPTY = new ChangeSet( Set.of(), Set.of() );
+record ChangeSet(
+      Set<GraphElement> additions, Set<GraphElement> deletions
+) {
+   public static final ChangeSet EMPTY = new ChangeSet( Set.of(), Set.of() );
 
-    /**
-     * Create a new ChangeSet from this and another given ChangeSet
-     *
-     * @param other the other ChangeSet
-     * @return the merged ChangeSet
-     */
-    ChangeSet merge( final ChangeSet other ) {
-        return new ChangeSet( Sets.union( additions, other.additions ), Sets.union( deletions, other.deletions ) );
-    }
+   /**
+    * Create a new ChangeSet from this and another given ChangeSet
+    *
+    * @param other the other ChangeSet
+    * @return the merged ChangeSet
+    */
+   ChangeSet merge( final ChangeSet other ) {
+      return new ChangeSet( Sets.union( additions, other.additions ), Sets.union( deletions, other.deletions ) );
+   }
 
-    /**
-     * Apply this ChangeSet to a graph
-     *
-     * @param graph the input graph
-     * @return the resulting graph
-     */
-    Set<GraphElement> applyTo( final Set<GraphElement> graph ) {
-        return Sets.union( Sets.difference( graph, deletions ), additions );
-    }
+   /**
+    * Apply this ChangeSet to a graph
+    *
+    * @param graph the input graph
+    * @return the resulting graph
+    */
+   Set<GraphElement> applyTo( final Set<GraphElement> graph ) {
+      return Sets.union( Sets.difference( graph, deletions ), additions );
+   }
 }

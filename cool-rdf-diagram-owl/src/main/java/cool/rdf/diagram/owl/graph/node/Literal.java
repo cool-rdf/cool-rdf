@@ -28,12 +28,12 @@ import lombok.With;
 @EqualsAndHashCode( callSuper = true )
 @With
 public class Literal extends Node {
-    Id id;
+   Id id;
 
-    String value;
+   String value;
 
-    @Override
-    public <T> T accept( final Visitor<T> visitor ) {
-        return visitor.visit( this );
-    }
+   @Override
+   public <T> T accept( final Visitor<T> visitor ) {
+      return visitor.visit( this );
+   }
 }

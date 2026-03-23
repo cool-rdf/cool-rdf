@@ -16,7 +16,8 @@
 
 package cool.rdf.diagram.owl.mappers;
 
-import cool.rdf.diagram.owl.graph.Graph;
+import javax.annotation.Nonnull;
+
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataAllValuesFrom;
@@ -50,176 +51,177 @@ import org.semanticweb.owlapi.model.OWLObjectSomeValuesFrom;
 import org.semanticweb.owlapi.model.OWLObjectUnionOf;
 import org.semanticweb.owlapi.model.OWLObjectVisitorEx;
 
-import javax.annotation.Nonnull;
+import cool.rdf.diagram.owl.graph.Graph;
 
 /**
- * Dispatcher of multiple types of OWL objects; this is called in some generic mapping operations. Maps
+ * Dispatcher of multiple types of OWL objects; this is called in some generic mapping operations.
+ * Maps
  * {@link org.semanticweb.owlapi.model.OWLObject}s to {@link Graph}s.
  */
 public class OWLObjectMapper implements OWLObjectVisitorEx<Graph> {
-    private final MappingConfiguration mappingConfig;
+   private final MappingConfiguration mappingConfig;
 
-    /**
-     * Creates a new object mapper from a given mapping config
-     *
-     * @param mappingConfig the config
-     */
-    public OWLObjectMapper( final MappingConfiguration mappingConfig ) {
-        this.mappingConfig = mappingConfig;
-    }
+   /**
+    * Creates a new object mapper from a given mapping config
+    *
+    * @param mappingConfig the config
+    */
+   public OWLObjectMapper( final MappingConfiguration mappingConfig ) {
+      this.mappingConfig = mappingConfig;
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLObjectIntersectionOf classExpression ) {
-        return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLObjectIntersectionOf classExpression ) {
+      return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLObjectUnionOf classExpression ) {
-        return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLObjectUnionOf classExpression ) {
+      return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLObjectComplementOf classExpression ) {
-        return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLObjectComplementOf classExpression ) {
+      return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLObjectSomeValuesFrom classExpression ) {
-        return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLObjectSomeValuesFrom classExpression ) {
+      return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLObjectAllValuesFrom classExpression ) {
-        return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLObjectAllValuesFrom classExpression ) {
+      return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLObjectHasValue classExpression ) {
-        return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLObjectHasValue classExpression ) {
+      return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLObjectMinCardinality classExpression ) {
-        return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLObjectMinCardinality classExpression ) {
+      return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLObjectExactCardinality classExpression ) {
-        return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLObjectExactCardinality classExpression ) {
+      return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLObjectMaxCardinality classExpression ) {
-        return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLObjectMaxCardinality classExpression ) {
+      return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLObjectHasSelf classExpression ) {
-        return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLObjectHasSelf classExpression ) {
+      return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLObjectOneOf classExpression ) {
-        return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLObjectOneOf classExpression ) {
+      return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLDataSomeValuesFrom classExpression ) {
-        return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLDataSomeValuesFrom classExpression ) {
+      return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLDataAllValuesFrom classExpression ) {
-        return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLDataAllValuesFrom classExpression ) {
+      return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLDataHasValue classExpression ) {
-        return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLDataHasValue classExpression ) {
+      return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLDataMinCardinality classExpression ) {
-        return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLDataMinCardinality classExpression ) {
+      return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLDataExactCardinality classExpression ) {
-        return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLDataExactCardinality classExpression ) {
+      return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLDataMaxCardinality classExpression ) {
-        return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLDataMaxCardinality classExpression ) {
+      return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLObjectInverseOf property ) {
-        return mappingConfig.getOwlPropertyExpressionMapper().visit( property );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLObjectInverseOf property ) {
+      return mappingConfig.getOwlPropertyExpressionMapper().visit( property );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLObjectProperty property ) {
-        return mappingConfig.getOwlPropertyExpressionMapper().visit( property );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLObjectProperty property ) {
+      return mappingConfig.getOwlPropertyExpressionMapper().visit( property );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLDataProperty property ) {
-        return mappingConfig.getOwlPropertyExpressionMapper().visit( property );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLDataProperty property ) {
+      return mappingConfig.getOwlPropertyExpressionMapper().visit( property );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLAnnotationProperty property ) {
-        return mappingConfig.getOwlPropertyExpressionMapper().visit( property );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLAnnotationProperty property ) {
+      return mappingConfig.getOwlPropertyExpressionMapper().visit( property );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLClass classExpression ) {
-        return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLClass classExpression ) {
+      return mappingConfig.getOwlClassExpressionMapper().visit( classExpression );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLNamedIndividual individual ) {
-        return mappingConfig.getOwlIndividualMapper().visit( individual );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLNamedIndividual individual ) {
+      return mappingConfig.getOwlIndividualMapper().visit( individual );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLLiteral literal ) {
-        return mappingConfig.getOwlDataMapper().visit( literal );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLLiteral literal ) {
+      return mappingConfig.getOwlDataMapper().visit( literal );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLDatatype datatype ) {
-        return mappingConfig.getOwlDataMapper().visit( datatype );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLDatatype datatype ) {
+      return mappingConfig.getOwlDataMapper().visit( datatype );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLDataComplementOf complement ) {
-        return mappingConfig.getOwlDataMapper().visit( complement );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLDataComplementOf complement ) {
+      return mappingConfig.getOwlDataMapper().visit( complement );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLDataOneOf oneOf ) {
-        return mappingConfig.getOwlDataMapper().visit( oneOf );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLDataOneOf oneOf ) {
+      return mappingConfig.getOwlDataMapper().visit( oneOf );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLDataIntersectionOf intersection ) {
-        return mappingConfig.getOwlDataMapper().visit( intersection );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLDataIntersectionOf intersection ) {
+      return mappingConfig.getOwlDataMapper().visit( intersection );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLDataUnionOf union ) {
-        return mappingConfig.getOwlDataMapper().visit( union );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLDataUnionOf union ) {
+      return mappingConfig.getOwlDataMapper().visit( union );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLDatatypeRestriction restriction ) {
-        return mappingConfig.getOwlDataMapper().visit( restriction );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLDatatypeRestriction restriction ) {
+      return mappingConfig.getOwlDataMapper().visit( restriction );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLFacetRestriction restriction ) {
-        return mappingConfig.getOwlDataMapper().visit( restriction );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLFacetRestriction restriction ) {
+      return mappingConfig.getOwlDataMapper().visit( restriction );
+   }
 }

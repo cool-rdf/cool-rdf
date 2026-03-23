@@ -21,7 +21,7 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 
 public interface RdfResource extends RdfNode, Resource {
-    Literal literalValue( Property property );
+   Literal literalValue( Property property );
 
-    boolean isList();
+   boolean isList();
 }

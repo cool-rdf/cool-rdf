@@ -20,9 +20,9 @@ import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Statement;
 
 public interface RdfStatement extends Statement {
-    RdfResource subject();
+   RdfResource subject();
 
-    RdfProperty predicate();
+   RdfProperty predicate();
 
-    RDFNode object();
+   RDFNode object();
 }

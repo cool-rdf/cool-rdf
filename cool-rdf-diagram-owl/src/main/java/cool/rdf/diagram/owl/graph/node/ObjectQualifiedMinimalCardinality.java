@@ -28,12 +28,12 @@ import lombok.With;
 @EqualsAndHashCode( callSuper = true )
 @With
 public class ObjectQualifiedMinimalCardinality extends Node.CardinalityNode {
-    Id id;
+   Id id;
 
-    int cardinality;
+   int cardinality;
 
-    @Override
-    public <T> T accept( final Visitor<T> visitor ) {
-        return visitor.visit( this );
-    }
+   @Override
+   public <T> T accept( final Visitor<T> visitor ) {
+      return visitor.visit( this );
+   }
 }

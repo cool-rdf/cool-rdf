@@ -16,8 +16,19 @@
 
 package cool.rdf.cli;
 
-import com.google.common.collect.ImmutableSet;
-import io.vavr.control.Try;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Optional;
+import java.util.Set;
+import java.util.concurrent.locks.ReadWriteLock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
+
+import javax.annotation.Nonnull;
+
 import org.semanticweb.owlapi.dlsyntax.parser.DLSyntaxOWLParserFactory;
 import org.semanticweb.owlapi.dlsyntax.renderer.DLSyntaxHTMLStorerFactory;
 import org.semanticweb.owlapi.dlsyntax.renderer.DLSyntaxStorerFactory;
@@ -44,114 +55,109 @@ import org.semanticweb.owlapi.rdf.rdfxml.renderer.RDFXMLStorerFactory;
 import org.semanticweb.owlapi.rdf.turtle.parser.TurtleOntologyParserFactory;
 import org.semanticweb.owlapi.rdf.turtle.renderer.TurtleStorerFactory;
 import org.slf4j.Logger;
+
+import com.google.common.collect.ImmutableSet;
+
+import io.vavr.control.Try;
 import picocli.CommandLine;
 import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLOntologyFactoryImpl;
 import uk.ac.manchester.cs.owl.owlapi.OWLOntologyManagerImpl;
 import uk.ac.manchester.cs.owl.owlapi.concurrent.NonConcurrentOWLOntologyBuilder;
 
-import javax.annotation.Nonnull;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
-
 /**
  * Base class for commands that bundles common functionality
  */
 public abstract class AbstractCommand {
-    protected final Runtime runtime;
+   protected final Runtime runtime;
 
-    protected AbstractCommand( final Runtime runtime ) {
-        this.runtime = runtime;
-    }
+   protected AbstractCommand( final Runtime runtime ) {
+      this.runtime = runtime;
+   }
 
-    /**
-     * Will exit the program with status code 1
-     */
-    protected void commandFailed() {
-        runtime.exit( 1 );
-    }
+   /**
+    * Will exit the program with status code 1
+    */
+   protected void commandFailed() {
+      runtime.exit( 1 );
+   }
 
-    /**
-     * Try to open an output stream
-     *
-     * @param input the original input: file path or "-" for stdin
-     * @param output the designated output: an absolute or relative path or "-" for stdout. If empty, determine the
-     * output from the input
-     * @param targetFileExtension the target file extension to use, if the output is empty
-     * @return if successful, the output stream
-     */
-    protected Try<OutputStream> openOutput( final @Nonnull String input, final Optional<String> output, final String targetFileExtension ) {
-        if ( output.isPresent() ) {
-            // Output is given as - --> write to stdout
-            if ( output.get().equals( "-" ) ) {
-                return Try.success( System.out );
-            }
-
-            // Output is given as something else --> open as file
-            try {
-                return Try.success( new FileOutputStream( output.get() ) );
-            } catch ( final FileNotFoundException exception ) {
-                return Try.failure( exception );
-            }
-        }
-
-        if ( input.equals( "-" ) ) {
-            // Input is stdin, output is not given -> write to stdout
+   /**
+    * Try to open an output stream
+    *
+    * @param input the original input: file path or "-" for stdin
+    * @param output the designated output: an absolute or relative path or "-" for stdout. If empty,
+    *        determine the
+    *        output from the input
+    * @param targetFileExtension the target file extension to use, if the output is empty
+    * @return if successful, the output stream
+    */
+   protected Try<OutputStream> openOutput( final @Nonnull String input, final Optional<String> output, final String targetFileExtension ) {
+      if ( output.isPresent() ) {
+         // Output is given as - --> write to stdout
+         if ( output.get().equals( "-" ) ) {
             return Try.success( System.out );
-        }
+         }
 
-        // Input is something else, output is not given -> interpret input as filename,
-        // change input's file extension to target format and use as output file name
-        final String outputFilename = input.replaceFirst( "[.][^.]+$",
+         // Output is given as something else --> open as file
+         try {
+            return Try.success( new FileOutputStream( output.get() ) );
+         } catch ( final FileNotFoundException exception ) {
+            return Try.failure( exception );
+         }
+      }
+
+      if ( input.equals( "-" ) ) {
+         // Input is stdin, output is not given -> write to stdout
+         return Try.success( System.out );
+      }
+
+      // Input is something else, output is not given -> interpret input as filename,
+      // change input's file extension to target format and use as output file name
+      final String outputFilename = input.replaceFirst( "[.][^.]+$",
             "." + targetFileExtension.toLowerCase() );
-        if ( outputFilename.equals( input ) ) {
-            return Try.failure( new ErrorMessage( "Can't determine an output filename" ) );
-        }
+      if ( outputFilename.equals( input ) ) {
+         return Try.failure( new ErrorMessage( "Can't determine an output filename" ) );
+      }
 
-        try {
-            return Try.success( new FileOutputStream( outputFilename ) );
-        } catch ( final FileNotFoundException exception ) {
-            return Try.failure( exception );
-        }
-    }
+      try {
+         return Try.success( new FileOutputStream( outputFilename ) );
+      } catch ( final FileNotFoundException exception ) {
+         return Try.failure( exception );
+      }
+   }
 
-    /**
-     * Try to open a given input as input stream, either an absolute or relative file system path or "-" meaning stdin
-     *
-     * @param input the input
-     * @return an input stream on success
-     */
-    protected Try<InputStream> openInput( final String input ) {
-        if ( input.equals( "-" ) ) {
-            return Try.success( System.in );
-        }
-        try {
-            final File inputFile = new File( input );
-            if ( !inputFile.exists() ) {
-                return Try.failure( new FileNotFoundException( input ) );
-            }
-            return Try.success( new FileInputStream( inputFile ) );
-        } catch ( final FileNotFoundException exception ) {
-            return Try.failure( exception );
-        }
-    }
+   /**
+    * Try to open a given input as input stream, either an absolute or relative file system path or "-"
+    * meaning stdin
+    *
+    * @param input the input
+    * @return an input stream on success
+    */
+   protected Try<InputStream> openInput( final String input ) {
+      if ( input.equals( "-" ) ) {
+         return Try.success( System.in );
+      }
+      try {
+         final File inputFile = new File( input );
+         if ( !inputFile.exists() ) {
+            return Try.failure( new FileNotFoundException( input ) );
+         }
+         return Try.success( new FileInputStream( inputFile ) );
+      } catch ( final FileNotFoundException exception ) {
+         return Try.failure( exception );
+      }
+   }
 
-    /**
-     * Since the service loader feature is disabled in the GraalVM config, instead set up the OWL-API OWL ontology
-     * manager programmatically.
-     *
-     * @return the OWL ontology manager
-     */
-    protected OWLOntologyManager createOWLOntologyManager() {
-        final ImmutableSet<OWLParserFactory> parserFactories = ImmutableSet.<OWLParserFactory>builder()
+   /**
+    * Since the service loader feature is disabled in the GraalVM config, instead set up the OWL-API
+    * OWL ontology
+    * manager programmatically.
+    *
+    * @return the OWL ontology manager
+    */
+   protected OWLOntologyManager createOWLOntologyManager() {
+      final ImmutableSet<OWLParserFactory> parserFactories = ImmutableSet.<OWLParserFactory>builder()
             .add( new ManchesterOWLSyntaxOntologyParserFactory() )
             .add( new KRSS2OWLParserFactory() )
             .add( new TurtleOntologyParserFactory() )
@@ -162,12 +168,12 @@ public abstract class AbstractCommand {
             .add( new OBOFormatOWLAPIParserFactory() )
             .build();
 
-        final Set<OWLOntologyFactory> ontologyFactories = ImmutableSet.<OWLOntologyFactory>builder()
+      final Set<OWLOntologyFactory> ontologyFactories = ImmutableSet.<OWLOntologyFactory>builder()
             .add( new OWLOntologyFactoryImpl( new NonConcurrentOWLOntologyBuilder() ) )
             .build();
 
-        @SuppressWarnings( "SpellCheckingInspection" )
-        final Set<OWLStorerFactory> storerFactories = ImmutableSet.<OWLStorerFactory>builder()
+      @SuppressWarnings( "SpellCheckingInspection" )
+      final Set<OWLStorerFactory> storerFactories = ImmutableSet.<OWLStorerFactory>builder()
             .add( new RDFXMLStorerFactory() )
             .add( new OWLXMLStorerFactory() )
             .add( new FunctionalSyntaxStorerFactory() )
@@ -180,66 +186,67 @@ public abstract class AbstractCommand {
             .add( new OBOFormatStorerFactory() )
             .build();
 
-        final OWLDataFactory dataFactory = new OWLDataFactoryImpl();
-        final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
-        final OWLOntologyManager manager = new OWLOntologyManagerImpl( dataFactory, readWriteLock );
+      final OWLDataFactory dataFactory = new OWLDataFactoryImpl();
+      final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
+      final OWLOntologyManager manager = new OWLOntologyManagerImpl( dataFactory, readWriteLock );
 
-        manager.setOntologyFactories( ontologyFactories );
-        manager.setOntologyParsers( parserFactories );
-        manager.setOntologyStorers( storerFactories );
+      manager.setOntologyFactories( ontologyFactories );
+      manager.setOntologyParsers( parserFactories );
+      manager.setOntologyStorers( storerFactories );
 
-        return manager;
-    }
+      return manager;
+   }
 
-    /**
-     * Loads an ontology from an input stream
-     *
-     * @param inputStream the input stream
-     * @return {@link Try.Success} with the {@link OWLOntology} on success, and a {@link Try.Failure} with the
-     * {@link OWLOntologyCreationException} otherwise.
-     */
-    public Try<OWLOntology> loadOntology( final InputStream inputStream ) {
-        final OWLOntologyManager manager = createOWLOntologyManager();
-        final OWLOntology ontology;
-        try {
-            ontology = manager.loadOntologyFromOntologyDocument( inputStream );
-            return Try.success( ontology );
-        } catch ( final OWLOntologyCreationException exception ) {
-            return Try.failure( exception );
-        }
-    }
+   /**
+    * Loads an ontology from an input stream
+    *
+    * @param inputStream the input stream
+    * @return {@link Try.Success} with the {@link OWLOntology} on success, and a {@link Try.Failure}
+    *         with the
+    *         {@link OWLOntologyCreationException} otherwise.
+    */
+   public Try<OWLOntology> loadOntology( final InputStream inputStream ) {
+      final OWLOntologyManager manager = createOWLOntologyManager();
+      final OWLOntology ontology;
+      try {
+         ontology = manager.loadOntologyFromOntologyDocument( inputStream );
+         return Try.success( ontology );
+      } catch ( final OWLOntologyCreationException exception ) {
+         return Try.failure( exception );
+      }
+   }
 
-    /**
-     * Bail out after a command failed with a throwable
-     *
-     * @param logger the logger to print a message
-     * @param loggingMixin the logging mixin of the respective command, to determine verbosity
-     * @param throwable the cause
-     */
-    protected void exitWithErrorMessage( final Logger logger, final LoggingMixin loggingMixin, final Throwable throwable ) {
-        if ( loggingMixin.getVerbosity().length == 0 ) {
-            System.err.println( "Error: " + throwable.getMessage() );
-        } else if ( loggingMixin.getVerbosity().length == 1 ) {
-            logger.warn( "Error: " + throwable.getMessage() );
-        } else {
-            throwable.printStackTrace();
-        }
-        commandFailed();
-    }
+   /**
+    * Bail out after a command failed with a throwable
+    *
+    * @param logger the logger to print a message
+    * @param loggingMixin the logging mixin of the respective command, to determine verbosity
+    * @param throwable the cause
+    */
+   protected void exitWithErrorMessage( final Logger logger, final LoggingMixin loggingMixin, final Throwable throwable ) {
+      if ( loggingMixin.getVerbosity().length == 0 ) {
+         System.err.println( "Error: " + throwable.getMessage() );
+      } else if ( loggingMixin.getVerbosity().length == 1 ) {
+         logger.warn( "Error: " + throwable.getMessage() );
+      } else {
+         throwable.printStackTrace();
+      }
+      commandFailed();
+   }
 
-    /**
-     * Provide a hook for subclasses to register custom {@link CommandLine.ITypeConverter}s
-     *
-     * @param commandLine the command line
-     */
-    public void registerTypeConverters( final CommandLine commandLine ) {
-        // empty by default
-    }
+   /**
+    * Provide a hook for subclasses to register custom {@link CommandLine.ITypeConverter}s
+    *
+    * @param commandLine the command line
+    */
+   public void registerTypeConverters( final CommandLine commandLine ) {
+      // empty by default
+   }
 
-    /**
-     * Return the name of this command
-     *
-     * @return the command name
-     */
-    public abstract String commandName();
+   /**
+    * Return the name of this command
+    *
+    * @return the command name
+    */
+   public abstract String commandName();
 }

@@ -33,7 +33,6 @@ import org.apache.jena.riot.ReaderRIOT;
 import org.apache.jena.riot.lang.LabelToNode;
 import org.apache.jena.riot.lang.LangRIOT;
 import org.apache.jena.riot.lang.LangTurtle;
-import org.apache.jena.riot.lang.RiotParsers;
 import org.apache.jena.riot.system.ParserProfile;
 import org.apache.jena.riot.system.ParserProfileWrapper;
 import org.apache.jena.riot.system.StreamRDF;
@@ -44,90 +43,92 @@ import org.apache.jena.riot.tokens.TokenizerText;
 import org.apache.jena.sparql.util.Context;
 
 public class BlankNodeOrderAwareTurtleParser {
-    /**
-     * Parses the TTL <code>content</code> and returns a {@link ParseResult}, containing the new {@link Model} and a
-     * {@link BlankNodeMetadata} object that makes the ordering of the blank nodes in the original <code>content</code>
-     * accessible for further processing.
-     *
-     * @param content RDF in TTL format
-     * @return the parse result and the blank node ordering
-     */
-    public static ParseResult parseModel( final String content ) {
-        final BlankNodeMetadata bnodeMetadata = new BlankNodeMetadata();
+   /**
+    * Parses the TTL <code>content</code> and returns a {@link ParseResult}, containing the new
+    * {@link Model} and a
+    * {@link BlankNodeMetadata} object that makes the ordering of the blank nodes in the original
+    * <code>content</code>
+    * accessible for further processing.
+    *
+    * @param content RDF in TTL format
+    * @return the parse result and the blank node ordering
+    */
+   public static ParseResult parseModel( final String content ) {
+      final BlankNodeMetadata bnodeMetadata = new BlankNodeMetadata();
 
-        final Lang TTL_bn = LangBuilder.create( "TTL_BN", "text/bogus" )
+      final Lang TTL_bn = LangBuilder.create( "TTL_BN", "text/bogus" )
             .build();
-        RDFParserRegistry.registerLangTriples( TTL_bn, ( language, profile ) -> {
-            final ParserProfile profileWrapper = new ParserProfileWrapper( profile ) {
-                @Override
-                public Node createBlankNode( final Node scope, final String label, final long line, final long col ) {
-                    final Node blank = get().createBlankNode( scope, label, line, col );
-                    bnodeMetadata.registerNewBlankNode( blank, label );
-                    return blank;
-                }
+      RDFParserRegistry.registerLangTriples( TTL_bn, ( language, profile ) -> {
+         final ParserProfile profileWrapper = new ParserProfileWrapper( profile ) {
+            @Override
+            public Node createBlankNode( final Node scope, final String label, final long line, final long col ) {
+               final Node blank = get().createBlankNode( scope, label, line, col );
+               bnodeMetadata.registerNewBlankNode( blank, label );
+               return blank;
+            }
 
-                @Override
-                public Node createBlankNode( final Node scope, final long line, final long col ) {
-                    final Node blank = get().createBlankNode( scope, line, col );
-                    bnodeMetadata.registerNewBlankNode( blank );
-                    return blank;
-                }
+            @Override
+            public Node createBlankNode( final Node scope, final long line, final long col ) {
+               final Node blank = get().createBlankNode( scope, line, col );
+               bnodeMetadata.registerNewBlankNode( blank );
+               return blank;
+            }
 
-                @Override
-                public Node create( final Node currentGraph, final Token token ) {
-                    // Dispatches to the underlying ParserFactory operation
-                    final long line = token.getLine();
-                    final long col = token.getColumn();
-                    final String str = token.getImage();
-                    if ( token.getType() == TokenType.BNODE ) {
-                        return createBlankNode( currentGraph, str, line, col );
-                    }
-                    return get().create( currentGraph, token );
-                }
+            @Override
+            public Node create( final Node currentGraph, final Token token ) {
+               // Dispatches to the underlying ParserFactory operation
+               final long line = token.getLine();
+               final long col = token.getColumn();
+               final String str = token.getImage();
+               if ( token.getType() == TokenType.BNODE ) {
+                  return createBlankNode( currentGraph, str, line, col );
+               }
+               return get().create( currentGraph, token );
+            }
 
-            };
-            return new ReaderRIOT() {
-                @Override
-                public void read( final InputStream in, final String baseURI, final ContentType ct, final StreamRDF output,
-                    final Context context ) {
-                    Tokenizer tokenizer = TokenizerText.create().source( in ).errorHandler( profileWrapper.getErrorHandler() ).build();
-                    LangRIOT parser = new LangTurtle( tokenizer, profileWrapper, output );
-                    parser.parse();
-                }
+         };
+         return new ReaderRIOT() {
+            @Override
+            public void read( final InputStream in, final String baseURI, final ContentType ct, final StreamRDF output,
+                  final Context context ) {
+               Tokenizer tokenizer = TokenizerText.create().source( in ).errorHandler( profileWrapper.getErrorHandler() ).build();
+               LangRIOT parser = new LangTurtle( tokenizer, profileWrapper, output );
+               parser.parse();
+            }
 
-                @Override
-                public void read( final Reader reader, final String baseURI, final ContentType ct, final StreamRDF output,
-                    final Context context ) {
-                    Tokenizer tokenizer = TokenizerText.create().source( reader ).errorHandler( profileWrapper.getErrorHandler() ).build();
-                    LangRIOT parser = new LangTurtle( tokenizer, profileWrapper, output );
-                    parser.parse();
-                }
-            };
-        } );
-        final Graph graph = RDFParser.source( new ByteArrayInputStream( content.getBytes() ) ).labelToNode( LabelToNode
+            @Override
+            public void read( final Reader reader, final String baseURI, final ContentType ct, final StreamRDF output,
+                  final Context context ) {
+               Tokenizer tokenizer = TokenizerText.create().source( reader ).errorHandler( profileWrapper.getErrorHandler() ).build();
+               LangRIOT parser = new LangTurtle( tokenizer, profileWrapper, output );
+               parser.parse();
+            }
+         };
+      } );
+      final Graph graph = RDFParser.source( new ByteArrayInputStream( content.getBytes() ) ).labelToNode( LabelToNode
             .createUseLabelAsGiven() )
             .lang( TTL_bn ).toGraph();
-        RDFParserRegistry.removeRegistration( TTL_bn );
-        final Model model = ModelFactory.createModelForGraph( graph );
-        bnodeMetadata.linkGraphNodesToModelResources( model );
-        return new ParseResult( model, bnodeMetadata );
-    }
+      RDFParserRegistry.removeRegistration( TTL_bn );
+      final Model model = ModelFactory.createModelForGraph( graph );
+      bnodeMetadata.linkGraphNodesToModelResources( model );
+      return new ParseResult( model, bnodeMetadata );
+   }
 
-    public static class ParseResult {
-        private final Model model;
-        private final BlankNodeMetadata blankNodeMetadata;
+   public static class ParseResult {
+      private final Model model;
+      private final BlankNodeMetadata blankNodeMetadata;
 
-        public ParseResult( final Model model, final BlankNodeMetadata blankNodeMetadata ) {
-            this.model = model;
-            this.blankNodeMetadata = blankNodeMetadata;
-        }
+      public ParseResult( final Model model, final BlankNodeMetadata blankNodeMetadata ) {
+         this.model = model;
+         this.blankNodeMetadata = blankNodeMetadata;
+      }
 
-        public Model getModel() {
-            return model;
-        }
+      public Model getModel() {
+         return model;
+      }
 
-        public BlankNodeMetadata getBlankNodeMetadata() {
-            return blankNodeMetadata;
-        }
-    }
+      public BlankNodeMetadata getBlankNodeMetadata() {
+         return blankNodeMetadata;
+      }
+   }
 }

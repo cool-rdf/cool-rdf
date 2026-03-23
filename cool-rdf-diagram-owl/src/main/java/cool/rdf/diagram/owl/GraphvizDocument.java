@@ -16,13 +16,6 @@
 
 package cool.rdf.diagram.owl;
 
-import com.google.common.collect.ImmutableMap;
-import cool.rdf.core.util.StringTemplate;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.experimental.FieldDefaults;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -30,90 +23,99 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import com.google.common.collect.ImmutableMap;
+
+import cool.rdf.core.util.StringTemplate;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.experimental.FieldDefaults;
+
 /**
  * Simple model for a Graphviz document, consisting of sets of edges and nodes
  */
 @AllArgsConstructor
 @Getter
-@FieldDefaults( makeFinal = true, level = AccessLevel.PRIVATE )
+@FieldDefaults( makeFinal = true,
+   level = AccessLevel.PRIVATE )
 public class GraphvizDocument implements Function<Configuration, String> {
-    /**
-     * A document containing no elements
-     */
-    public static final GraphvizDocument BLANK = new GraphvizDocument();
+   /**
+    * A document containing no elements
+    */
+   public static final GraphvizDocument BLANK = new GraphvizDocument();
 
-    /**
-     * The default configuration for rendering the document
-     */
-    public static final Configuration DEFAULT_CONFIGURATION = Configuration.builder().build();
+   /**
+    * The default configuration for rendering the document
+    */
+   public static final Configuration DEFAULT_CONFIGURATION = Configuration.builder().build();
 
-    @SuppressWarnings( "SpellCheckingInspection" )
-    private static final StringTemplate GRAPHVIZ_TEMPLATE = new StringTemplate( """
-        digraph G {
-          rankdir = ${rankdir}
-          charset = "utf-8"
+   @SuppressWarnings( "SpellCheckingInspection" )
+   private static final StringTemplate GRAPHVIZ_TEMPLATE = new StringTemplate( """
+      digraph G {
+        rankdir = ${rankdir}
+        charset = "utf-8"
 
-          bgcolor = "${bgcolor}"
-          color = "${fgcolor}"
+        bgcolor = "${bgcolor}"
+        color = "${fgcolor}"
 
-          fontname = "${fontname}"
-          fontsize = ${fontsize}
+        fontname = "${fontname}"
+        fontsize = ${fontsize}
+        fontcolor = "${fgcolor}"
+
+        node [
+          fontname = "${nodeFontname}"
+          fontsize = ${nodeFontsize}
           fontcolor = "${fgcolor}"
+          shape = "${nodeShape}"
+          margin = "${nodeMargin}"
+          style = "${nodeStyle}"
+          height = 0.3
+          width = 0.2
+          color = "${fgcolor}"
+          bgcolor = "${bgcolor}"
+        ]
 
-          node [
-            fontname = "${nodeFontname}"
-            fontsize = ${nodeFontsize}
-            fontcolor = "${fgcolor}"
-            shape = "${nodeShape}"
-            margin = "${nodeMargin}"
-            style = "${nodeStyle}"
-            height = 0.3
-            width = 0.2
-            color = "${fgcolor}"
-            bgcolor = "${bgcolor}"
-          ]
+        ${statements}
 
-          ${statements}
+      }
+      """ );
 
-        }
-        """ );
+   private List<Statement> nodeStatements;
 
-    private List<Statement> nodeStatements;
+   private List<Statement> edgeStatements;
 
-    private List<Statement> edgeStatements;
+   private GraphvizDocument() {
+      this( Collections.emptyList(), Collections.emptyList() );
+   }
 
-    private GraphvizDocument() {
-        this( Collections.emptyList(), Collections.emptyList() );
-    }
+   static GraphvizDocument withNode( final Statement nodeStatement ) {
+      return withNodes( Collections.singletonList( nodeStatement ) );
+   }
 
-    static GraphvizDocument withNode( final Statement nodeStatement ) {
-        return withNodes( Collections.singletonList( nodeStatement ) );
-    }
+   static GraphvizDocument withNodes( final List<Statement> nodeStatements ) {
+      return new GraphvizDocument( nodeStatements, Collections.emptyList() );
+   }
 
-    static GraphvizDocument withNodes( final List<Statement> nodeStatements ) {
-        return new GraphvizDocument( nodeStatements, Collections.emptyList() );
-    }
+   static GraphvizDocument withEdge( final Statement edgeStatement ) {
+      return withEdges( Collections.singletonList( edgeStatement ) );
+   }
 
-    static GraphvizDocument withEdge( final Statement edgeStatement ) {
-        return withEdges( Collections.singletonList( edgeStatement ) );
-    }
+   static GraphvizDocument withEdges( final List<Statement> edgeStatements ) {
+      return new GraphvizDocument( Collections.emptyList(), edgeStatements );
+   }
 
-    static GraphvizDocument withEdges( final List<Statement> edgeStatements ) {
-        return new GraphvizDocument( Collections.emptyList(), edgeStatements );
-    }
-
-    GraphvizDocument merge( final GraphvizDocument other ) {
-        return new GraphvizDocument(
+   GraphvizDocument merge( final GraphvizDocument other ) {
+      return new GraphvizDocument(
             Stream.concat( getNodeStatements().stream(), other.getNodeStatements().stream() )
-                .collect( Collectors.toList() ),
+                  .collect( Collectors.toList() ),
             Stream.concat( getEdgeStatements().stream(), other.getEdgeStatements().stream() )
-                .collect( Collectors.toList() ) );
-    }
+                  .collect( Collectors.toList() ) );
+   }
 
-    @SuppressWarnings( "SpellCheckingInspection" )
-    @Override
-    public String apply( final Configuration configuration ) {
-        final Map<String, Object> templateMap = new ImmutableMap.Builder<String, Object>()
+   @SuppressWarnings( "SpellCheckingInspection" )
+   @Override
+   public String apply( final Configuration configuration ) {
+      final Map<String, Object> templateMap = new ImmutableMap.Builder<String, Object>()
             .put( "rankdir", configuration.layoutDirection == Configuration.LayoutDirection.TOP_TO_BOTTOM ? "TB" : "LR" )
             .put( "fontname", configuration.fontname )
             .put( "fontsize", configuration.fontsize )
@@ -125,23 +127,25 @@ public class GraphvizDocument implements Function<Configuration, String> {
             .put( "bgcolor", configuration.bgColor )
             .put( "fgcolor", configuration.fgColor )
             .put( "statements", Stream.concat( nodeStatements.stream(), edgeStatements.stream() )
-                .map( Statement::toFragment )
-                .collect( Collectors.joining( "   \n" ) ) )
+                  .map( Statement::toFragment )
+                  .collect( Collectors.joining( "   \n" ) ) )
             .build();
-        return GRAPHVIZ_TEMPLATE.apply( templateMap );
-    }
+      return GRAPHVIZ_TEMPLATE.apply( templateMap );
+   }
 
-    @Override
-    public String toString() {
-        return "GraphvizDocument{" +
-            "nodeStatements=" + nodeStatements +
-            ", edgeStatements=" + edgeStatements +
-            '}';
-    }
+   @Override
+   public String toString() {
+      return "GraphvizDocument{"
+            + "nodeStatements=" + nodeStatements
+            + ", edgeStatements=" + edgeStatements
+            + '}';
+   }
 
-    record Statement( String content ) {
-        String toFragment() {
-            return content + "\n";
-        }
-    }
+   record Statement(
+         String content
+   ) {
+      String toFragment() {
+         return content + "\n";
+      }
+   }
 }

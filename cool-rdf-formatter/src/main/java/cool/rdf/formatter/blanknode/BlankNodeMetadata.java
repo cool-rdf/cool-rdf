@@ -33,16 +33,15 @@ import org.apache.jena.rdf.model.Resource;
  * A lookup table for each blank node's order in a TTL file.
  */
 public class BlankNodeMetadata {
-    private final Map<Node, Long> blankNodeIndex = new HashMap<>();
-    private final Map<Node, String> blankNodeLabels = new HashMap<>();
-    private final Set<Resource> labeledBlankNodes = new HashSet<>();
-    private long nextIndex = 0;
+   private final Map<Node, Long> blankNodeIndex = new HashMap<>();
+   private final Map<Node, String> blankNodeLabels = new HashMap<>();
+   private final Set<Resource> labeledBlankNodes = new HashSet<>();
+   private long nextIndex = 0;
 
-    public BlankNodeMetadata() {
-    }
+   public BlankNodeMetadata() {}
 
-    public void linkGraphNodesToModelResources( final Model model ) {
-        labeledBlankNodes.addAll( model.listStatements()
+   public void linkGraphNodesToModelResources( final Model model ) {
+      labeledBlankNodes.addAll( model.listStatements()
             .toList()
             .stream()
             .flatMap( s -> Stream.of( s.getSubject(), s.getObject() ) )
@@ -51,49 +50,50 @@ public class BlankNodeMetadata {
             .map( RDFNode::asResource )
             .collect( Collectors.toSet() ) );
 
-    }
+   }
 
-    public static BlankNodeMetadata gotNothing() {
-        return new BlankNodeMetadata();
-    }
+   public static BlankNodeMetadata gotNothing() {
+      return new BlankNodeMetadata();
+   }
 
-    /**
-     * Returns the order of the specified node, if it has been added previously via {@link #registerNewBlankNode(Node)},
-     * or null.
-     *
-     * @param node the node to look up
-     * @return the 0-based order of the {@code node} (or null if it has not been registered)
-     */
-    public Long getOrder( final Node node ) {
-        return blankNodeIndex.get( node );
-    }
+   /**
+    * Returns the order of the specified node, if it has been added previously via
+    * {@link #registerNewBlankNode(Node)},
+    * or null.
+    *
+    * @param node the node to look up
+    * @return the 0-based order of the {@code node} (or null if it has not been registered)
+    */
+   public Long getOrder( final Node node ) {
+      return blankNodeIndex.get( node );
+   }
 
-    /**
-     * If the specified {@code node} is a labeled blank node, the label is returned.
-     *
-     * @param node
-     * @return the label or null.
-     */
-    public String getLabel( final Node node ) {
-        return blankNodeLabels.get( node );
-    }
+   /**
+    * If the specified {@code node} is a labeled blank node, the label is returned.
+    *
+    * @param node the node to look up
+    * @return the label or null
+    */
+   public String getLabel( final Node node ) {
+      return blankNodeLabels.get( node );
+   }
 
-    void registerNewBlankNode( final Node blankNode ) {
-        if ( blankNode.isBlank() && !blankNodeIndex.containsKey( blankNode ) ) {
-            blankNodeIndex.put( blankNode, nextIndex++ );
-        }
-    }
+   void registerNewBlankNode( final Node blankNode ) {
+      if ( blankNode.isBlank() && !blankNodeIndex.containsKey( blankNode ) ) {
+         blankNodeIndex.put( blankNode, nextIndex++ );
+      }
+   }
 
-    void registerNewBlankNode( final Node blankNode, final String label ) {
-        registerNewBlankNode( blankNode );
-        blankNodeLabels.put( blankNode, label );
-    }
+   void registerNewBlankNode( final Node blankNode, final String label ) {
+      registerNewBlankNode( blankNode );
+      blankNodeLabels.put( blankNode, label );
+   }
 
-    public Set<Resource> getLabeledBlankNodes() {
-        return Collections.unmodifiableSet( labeledBlankNodes );
-    }
+   public Set<Resource> getLabeledBlankNodes() {
+      return Collections.unmodifiableSet( labeledBlankNodes );
+   }
 
-    public Set<String> getAllBlankNodeLabels() {
-        return Set.copyOf( blankNodeLabels.values() );
-    }
+   public Set<String> getAllBlankNodeLabels() {
+      return Set.copyOf( blankNodeLabels.values() );
+   }
 }

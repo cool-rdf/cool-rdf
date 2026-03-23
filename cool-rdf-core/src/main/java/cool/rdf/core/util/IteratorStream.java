@@ -22,7 +22,7 @@ import java.util.stream.Stream;
 import java.util.stream.StreamSupport;
 
 public class IteratorStream {
-    public static <T> Stream<T> stream( final Iterator<T> iterator ) {
-        return StreamSupport.stream( Spliterators.spliteratorUnknownSize( iterator, 0 ), false );
-    }
+   public static <T> Stream<T> stream( final Iterator<T> iterator ) {
+      return StreamSupport.stream( Spliterators.spliteratorUnknownSize( iterator, 0 ), false );
+   }
 }

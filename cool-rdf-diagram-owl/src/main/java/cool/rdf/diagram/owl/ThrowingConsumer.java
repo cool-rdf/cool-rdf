@@ -25,11 +25,11 @@ package cool.rdf.diagram.owl;
 @FunctionalInterface
 public interface ThrowingConsumer<T, E extends Throwable> {
 
-    /**
-     * Performs this operation on the given argument.
-     *
-     * @param t the input argument
-     * @throws E some exception
-     */
-    void accept( T t ) throws E;
+   /**
+    * Performs this operation on the given argument.
+    *
+    * @param t the input argument
+    * @throws E some exception
+    */
+   void accept( T t ) throws E;
 }

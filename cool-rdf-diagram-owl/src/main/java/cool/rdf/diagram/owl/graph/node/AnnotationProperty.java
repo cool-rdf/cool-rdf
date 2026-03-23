@@ -28,12 +28,12 @@ import lombok.With;
 @EqualsAndHashCode( callSuper = true )
 @With
 public class AnnotationProperty extends Node.NamedNode {
-    Id id;
+   Id id;
 
-    String name;
+   String name;
 
-    @Override
-    public <T> T accept( final Visitor<T> visitor ) {
-        return visitor.visit( this );
-    }
+   @Override
+   public <T> T accept( final Visitor<T> visitor ) {
+      return visitor.visit( this );
+   }
 }

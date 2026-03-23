@@ -16,8 +16,10 @@
 
 package cool.rdf.core.model.impl;
 
-import cool.rdf.core.model.RdfResource;
-import lombok.experimental.Delegate;
+import static cool.rdf.core.util.IteratorStream.stream;
+
+import java.util.List;
+
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
@@ -26,37 +28,36 @@ import org.apache.jena.rdf.model.Statement;
 import org.apache.jena.shared.PropertyNotFoundException;
 import org.apache.jena.vocabulary.RDF;
 
-import java.util.List;
-
-import static cool.rdf.core.util.IteratorStream.stream;
+import cool.rdf.core.model.RdfResource;
+import lombok.experimental.Delegate;
 
 public class DefaultRdfResource extends DefaultRdfNode implements RdfResource {
-    private final @Delegate Resource resource;
+   private final @Delegate Resource resource;
 
-    public DefaultRdfResource( final Resource resource ) {
-        super( resource );
-        this.resource = resource;
-    }
+   public DefaultRdfResource( final Resource resource ) {
+      super( resource );
+      this.resource = resource;
+   }
 
-    public Statement property( final Property property ) {
-        final List<Statement> statements = stream( listProperties( property ) ).toList();
-        if ( statements.size() != 1 ) {
-            throw new PropertyNotFoundException( property );
-        }
-        return statements.get( 0 );
-    }
+   public Statement property( final Property property ) {
+      final List<Statement> statements = stream( listProperties( property ) ).toList();
+      if ( statements.size() != 1 ) {
+         throw new PropertyNotFoundException( property );
+      }
+      return statements.get( 0 );
+   }
 
-    @Override
-    public Literal literalValue( final Property property ) {
-        final RDFNode object = property( property ).getObject();
-        if ( !object.isLiteral() ) {
-            throw new PropertyNotFoundException( property );
-        }
-        return object.asLiteral();
-    }
+   @Override
+   public Literal literalValue( final Property property ) {
+      final RDFNode object = property( property ).getObject();
+      if ( !object.isLiteral() ) {
+         throw new PropertyNotFoundException( property );
+      }
+      return object.asLiteral();
+   }
 
-    @Override
-    public boolean isList() {
-        return resource.equals( RDF.Nodes.nil ) || ( resource.hasProperty( RDF.rest ) && resource.hasProperty( RDF.first ) );
-    }
+   @Override
+   public boolean isList() {
+      return resource.equals( RDF.Nodes.nil ) || ( resource.hasProperty( RDF.rest ) && resource.hasProperty( RDF.first ) );
+   }
 }

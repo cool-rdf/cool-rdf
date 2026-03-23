@@ -16,35 +16,36 @@
 
 package cool.rdf.diagram.owl.printers;
 
-import cool.rdf.diagram.owl.mappers.MappingConfiguration;
+import javax.annotation.Nonnull;
+
 import org.semanticweb.owlapi.model.OWLAnonymousIndividual;
 import org.semanticweb.owlapi.model.OWLIndividualVisitorEx;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
-import javax.annotation.Nonnull;
+import cool.rdf.diagram.owl.mappers.MappingConfiguration;
 
 /**
  * Serializes {@link org.semanticweb.owlapi.model.OWLIndividual}s into expressions
  */
 public class OWLIndividualPrinter implements OWLIndividualVisitorEx<String> {
-    final MappingConfiguration mappingConfiguration;
+   final MappingConfiguration mappingConfiguration;
 
-    /**
-     * Creates a new individual printer from a given mapping config
-     *
-     * @param mappingConfiguration the config
-     */
-    public OWLIndividualPrinter( final MappingConfiguration mappingConfiguration ) {
-        this.mappingConfiguration = mappingConfiguration;
-    }
+   /**
+    * Creates a new individual printer from a given mapping config
+    *
+    * @param mappingConfiguration the config
+    */
+   public OWLIndividualPrinter( final MappingConfiguration mappingConfiguration ) {
+      this.mappingConfiguration = mappingConfiguration;
+   }
 
-    @Override
-    public String visit( final @Nonnull OWLAnonymousIndividual individual ) {
-        return "[]";
-    }
+   @Override
+   public String visit( final @Nonnull OWLAnonymousIndividual individual ) {
+      return "[]";
+   }
 
-    @Override
-    public String visit( final @Nonnull OWLNamedIndividual individual ) {
-        return mappingConfiguration.getNameMapper().getName( individual );
-    }
+   @Override
+   public String visit( final @Nonnull OWLNamedIndividual individual ) {
+      return mappingConfiguration.getNameMapper().getName( individual );
+   }
 }

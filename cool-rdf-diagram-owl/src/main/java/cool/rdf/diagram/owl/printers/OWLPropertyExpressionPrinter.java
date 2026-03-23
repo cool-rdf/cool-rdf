@@ -16,47 +16,48 @@
 
 package cool.rdf.diagram.owl.printers;
 
-import cool.rdf.diagram.owl.mappers.MappingConfiguration;
+import javax.annotation.Nonnull;
+
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLObjectInverseOf;
 import org.semanticweb.owlapi.model.OWLObjectProperty;
 import org.semanticweb.owlapi.model.OWLPropertyExpressionVisitorEx;
 
-import javax.annotation.Nonnull;
+import cool.rdf.diagram.owl.mappers.MappingConfiguration;
 
 /**
  * Serializes {@link org.semanticweb.owlapi.model.OWLPropertyExpression}s into expressions
  */
 public class OWLPropertyExpressionPrinter implements OWLPropertyExpressionVisitorEx<String> {
-    private final MappingConfiguration mappingConfig;
+   private final MappingConfiguration mappingConfig;
 
-    /**
-     * Creates a new property expression printer from a given mapping config
-     *
-     * @param mappingConfig the mapping config
-     */
-    public OWLPropertyExpressionPrinter( final MappingConfiguration mappingConfig ) {
-        this.mappingConfig = mappingConfig;
-    }
+   /**
+    * Creates a new property expression printer from a given mapping config
+    *
+    * @param mappingConfig the mapping config
+    */
+   public OWLPropertyExpressionPrinter( final MappingConfiguration mappingConfig ) {
+      this.mappingConfig = mappingConfig;
+   }
 
-    @Override
-    public String visit( final @Nonnull OWLObjectInverseOf property ) {
-        return String.format( "inverse(%s)", property.getInverse().accept( this ) );
-    }
+   @Override
+   public String visit( final @Nonnull OWLObjectInverseOf property ) {
+      return String.format( "inverse(%s)", property.getInverse().accept( this ) );
+   }
 
-    @Override
-    public String visit( final @Nonnull OWLObjectProperty property ) {
-        return mappingConfig.getNameMapper().getName( property );
-    }
+   @Override
+   public String visit( final @Nonnull OWLObjectProperty property ) {
+      return mappingConfig.getNameMapper().getName( property );
+   }
 
-    @Override
-    public String visit( final @Nonnull OWLDataProperty property ) {
-        return mappingConfig.getNameMapper().getName( property );
-    }
+   @Override
+   public String visit( final @Nonnull OWLDataProperty property ) {
+      return mappingConfig.getNameMapper().getName( property );
+   }
 
-    @Override
-    public String visit( final @Nonnull OWLAnnotationProperty property ) {
-        return mappingConfig.getNameMapper().getName( property );
-    }
+   @Override
+   public String visit( final @Nonnull OWLAnnotationProperty property ) {
+      return mappingConfig.getNameMapper().getName( property );
+   }
 }

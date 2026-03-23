@@ -16,25 +16,27 @@
 
 package cool.rdf.cli.graal.substitution;
 
-import com.oracle.svm.core.annotate.Alias;
-import com.oracle.svm.core.annotate.RecomputeFieldValue;
-import com.oracle.svm.core.annotate.TargetClass;
+import java.io.Serial;
+
 import org.apache.jena.util.LocationMapper;
 import org.slf4j.Logger;
 import org.slf4j.helpers.NOPLogger;
 
-import java.io.Serial;
+import com.oracle.svm.core.annotate.Alias;
+import com.oracle.svm.core.annotate.RecomputeFieldValue;
+import com.oracle.svm.core.annotate.TargetClass;
 
 /**
- * Substitution for {@link LocationMapper}. This will silence Jena's "can't find location-mapping.rdf" complaints.
+ * Substitution for {@link LocationMapper}. This will silence Jena's "can't find
+ * location-mapping.rdf" complaints.
  */
 @SuppressWarnings( "unused" )
 @TargetClass( LocationMapper.class )
 public final class Target_org_apache_jena_util_LocationMapper {
-    @Alias
-    @RecomputeFieldValue( kind = RecomputeFieldValue.Kind.FromAlias )
-    static Logger log = new NOPLogger() {
-        @Serial
-        private static final long serialVersionUID = 6664642930049031320L;
-    };
+   @Alias
+   @RecomputeFieldValue( kind = RecomputeFieldValue.Kind.FromAlias )
+   static Logger log = new NOPLogger() {
+      @Serial
+      private static final long serialVersionUID = 6664642930049031320L;
+   };
 }

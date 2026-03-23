@@ -16,28 +16,31 @@
 
 package cool.rdf.diagram.owl.graph.node;
 
+import org.semanticweb.owlapi.model.IRI;
+
 import cool.rdf.diagram.owl.graph.Node;
 import cool.rdf.diagram.owl.graph.transformer.IriReferenceResolver;
 import lombok.EqualsAndHashCode;
 import lombok.Value;
 import lombok.With;
-import org.semanticweb.owlapi.model.IRI;
 
 /**
- * Represents a reference to some yet unknown other graph that has a {@link Node.Id} with a given {@link IRI}. This type
- * of node should never end up in the final graph, as it is resolved by the {@link IriReferenceResolver} after the Axiom
+ * Represents a reference to some yet unknown other graph that has a {@link Node.Id} with a given
+ * {@link IRI}. This type
+ * of node should never end up in the final graph, as it is resolved by the
+ * {@link IriReferenceResolver} after the Axiom
  * -> Graph Elements mapping is done.
  */
 @Value
 @EqualsAndHashCode( callSuper = true )
 @With
 public class IRIReference extends Node.InvisibleNode {
-    Id id;
+   Id id;
 
-    IRI iri;
+   IRI iri;
 
-    @Override
-    public <T> T accept( final Visitor<T> visitor ) {
-        return visitor.visit( this );
-    }
+   @Override
+   public <T> T accept( final Visitor<T> visitor ) {
+      return visitor.visit( this );
+   }
 }

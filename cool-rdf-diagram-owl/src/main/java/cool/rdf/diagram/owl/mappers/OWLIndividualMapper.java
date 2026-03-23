@@ -16,42 +16,43 @@
 
 package cool.rdf.diagram.owl.mappers;
 
-import cool.rdf.diagram.owl.graph.Graph;
-import cool.rdf.diagram.owl.graph.Node;
-import cool.rdf.diagram.owl.graph.node.Individual;
+import javax.annotation.Nonnull;
+
 import org.semanticweb.owlapi.model.OWLAnonymousIndividual;
 import org.semanticweb.owlapi.model.OWLIndividualVisitorEx;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
 
-import javax.annotation.Nonnull;
+import cool.rdf.diagram.owl.graph.Graph;
+import cool.rdf.diagram.owl.graph.Node;
+import cool.rdf.diagram.owl.graph.node.Individual;
 
 /**
  * Maps {@link org.semanticweb.owlapi.model.OWLIndividual}s to {@link Graph}s
  */
 public class OWLIndividualMapper implements OWLIndividualVisitorEx<Graph> {
-    private final MappingConfiguration mappingConfig;
+   private final MappingConfiguration mappingConfig;
 
-    /**
-     * Creates a new individual mapper from a given mapping config
-     *
-     * @param mappingConfig the config
-     */
-    public OWLIndividualMapper( final MappingConfiguration mappingConfig ) {
-        this.mappingConfig = mappingConfig;
-    }
+   /**
+    * Creates a new individual mapper from a given mapping config
+    *
+    * @param mappingConfig the config
+    */
+   public OWLIndividualMapper( final MappingConfiguration mappingConfig ) {
+      this.mappingConfig = mappingConfig;
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLAnonymousIndividual individual ) {
-        final Node node = new Individual( mappingConfig.getIdentifierMapper().getSyntheticId(),
+   @Override
+   public Graph visit( final @Nonnull OWLAnonymousIndividual individual ) {
+      final Node node = new Individual( mappingConfig.getIdentifierMapper().getSyntheticId(),
             individual.accept( mappingConfig.getOwlIndividualPrinter() ) );
-        return Graph.of( node );
-    }
+      return Graph.of( node );
+   }
 
-    @Override
-    public Graph visit( final @Nonnull OWLNamedIndividual individual ) {
-        final Node.Id id = mappingConfig.getIdentifierMapper().getIdForIri( individual.getIRI() );
-        final String label = individual.accept( mappingConfig.getOwlIndividualPrinter() );
-        final Node node = new Individual( id, label );
-        return Graph.of( node );
-    }
+   @Override
+   public Graph visit( final @Nonnull OWLNamedIndividual individual ) {
+      final Node.Id id = mappingConfig.getIdentifierMapper().getIdForIri( individual.getIRI() );
+      final String label = individual.accept( mappingConfig.getOwlIndividualPrinter() );
+      final Node node = new Individual( id, label );
+      return Graph.of( node );
+   }
 }

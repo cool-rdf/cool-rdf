@@ -28,10 +28,10 @@ import lombok.With;
 @EqualsAndHashCode( callSuper = true )
 @With
 public class Inequality extends Node {
-    Id id;
+   Id id;
 
-    @Override
-    public <T> T accept( final Visitor<T> visitor ) {
-        return visitor.visit( this );
-    }
+   @Override
+   public <T> T accept( final Visitor<T> visitor ) {
+      return visitor.visit( this );
+   }
 }

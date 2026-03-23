@@ -16,31 +16,32 @@
 
 package cool.rdf.diagram.owl.mappers;
 
-import cool.rdf.diagram.owl.graph.Node;
+import java.util.UUID;
+
 import org.semanticweb.owlapi.model.IRI;
 
-import java.util.UUID;
+import cool.rdf.diagram.owl.graph.Node;
 
 /**
  * Default implementation for the {@link IdentifierMapper}
  */
 public class DefaultIdentifierMapper implements IdentifierMapper {
-    private String getRandomIdString() {
-        return "_" + UUID.randomUUID().toString().replace( "-", "" );
-    }
+   private String getRandomIdString() {
+      return "_" + UUID.randomUUID().toString().replace( "-", "" );
+   }
 
-    @Override
-    public Node.Id getIdForIri( final IRI iri ) {
-        return new Node.Id( iri.getFragment(), iri );
-    }
+   @Override
+   public Node.Id getIdForIri( final IRI iri ) {
+      return new Node.Id( iri.getFragment(), iri );
+   }
 
-    @Override
-    public Node.Id getSyntheticId() {
-        return new Node.Id( getRandomIdString() );
-    }
+   @Override
+   public Node.Id getSyntheticId() {
+      return new Node.Id( getRandomIdString() );
+   }
 
-    @Override
-    public Node.Id getSyntheticIdForIri( final IRI iri ) {
-        return new Node.Id( getRandomIdString(), iri );
-    }
+   @Override
+   public Node.Id getSyntheticIdForIri( final IRI iri ) {
+      return new Node.Id( getRandomIdString(), iri );
+   }
 }

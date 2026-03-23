@@ -1,5 +1,5 @@
 /*
- * Copyright 2024 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,39 +16,40 @@
 
 package cool.rdf.diagram.owl;
 
-import cool.rdf.diagram.owl.mappers.OWLEntityMapper;
 import org.junit.jupiter.api.Test;
 
+import cool.rdf.diagram.owl.mappers.OWLEntityMapper;
+
 public class OWLEntityMapperTest extends MapperTestBase {
-    private final OWLEntityMapper mapper = new OWLEntityMapper( createTestMappingConfiguration() );
+   private final OWLEntityMapper mapper = new OWLEntityMapper( createTestMappingConfiguration() );
 
-    @Test
-    public void testOWLClass() {
-        // TODO
-    }
+   @Test
+   public void testOWLClass() {
+      // TODO
+   }
 
-    @Test
-    public void testOWLDatatype() {
-        // TODO
-    }
+   @Test
+   public void testOWLDatatype() {
+      // TODO
+   }
 
-    @Test
-    public void testOWLNamedIndividual() {
-        // TODO
-    }
+   @Test
+   public void testOWLNamedIndividual() {
+      // TODO
+   }
 
-    @Test
-    public void testOWLObjectProperty() {
-        // TODO
-    }
+   @Test
+   public void testOWLObjectProperty() {
+      // TODO
+   }
 
-    @Test
-    public void testOWLDataProperty() {
-        // TODO
-    }
+   @Test
+   public void testOWLDataProperty() {
+      // TODO
+   }
 
-    @Test
-    public void testOWLAnnotationProperty() {
-        // TODO
-    }
+   @Test
+   public void testOWLAnnotationProperty() {
+      // TODO
+   }
 }

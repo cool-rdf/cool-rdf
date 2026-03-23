@@ -16,13 +16,14 @@
 
 package cool.rdf.cli.graal.substitution;
 
-import com.oracle.svm.core.annotate.Alias;
-import com.oracle.svm.core.annotate.Substitute;
-import com.oracle.svm.core.annotate.TargetClass;
+import java.util.List;
+
 import org.apache.jena.util.FileManagerImpl;
 import org.apache.jena.util.Locator;
 
-import java.util.List;
+import com.oracle.svm.core.annotate.Alias;
+import com.oracle.svm.core.annotate.Substitute;
+import com.oracle.svm.core.annotate.TargetClass;
 
 /**
  * Substitution class for {@link FileManagerImpl}
@@ -30,21 +31,21 @@ import java.util.List;
 @SuppressWarnings( { "unused", "allJavadoc" } )
 @TargetClass( FileManagerImpl.class )
 public final class Target_org_apache_jena_util_FileManagerImpl {
-    /**
-     * See fmHandlers field in original FileManagerImpl
-     */
-    @SuppressWarnings( { "unused", "ProtectedMemberInFinalClass" } )
-    @Alias
-    protected List<Locator> fmHandlers;
+   /**
+    * See fmHandlers field in original FileManagerImpl
+    */
+   @SuppressWarnings( { "unused", "ProtectedMemberInFinalClass" } )
+   @Alias
+   protected List<Locator> fmHandlers;
 
-    /**
-     * See addLocator() method in original FileManagerImpl
-     *
-     * @param loc see original method
-     */
-    @SuppressWarnings( "unused" )
-    @Substitute
-    public void addLocator( final Locator loc ) {
-        fmHandlers.add( loc );
-    }
+   /**
+    * See addLocator() method in original FileManagerImpl
+    *
+    * @param loc see original method
+    */
+   @SuppressWarnings( "unused" )
+   @Substitute
+   public void addLocator( final Locator loc ) {
+      fmHandlers.add( loc );
+   }
 }

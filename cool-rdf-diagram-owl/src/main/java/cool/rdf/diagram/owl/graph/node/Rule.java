@@ -28,22 +28,22 @@ import lombok.With;
 @EqualsAndHashCode( callSuper = true )
 @With
 public class Rule extends Node {
-    /**
-     * The symbol that represents conjunctions in rules when they are rendered to strings
-     */
-    public static final String CONJUNCTION_SYMBOL = "∧";
+   /**
+    * The symbol that represents conjunctions in rules when they are rendered to strings
+    */
+   public static final String CONJUNCTION_SYMBOL = "∧";
 
-    /**
-     * The symbol that represents implication in rules when they are rendered to strings
-     */
-    public static final String IMPLICATION_SYMBOL = "⇒";
+   /**
+    * The symbol that represents implication in rules when they are rendered to strings
+    */
+   public static final String IMPLICATION_SYMBOL = "⇒";
 
-    Id id;
+   Id id;
 
-    String value;
+   String value;
 
-    @Override
-    public <T> T accept( final Visitor<T> visitor ) {
-        return visitor.visit( this );
-    }
+   @Override
+   public <T> T accept( final Visitor<T> visitor ) {
+      return visitor.visit( this );
+   }
 }

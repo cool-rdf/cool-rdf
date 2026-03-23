@@ -24,67 +24,67 @@ import lombok.Builder;
  */
 @Builder
 public class Configuration {
-    /**
-     * The format used to write the document
-     */
-    @SuppressWarnings( "CanBeFinal" )
-    @Builder.Default
-    public Format outputFormat = Format.TURTLE;
+   /**
+    * The format used to write the document
+    */
+   @SuppressWarnings( "CanBeFinal" )
+   @Builder.Default
+   public Format outputFormat = Format.TURTLE;
 
-    /**
-     * The format used to parse the input
-     */
-    @SuppressWarnings( "CanBeFinal" )
-    @Builder.Default
-    public Format inputFormat = Format.TURTLE;
+   /**
+    * The format used to parse the input
+    */
+   @SuppressWarnings( "CanBeFinal" )
+   @Builder.Default
+   public Format inputFormat = Format.TURTLE;
 
-    /**
-     * The formatting style to use
-     */
-    @Builder.Default
-    public FormattingStyle formattingStyle = FormattingStyle.DEFAULT;
+   /**
+    * The formatting style to use
+    */
+   @Builder.Default
+   public FormattingStyle formattingStyle = FormattingStyle.DEFAULT;
 
-    @Override
-    public String toString() {
-        return "Configuration{" +
-            "outputFormat=" + outputFormat +
-            ", inputFormat=" + inputFormat +
-            ", formattingStyle=" + formattingStyle +
-            '}';
-    }
+   @Override
+   public String toString() {
+      return "Configuration{"
+            + "outputFormat=" + outputFormat
+            + ", inputFormat=" + inputFormat
+            + ", formattingStyle=" + formattingStyle
+            + '}';
+   }
 
-    /**
-     * The possible input/output formats
-     */
-    public enum Format {
-        /**
-         * RDF/Turtle
-         */
-        TURTLE,
+   /**
+    * The possible input/output formats
+    */
+   public enum Format {
+      /**
+       * RDF/Turtle
+       */
+      TURTLE,
 
-        /**
-         * RDF/XML
-         */
-        RDFXML,
+      /**
+       * RDF/XML
+       */
+      RDFXML,
 
-        /**
-         * N-Triple
-         */
-        NTRIPLE,
+      /**
+       * N-Triple
+       */
+      NTRIPLE,
 
-        /**
-         * N3 format
-         */
-        N3;
+      /**
+       * N3 format
+       */
+      N3;
 
-        @Override
-        public String toString() {
-            return switch ( this ) {
-                case TURTLE -> "turtle";
-                case RDFXML -> "rdfxml";
-                case NTRIPLE -> "ntriple";
-                case N3 -> "n3";
-            };
-        }
-    }
+      @Override
+      public String toString() {
+         return switch ( this ) {
+            case TURTLE -> "turtle";
+            case RDFXML -> "rdfxml";
+            case NTRIPLE -> "ntriple";
+            case N3 -> "n3";
+         };
+      }
+   }
 }

@@ -23,147 +23,151 @@ import lombok.Builder;
  */
 @Builder
 public class Configuration {
-    /**
-     * The name (and possibly path) to the GraphViz dot binary
-     */
-    @SuppressWarnings( "CanBeFinal" )
-    @Builder.Default
-    public String dotBinary = "dot";
+   /**
+    * The name (and possibly path) to the GraphViz dot binary
+    */
+   @SuppressWarnings( "CanBeFinal" )
+   @Builder.Default
+   public String dotBinary = "dot";
 
-    /**
-     * The default font name
-     */
-    @SuppressWarnings( "CanBeFinal" )
-    @Builder.Default
-    public String fontname = "Verdana";
+   /**
+    * The default font name
+    */
+   @SuppressWarnings( "CanBeFinal" )
+   @Builder.Default
+   public String fontname = "Verdana";
 
-    /**
-     * The default font size
-     */
-    @Builder.Default
-    public int fontsize = 12;
+   /**
+    * The default font size
+    */
+   @Builder.Default
+   public int fontsize = 12;
 
-    /**
-     * The name of the font for nodes
-     */
-    @SuppressWarnings( "CanBeFinal" )
-    @Builder.Default
-    public String nodeFontname = "Verdana";
+   /**
+    * The name of the font for nodes
+    */
+   @SuppressWarnings( "CanBeFinal" )
+   @Builder.Default
+   public String nodeFontname = "Verdana";
 
-    /**
-     * The size of the font for nodes
-     */
-    @SuppressWarnings( "CanBeFinal" )
-    @Builder.Default
-    public int nodeFontsize = 12;
+   /**
+    * The size of the font for nodes
+    */
+   @SuppressWarnings( "CanBeFinal" )
+   @Builder.Default
+   public int nodeFontsize = 12;
 
-    /**
-     * The default node shape, see <a href="https://graphviz.org/doc/info/shapes.html">Node Shapes</a> for the possible
-     * options
-     */
-    @Builder.Default
-    public String nodeShape = "box";
+   /**
+    * The default node shape, see <a href="https://graphviz.org/doc/info/shapes.html">Node Shapes</a>
+    * for the possible
+    * options
+    */
+   @Builder.Default
+   public String nodeShape = "box";
 
-    /**
-     * The margin values to be used for shapes, see <a href="https://graphviz.org/docs/attrs/margin/">margin</a> for
-     * syntax
-     */
-    @SuppressWarnings( "CanBeFinal" )
-    @Builder.Default
-    public String nodeMargin = "0.05,0.0";
+   /**
+    * The margin values to be used for shapes, see
+    * <a href="https://graphviz.org/docs/attrs/margin/">margin</a> for
+    * syntax
+    */
+   @SuppressWarnings( "CanBeFinal" )
+   @Builder.Default
+   public String nodeMargin = "0.05,0.0";
 
-    /**
-     * The style to use for nodes, see <a href="https://graphviz.org/docs/attr-types/style/">style</a> for details
-     */
-    @Builder.Default
-    public String nodeStyle = "rounded";
+   /**
+    * The style to use for nodes, see <a href="https://graphviz.org/docs/attr-types/style/">style</a>
+    * for details
+    */
+   @Builder.Default
+   public String nodeStyle = "rounded";
 
-    /**
-     * The background color for nodes
-     */
-    @SuppressWarnings( "CanBeFinal" )
-    @Builder.Default
-    public String bgColor = "white";
+   /**
+    * The background color for nodes
+    */
+   @SuppressWarnings( "CanBeFinal" )
+   @Builder.Default
+   public String bgColor = "white";
 
-    /**
-     * The foreground color (lines and text)
-     */
-    @SuppressWarnings( "CanBeFinal" )
-    @Builder.Default
-    public String fgColor = "black";
+   /**
+    * The foreground color (lines and text)
+    */
+   @SuppressWarnings( "CanBeFinal" )
+   @Builder.Default
+   public String fgColor = "black";
 
-    /**
-     * The output format
-     */
-    @Builder.Default
-    public Format format = Format.SVG;
+   /**
+    * The output format
+    */
+   @Builder.Default
+   public Format format = Format.SVG;
 
-    /**
-     * The diagram layout direction
-     */
-    @SuppressWarnings( "CanBeFinal" )
-    @Builder.Default
-    public LayoutDirection layoutDirection = LayoutDirection.LEFT_TO_RIGHT;
+   /**
+    * The diagram layout direction
+    */
+   @SuppressWarnings( "CanBeFinal" )
+   @Builder.Default
+   public LayoutDirection layoutDirection = LayoutDirection.LEFT_TO_RIGHT;
 
-    /**
-     * The possible formats for diagram generation
-     */
-    public enum Format {
-        /**
-         * PNG format
-         */
-        PNG,
-        /**
-         * SVG format
-         */
-        SVG;
+   /**
+    * The possible formats for diagram generation
+    */
+   public enum Format {
+      /**
+       * PNG format
+       */
+      PNG,
+      /**
+       * SVG format
+       */
+      SVG;
 
-        /**
-         * The file extension according to the format, e.g. "png" or "svg"
-         *
-         * @return the file extension
-         */
-        public String getExtension() {
-            return toString().toLowerCase();
-        }
+      /**
+       * The file extension according to the format, e.g. "png" or "svg"
+       *
+       * @return the file extension
+       */
+      public String getExtension() {
+         return toString().toLowerCase();
+      }
 
-        @Override
-        public String toString() {
-            return switch ( this ) {
-                case PNG -> "png";
-                case SVG -> "svg";
-            };
-        }
-    }
+      @Override
+      public String toString() {
+         return switch ( this ) {
+            case PNG -> "png";
+            case SVG -> "svg";
+         };
+      }
+   }
 
-    /**
-     * The possible directions in which the generated diagrams are aligned
-     */
-    public enum LayoutDirection {
-        /**
-         * Diagrams are aligned vertically, with the root node on top
-         */
-        TOP_TO_BOTTOM,
+   /**
+    * The possible directions in which the generated diagrams are aligned
+    */
+   public enum LayoutDirection {
+      /**
+       * Diagrams are aligned vertically, with the root node on top
+       */
+      TOP_TO_BOTTOM,
 
-        /**
-         * Diagrams are aligned horizontally, with the root node on the left
-         */
-        LEFT_TO_RIGHT,
+      /**
+       * Diagrams are aligned horizontally, with the root node on the left
+       */
+      LEFT_TO_RIGHT,
 
-        /**
-         * Check if the file contains the {@link #HINT_PREFIX} followed by either "top_to_bottom" or "left_to_right"
-         */
-        DETECT;
+      /**
+       * Check if the file contains the {@link #HINT_PREFIX} followed by either "top_to_bottom" or
+       * "left_to_right"
+       */
+      DETECT;
 
-        public static final String HINT_PREFIX = "#pragma diagram: ";
+      public static final String HINT_PREFIX = "#pragma diagram: ";
 
-        @Override
-        public String toString() {
-            return switch ( this ) {
-                case TOP_TO_BOTTOM -> "top_to_bottom";
-                case LEFT_TO_RIGHT -> "left_to_right";
-                case DETECT -> "detect";
-            };
-        }
-    }
+      @Override
+      public String toString() {
+         return switch ( this ) {
+            case TOP_TO_BOTTOM -> "top_to_bottom";
+            case LEFT_TO_RIGHT -> "left_to_right";
+            case DETECT -> "detect";
+         };
+      }
+   }
 }
