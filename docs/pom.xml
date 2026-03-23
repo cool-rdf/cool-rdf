@@ -128,7 +128,7 @@
                         <configuration>
                             <target name="main">
                                 <apply executable="java"
-                                       dest="${project.basedir}/src-gen/docs/antora/modules/ROOT/assets/images/generated"
+                                       dest="${project.basedir}/src/docs/antora/modules/ROOT/assets/images/generated"
                                        parallel="false"
                                        failonerror="true"
                                        failifexecutionfails="true"
