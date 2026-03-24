@@ -31,7 +31,6 @@
 
     <properties>
         <regular.jar>${project.artifactId}-${project.version}</regular.jar>
-        <native.image.jar>${project.artifactId}-${project.version}-for-native</native.image.jar>
         <main.class>cool.rdf.cli.Cool</main.class>
         <binary.name>cool</binary.name>
         <packaging.type>jar</packaging.type>
@@ -94,12 +93,6 @@
         <dependency>
             <groupId>info.picocli</groupId>
             <artifactId>picocli</artifactId>
-        </dependency>
-
-        <!-- Compile time only dependencies -->
-        <dependency>
-            <groupId>org.graalvm.nativeimage</groupId>
-            <artifactId>svm</artifactId>
         </dependency>
 
         <!-- Test dependencies -->
@@ -294,84 +287,6 @@
                 <artifactId>maven-shade-plugin</artifactId>
                 <version>${maven-shade-plugin.version}</version>
                 <executions>
-                    <!-- Builds the .jar file that is passed to GraalVM native-image -->
-                    <execution>
-                        <id>shade-for-native-image</id>
-                        <phase>package</phase>
-                        <goals>
-                            <goal>shade</goal>
-                        </goals>
-                        <configuration>
-                            <finalName>${native.image.jar}</finalName>
-                            <createDependencyReducedPom>false</createDependencyReducedPom>
-                            <skip>${maven.shade.skip}</skip>
-                            <transformers>
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <manifestEntries>
-                                        <Main-Class>${main.class}</Main-Class>
-                                    </manifestEntries>
-                                </transformer>
-                                <transformer
-                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
-                            </transformers>
-                            <artifactSet>
-                                <excludes>
-                                    <!-- GraalVM SDK classes & friends must not be used at runtime -->
-                                    <exclude>org.graalvm.sdk:graal-sdk</exclude>
-                                    <exclude>org.graalvm.nativeimage:svm</exclude>
-                                    <exclude>org.graalvm.truffle:truffle-api</exclude>
-                                    <exclude>org.graalvm.nativeimage:native-image-base</exclude>
-                                    <exclude>org.graalvm.nativeimage:pointsto</exclude>
-                                    <exclude>org.graalvm.nativeimage:objectfile</exclude>
-                                    <exclude>org.graalvm.compiler:compiler</exclude>
-
-                                    <!-- OWL API components that contain identical classes to the ones -->
-                                    <!-- already given in owlapi-distribution -->
-                                    <exclude>net.sourceforge.owlapi:owlapi-api</exclude>
-                                    <exclude>net.sourceforge.owlapi:owlapi-apibinding</exclude>
-                                    <exclude>net.sourceforge.owlapi:owlapi-compatibility</exclude>
-                                    <exclude>net.sourceforge.owlapi:owlapi-impl</exclude>
-                                    <exclude>net.sourceforge.owlapi:owlapi-parsers</exclude>
-                                    <exclude>net.sourceforge.owlapi:owlapi-oboformat</exclude>
-                                    <exclude>net.sourceforge.owlapi:owlapi-rio</exclude>
-                                    <exclude>net.sourceforge.owlapi:owlapi-tools</exclude>
-                                </excludes>
-                            </artifactSet>
-                            <filters>
-                                <!-- Required to prevent overlapping resources -->
-                                <filter>
-                                    <artifact>*:*</artifact>
-                                    <excludes>
-                                        <exclude>module-info.class</exclude>
-                                        <exclude>META-INF/*</exclude>
-                                        <exclude>META-INF/sisu/javax.inject.Named</exclude>
-                                        <exclude>META-INF/plexus/components.xml</exclude>
-                                        <exclude>META-INF.versions*/**</exclude>
-                                        <exclude>META-INF/versions*/**</exclude>
-                                        <exclude>META-INF/maven/**</exclude>
-                                        <exclude>plugin.xml</exclude>
-                                        <exclude>about.html</exclude>
-                                    </excludes>
-                                </filter>
-                                <!-- Required to override the excludes above -->
-                                <filter>
-                                    <artifact>${project.groupId}:${project.artifactId}</artifact>
-                                    <excludeDefaults>false</excludeDefaults>
-                                    <includes>
-                                        <include>**</include>
-                                        <include>META-INF/**</include>
-                                        <include>git.properties</include>
-                                    </includes>
-                                    <excludes>
-                                        <!-- Explicitly exclude build-time-only code from jar -->
-                                        <exclude>cool/rdf/*/buildtime/**</exclude>
-                                    </excludes>
-                                </filter>
-                            </filters>
-                        </configuration>
-                    </execution>
-                    <!-- Builds the regular standalone executable .jar -->
                     <execution>
                         <id>default-shade</id>
                         <phase>package</phase>
@@ -434,8 +349,6 @@
                                     <excludes>
                                         <!-- Explicitly exclude build-time-only code from jar -->
                                         <exclude>cool/rdf/core/buildtime/**</exclude>
-                                        <!-- Exclude the GraalVM setup code and substitution classes -->
-                                        <exclude>cool/rdf/cli/graal/**</exclude>
                                     </excludes>
                                 </filter>
                             </filters>
@@ -445,66 +358,4 @@
             </plugin>
         </plugins>
     </build>
-
-    <profiles>
-        <profile>
-            <id>native</id>
-            <properties>
-                <maven.surefire.skip>true</maven.surefire.skip>
-                <maven.resources.skip>true</maven.resources.skip>
-                <packaging.type>native</packaging.type>
-            </properties>
-
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.graalvm.buildtools</groupId>
-                        <artifactId>native-maven-plugin</artifactId>
-                        <version>${native-maven-plugin.version}</version>
-                        <extensions>true</extensions>
-                        <executions>
-                            <execution>
-                                <id>build-native</id>
-                                <goals>
-                                    <goal>compile</goal>
-                                </goals>
-                                <phase>pre-integration-test</phase>
-                            </execution>
-                        </executions>
-                        <configuration>
-                            <mainClass>${main.class}</mainClass>
-                            <skip>${native.build.skip}</skip>
-                            <skipNativeTests>true</skipNativeTests>
-                            <buildArgs>
-                                <arg>-H:Name=${project.build.directory}/${binary.name}</arg>
-                                <arg>--verbose</arg>
-                                <arg>--no-fallback</arg>
-                                <arg>--report-unsupported-elements-at-runtime</arg>
-                                <arg>-H:EnableURLProtocols=http,https</arg>
-                                <arg>--enable-https</arg>
-                                <arg>-H:-UseServiceLoaderFeature</arg>
-                                <arg>-H:+AllowIncompleteClasspath</arg>
-                                <arg>-H:+ReportExceptionStackTraces</arg>
-                                <arg>-H:+PrintClassInitialization</arg>
-                                <arg>-H:-DeadlockWatchdogExitOnTimeout</arg>
-                                <arg>-H:DeadlockWatchdogInterval=0</arg>
-                                <arg>--features=cool.rdf.cli.graal.feature.CoolRdfFeature</arg>
-                                <arg>-J-XX:MaxRAMPercentage=90.0</arg>
-                                <arg>-J-XX:GCTimeRatio=19</arg>
-                                <arg>-J--add-exports=java.desktop/sun.awt=ALL-UNNAMED</arg>
-                                <arg>-J--add-exports=java.desktop/sun.font=ALL-UNNAMED</arg>
-                                <arg>
-                                    -J--add-exports=org.graalvm.nativeimage.builder/com.oracle.svm.core.jni=ALL-UNNAMED
-                                </arg>
-                            </buildArgs>
-                            <quickBuild>true</quickBuild>
-                            <classpath>
-                                <param>${project.build.directory}/${native.image.jar}.jar</param>
-                            </classpath>
-                        </configuration>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-    </profiles>
 </project>

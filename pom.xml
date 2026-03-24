@@ -64,7 +64,6 @@
         <maven.surefire.skip>false</maven.surefire.skip>
         <maven.failsafe.skip>false</maven.failsafe.skip>
         <maven.shade.skip>false</maven.shade.skip>
-        <native.build.skip>false</native.build.skip>
         <jacoco.skip>false</jacoco.skip>
         <eclipse-code-formatter.version>4.38</eclipse-code-formatter.version>
 
@@ -74,7 +73,6 @@
         <commons-codec.version>1.20.0</commons-codec.version>
         <commons-io.version>2.21.0</commons-io.version>
         <commons-text.version>1.15.0</commons-text.version>
-        <graalvm.version>23.0.1</graalvm.version>
         <guava.version>33.5.0-jre</guava.version>
         <httpclient.version>4.5.14</httpclient.version>
         <jena.version>5.6.0</jena.version>
@@ -119,7 +117,6 @@
         <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
         <maven-surefire-junit5-tree-reporter.version>1.5.1</maven-surefire-junit5-tree-reporter.version>
         <maven-surefire-plugin.version>3.5.4</maven-surefire-plugin.version>
-        <native-maven-plugin.version>0.11.3</native-maven-plugin.version>
         <versions-maven-plugin.version>2.20.1</versions-maven-plugin.version>
         <spotless-maven-plugin.version>3.1.0</spotless-maven-plugin.version>
     </properties>
@@ -271,11 +268,6 @@
                 <groupId>org.slf4j</groupId>
                 <artifactId>slf4j-api</artifactId>
                 <version>${slf4j-api.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.graalvm.nativeimage</groupId>
-                <artifactId>svm</artifactId>
-                <version>${graalvm.version}</version>
             </dependency>
             <dependency>
                 <groupId>io.vavr</groupId>
@@ -436,11 +428,6 @@
                     <version>${maven-surefire-plugin.version}</version>
                 </plugin>
                 <plugin>
-                    <groupId>org.graalvm.buildtools</groupId>
-                    <artifactId>native-maven-plugin</artifactId>
-                    <version>${native-maven-plugin.version}</version>
-                </plugin>
-                <plugin>
                     <groupId>com.diffplug.spotless</groupId>
                     <artifactId>spotless-maven-plugin</artifactId>
                     <version>${spotless-maven-plugin.version}</version>
@@ -576,7 +563,7 @@
                 <version>${versions-maven-plugin.version}</version>
                 <configuration>
                     <ignoredVersions>.*[\.-](?i)(alpha|beta|(rc[0-9]+)|(m\d+)).*</ignoredVersions>
-                    <excludeProperties>graalvm.version,jena.version</excludeProperties>
+                    <excludeProperties>jena.version</excludeProperties>
                 </configuration>
             </plugin>
 
@@ -741,7 +728,6 @@
                         <extensions>true</extensions>
                         <configuration>
                             <publishingServerId>central</publishingServerId>
-                            <tokenEnabled>true</tokenEnabled>
                             <checksums>all</checksums>
                             <autoPublish>false</autoPublish>
                             <excludeArtifacts>

@@ -23,47 +23,17 @@ import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Optional;
-import java.util.Set;
-import java.util.concurrent.locks.ReadWriteLock;
-import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 import javax.annotation.Nonnull;
 
-import org.semanticweb.owlapi.dlsyntax.parser.DLSyntaxOWLParserFactory;
-import org.semanticweb.owlapi.dlsyntax.renderer.DLSyntaxHTMLStorerFactory;
-import org.semanticweb.owlapi.dlsyntax.renderer.DLSyntaxStorerFactory;
-import org.semanticweb.owlapi.functional.parser.OWLFunctionalSyntaxOWLParserFactory;
-import org.semanticweb.owlapi.functional.renderer.FunctionalSyntaxStorerFactory;
-import org.semanticweb.owlapi.io.OWLParserFactory;
-import org.semanticweb.owlapi.krss2.parser.KRSS2OWLParserFactory;
-import org.semanticweb.owlapi.krss2.renderer.KRSS2OWLSyntaxStorerFactory;
-import org.semanticweb.owlapi.latex.renderer.LatexStorerFactory;
-import org.semanticweb.owlapi.manchestersyntax.parser.ManchesterOWLSyntaxOntologyParserFactory;
-import org.semanticweb.owlapi.manchestersyntax.renderer.ManchesterSyntaxStorerFactory;
-import org.semanticweb.owlapi.model.OWLDataFactory;
+import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
-import org.semanticweb.owlapi.model.OWLOntologyFactory;
 import org.semanticweb.owlapi.model.OWLOntologyManager;
-import org.semanticweb.owlapi.model.OWLStorerFactory;
-import org.semanticweb.owlapi.oboformat.OBOFormatOWLAPIParserFactory;
-import org.semanticweb.owlapi.oboformat.OBOFormatStorerFactory;
-import org.semanticweb.owlapi.owlxml.parser.OWLXMLParserFactory;
-import org.semanticweb.owlapi.owlxml.renderer.OWLXMLStorerFactory;
-import org.semanticweb.owlapi.rdf.rdfxml.parser.RDFXMLParserFactory;
-import org.semanticweb.owlapi.rdf.rdfxml.renderer.RDFXMLStorerFactory;
-import org.semanticweb.owlapi.rdf.turtle.parser.TurtleOntologyParserFactory;
-import org.semanticweb.owlapi.rdf.turtle.renderer.TurtleStorerFactory;
 import org.slf4j.Logger;
-
-import com.google.common.collect.ImmutableSet;
 
 import io.vavr.control.Try;
 import picocli.CommandLine;
-import uk.ac.manchester.cs.owl.owlapi.OWLDataFactoryImpl;
-import uk.ac.manchester.cs.owl.owlapi.OWLOntologyFactoryImpl;
-import uk.ac.manchester.cs.owl.owlapi.OWLOntologyManagerImpl;
-import uk.ac.manchester.cs.owl.owlapi.concurrent.NonConcurrentOWLOntologyBuilder;
 
 /**
  * Base class for commands that bundles common functionality
@@ -150,54 +120,6 @@ public abstract class AbstractCommand {
    }
 
    /**
-    * Since the service loader feature is disabled in the GraalVM config, instead set up the OWL-API
-    * OWL ontology
-    * manager programmatically.
-    *
-    * @return the OWL ontology manager
-    */
-   protected OWLOntologyManager createOWLOntologyManager() {
-      final ImmutableSet<OWLParserFactory> parserFactories = ImmutableSet.<OWLParserFactory>builder()
-            .add( new ManchesterOWLSyntaxOntologyParserFactory() )
-            .add( new KRSS2OWLParserFactory() )
-            .add( new TurtleOntologyParserFactory() )
-            .add( new OWLFunctionalSyntaxOWLParserFactory() )
-            .add( new OWLXMLParserFactory() )
-            .add( new RDFXMLParserFactory() )
-            .add( new DLSyntaxOWLParserFactory() )
-            .add( new OBOFormatOWLAPIParserFactory() )
-            .build();
-
-      final Set<OWLOntologyFactory> ontologyFactories = ImmutableSet.<OWLOntologyFactory>builder()
-            .add( new OWLOntologyFactoryImpl( new NonConcurrentOWLOntologyBuilder() ) )
-            .build();
-
-      @SuppressWarnings( "SpellCheckingInspection" )
-      final Set<OWLStorerFactory> storerFactories = ImmutableSet.<OWLStorerFactory>builder()
-            .add( new RDFXMLStorerFactory() )
-            .add( new OWLXMLStorerFactory() )
-            .add( new FunctionalSyntaxStorerFactory() )
-            .add( new ManchesterSyntaxStorerFactory() )
-            .add( new KRSS2OWLSyntaxStorerFactory() )
-            .add( new TurtleStorerFactory() )
-            .add( new LatexStorerFactory() )
-            .add( new DLSyntaxHTMLStorerFactory() )
-            .add( new DLSyntaxStorerFactory() )
-            .add( new OBOFormatStorerFactory() )
-            .build();
-
-      final OWLDataFactory dataFactory = new OWLDataFactoryImpl();
-      final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
-      final OWLOntologyManager manager = new OWLOntologyManagerImpl( dataFactory, readWriteLock );
-
-      manager.setOntologyFactories( ontologyFactories );
-      manager.setOntologyParsers( parserFactories );
-      manager.setOntologyStorers( storerFactories );
-
-      return manager;
-   }
-
-   /**
     * Loads an ontology from an input stream
     *
     * @param inputStream the input stream
@@ -206,7 +128,7 @@ public abstract class AbstractCommand {
     *         {@link OWLOntologyCreationException} otherwise.
     */
    public Try<OWLOntology> loadOntology( final InputStream inputStream ) {
-      final OWLOntologyManager manager = createOWLOntologyManager();
+      final OWLOntologyManager manager = OWLManager.createOWLOntologyManager();
       final OWLOntology ontology;
       try {
          ontology = manager.loadOntologyFromOntologyDocument( inputStream );

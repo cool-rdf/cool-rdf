@@ -106,8 +106,8 @@
                                 <source>${shared.test.sources}/java</source>
                             </sources>
                         </configuration>
-                     </execution>
-                 </executions>
+                    </execution>
+                </executions>
             </plugin>
 
             <plugin>
