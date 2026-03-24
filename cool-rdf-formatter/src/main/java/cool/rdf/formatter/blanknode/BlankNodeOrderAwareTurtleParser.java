@@ -91,16 +91,16 @@ public class BlankNodeOrderAwareTurtleParser {
             @Override
             public void read( final InputStream in, final String baseURI, final ContentType ct, final StreamRDF output,
                   final Context context ) {
-               Tokenizer tokenizer = TokenizerText.create().source( in ).errorHandler( profileWrapper.getErrorHandler() ).build();
-               LangRIOT parser = new LangTurtle( tokenizer, profileWrapper, output );
+               final Tokenizer tokenizer = TokenizerText.create().source( in ).errorHandler( profileWrapper.getErrorHandler() ).build();
+               final LangRIOT parser = new LangTurtle( tokenizer, profileWrapper, output );
                parser.parse();
             }
 
             @Override
             public void read( final Reader reader, final String baseURI, final ContentType ct, final StreamRDF output,
                   final Context context ) {
-               Tokenizer tokenizer = TokenizerText.create().source( reader ).errorHandler( profileWrapper.getErrorHandler() ).build();
-               LangRIOT parser = new LangTurtle( tokenizer, profileWrapper, output );
+               final Tokenizer tokenizer = TokenizerText.create().source( reader ).errorHandler( profileWrapper.getErrorHandler() ).build();
+               final LangRIOT parser = new LangTurtle( tokenizer, profileWrapper, output );
                parser.parse();
             }
          };

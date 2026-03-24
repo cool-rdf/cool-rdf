@@ -30,12 +30,12 @@ public class RDFNodeComparatorFactory {
    private final BlankNodeMetadata blankNodeOrdering;
    private final RDFNodeComparator rdfNodeComparator = new RDFNodeComparator();
 
-   public RDFNodeComparatorFactory( PrefixMapping prefixMapping, BlankNodeMetadata blankNodeOrdering ) {
+   public RDFNodeComparatorFactory( final PrefixMapping prefixMapping, final BlankNodeMetadata blankNodeOrdering ) {
       this.prefixMapping = prefixMapping;
       this.blankNodeOrdering = blankNodeOrdering;
    }
 
-   public RDFNodeComparatorFactory( PrefixMapping prefixMapping ) {
+   public RDFNodeComparatorFactory( final PrefixMapping prefixMapping ) {
       this( prefixMapping, null );
    }
 
@@ -45,7 +45,7 @@ public class RDFNodeComparatorFactory {
 
    private class RDFNodeComparator implements Comparator<RDFNode> {
       @Override
-      public int compare( RDFNode left, RDFNode right ) {
+      public int compare( final RDFNode left, final RDFNode right ) {
          if ( left.isURIResource() ) {
             if ( right.isURIResource() ) {
                return prefixMapping.shortForm( left.asResource().getURI() ).compareTo( prefixMapping.shortForm( right.asResource()

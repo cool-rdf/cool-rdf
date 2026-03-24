@@ -790,7 +790,7 @@ public class TurtleFormatterTest {
 
    @ParameterizedTest
    @MethodSource
-   void testConsistentBlankNodeOrdering( String content ) {
+   void testConsistentBlankNodeOrdering( final String content ) {
       final FormattingStyle style = FormattingStyle.DEFAULT;
       final TurtleFormatter formatter = new TurtleFormatter( style );
       for ( int i = 0; i < 1; i++ ) {
@@ -831,18 +831,18 @@ public class TurtleFormatterTest {
                _:blank1 ex:has [
                    ex:has _:blank1 ;
                  ] ."""
-      ).map( s -> Arguments.of( s ) );
+      ).map( Arguments::of );
    }
 
    @Test
    void testPreviouslyIdentifiedBlankNode() {
-      String content = """
+      final String content = """
          @prefix ex: <http://example.com/ns#> .
 
          _:gen0 ex:has [
              ex:has _:gen0 ;
            ].""";
-      String expected = """
+      final String expected = """
          @prefix ex: <http://example.com/ns#> .
 
          _:gen0 ex:has [
@@ -858,14 +858,14 @@ public class TurtleFormatterTest {
 
    @Test
    void testBlankNodeCycle() {
-      String content = """
+      final String content = """
          @prefix ex: <http://example.com/ns#> .
 
          _:blank1 ex:has _:blank2 .
 
          _:blank2 ex:has _:blank1 .
          """;
-      String expected = """
+      final String expected = """
          @prefix ex: <http://example.com/ns#> .
 
          _:blank1 ex:has [
@@ -881,14 +881,14 @@ public class TurtleFormatterTest {
 
    @Test
    void testNoBlankNodeCycle() {
-      String content = """
+      final String content = """
          @prefix ex: <http://example.com/ns#> .
 
          _:one ex:has ex:A .
          ex:A ex:has _:one .
 
          """;
-      String expected = """
+      final String expected = """
          @prefix ex: <http://example.com/ns#> .
 
          ex:A ex:has [
@@ -904,7 +904,7 @@ public class TurtleFormatterTest {
 
    @Test
    void testNoBlankNodeCycle2Blanks() {
-      String content = """
+      final String content = """
          @prefix ex: <http://example.com/ns#> .
 
          _:one ex:has ex:A .
@@ -913,7 +913,7 @@ public class TurtleFormatterTest {
          _:three ex:has _:one .
 
          """;
-      String expected = """
+      final String expected = """
          @prefix ex: <http://example.com/ns#> .
 
          ex:A ex:has [
@@ -933,7 +933,7 @@ public class TurtleFormatterTest {
 
    @Test
    void testBlankNodeCycle1ResBetween() {
-      String content = """
+      final String content = """
          @prefix ex: <http://example.com/ns#> .
 
          _:one ex:has ex:A .
@@ -941,7 +941,7 @@ public class TurtleFormatterTest {
          _:two ex:has _:one .
 
          """;
-      String expected = """
+      final String expected = """
          @prefix ex: <http://example.com/ns#> .
 
          ex:A ex:has [
@@ -957,7 +957,7 @@ public class TurtleFormatterTest {
 
    @Test
    void testBlankNodeCycle2ResBetween() {
-      String content = """
+      final String content = """
          @prefix ex: <http://example.com/ns#> .
 
          _:one ex:has ex:A .
@@ -966,7 +966,7 @@ public class TurtleFormatterTest {
          ex:B ex:has _:one .
 
          """;
-      String expected = """
+      final String expected = """
          @prefix ex: <http://example.com/ns#> .
 
          ex:A ex:has [
@@ -984,13 +984,13 @@ public class TurtleFormatterTest {
 
    @Test
    void testBlankNodeTriangle1() {
-      String content = """
+      final String content = """
          @prefix : <http://example.com/ns#> .
          _:b1 :foo _:b2, _:b3.
          _:b2 :foo _:b3.
 
          """;
-      String expected = """
+      final String expected = """
          @prefix : <http://example.com/ns#> .
 
          [
@@ -1009,14 +1009,14 @@ public class TurtleFormatterTest {
 
    @Test
    void testBlankNodeTriangleWithBlankNodeTriple() {
-      String content = """
+      final String content = """
          @prefix : <http://example.com/ns#> .
          [] :foo [] .
          _:b1 :foo _:b2, _:b3.
          _:b2 :foo _:b3.
 
          """;
-      String expected = """
+      final String expected = """
          @prefix : <http://example.com/ns#> .
 
          [
@@ -1087,12 +1087,12 @@ public class TurtleFormatterTest {
 
    @Test
    public void testIntegerLiteralWithLeadingZeros() {
-      String content = """
+      final String content = """
          @prefix : <http://example.com/ns#> .
          :thing :value 060.
 
          """;
-      String expected = """
+      final String expected = """
          @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
          @prefix : <http://example.com/ns#> .
 
@@ -1105,12 +1105,12 @@ public class TurtleFormatterTest {
 
    @Test
    public void testDoubleLiteralWithoutFractions() {
-      String content = """
+      final String content = """
          @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
          @prefix : <http://example.com/ns#> .
          :thing :value "40"^^xsd:double.
          """;
-      String expected = """
+      final String expected = """
          @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
          @prefix : <http://example.com/ns#> .
 
@@ -1123,12 +1123,12 @@ public class TurtleFormatterTest {
 
    @Test
    public void testDoubleLiteralWithFractions() {
-      String content = """
+      final String content = """
          @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
          @prefix : <http://example.com/ns#> .
          :thing :value "4.001E2"^^xsd:double.
          """;
-      String expected = """
+      final String expected = """
          @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
          @prefix : <http://example.com/ns#> .
 
@@ -1141,12 +1141,12 @@ public class TurtleFormatterTest {
 
    @Test
    public void testDecimalLiteralWithoutFractions() {
-      String content = """
+      final String content = """
          @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
          @prefix : <http://example.com/ns#> .
          :thing :value "40"^^xsd:decimal.
          """;
-      String expected = """
+      final String expected = """
          @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
          @prefix : <http://example.com/ns#> .
 
@@ -1159,12 +1159,12 @@ public class TurtleFormatterTest {
 
    @Test
    public void testDecimalLiteralWithFractions() {
-      String content = """
+      final String content = """
          @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
          @prefix : <http://example.com/ns#> .
          :thing :value "40.0001"^^xsd:decimal.
          """;
-      String expected = """
+      final String expected = """
          @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
          @prefix : <http://example.com/ns#> .
 
@@ -1178,7 +1178,7 @@ public class TurtleFormatterTest {
 
    @Test
    public void testListNodeWithAdditionalTriples() {
-      String content = """
+      final String content = """
          @prefix : <http://example.com/ns#> .
          @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
          :thing :hasList  [
@@ -1189,7 +1189,7 @@ public class TurtleFormatterTest {
              rdf:rest ( 2 3 4 );
          ] .
          """;
-      String expected = """
+      final String expected = """
          @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
          @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
          @prefix : <http://example.com/ns#> .
@@ -1208,7 +1208,7 @@ public class TurtleFormatterTest {
 
    @Test
    public void testEmptyList() {
-      var content = """
+      final var content = """
          @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
          @prefix : <http://example.com/ns#> .
          :aThing a :element;
@@ -1251,7 +1251,7 @@ public class TurtleFormatterTest {
 
    @Test
    public void testMultilineStrings() {
-      String content = """
+      final String content = """
          @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
          @prefix : <http://example.com/ns#> .
          :thing :value \"""
@@ -1260,7 +1260,7 @@ public class TurtleFormatterTest {
               Third Line
          \""" .
          """;
-      String expected = """
+      final String expected = """
          @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
          @prefix : <http://example.com/ns#> .
 
@@ -1277,12 +1277,12 @@ public class TurtleFormatterTest {
 
    @Test
    public void testStringsWithUnixStyleNewlinesToMultilineStrings() {
-      String content = """
+      final String content = """
          @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
          @prefix : <http://example.com/ns#> .
          :thing :value "\\n     First Line\\n     Second Line\\n     Third Line\\n" .
          """;
-      String expected = """
+      final String expected = """
          @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
          @prefix : <http://example.com/ns#> .
 
@@ -1299,12 +1299,12 @@ public class TurtleFormatterTest {
 
    @Test
    public void testStringsWithWindowsStyleNewlinesToMultilineStrings() {
-      String content = """
+      final String content = """
          @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
          @prefix : <http://example.com/ns#> .
          :thing :value "\\r\\n     First Line\\r\\n     Second Line\\r\\n     Third Line\\r\\n" .
          """;
-      String expected = """
+      final String expected = """
          @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
          @prefix : <http://example.com/ns#> .
 
@@ -1321,12 +1321,12 @@ public class TurtleFormatterTest {
 
    @Test
    public void testStringsWithMacStyleNewlinesToMultilineStrings() {
-      String content = """
+      final String content = """
          @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
          @prefix : <http://example.com/ns#> .
          :thing :value "\\r     First Line\\r     Second Line\\r     Third Line\\r" .
          """;
-      String expected = """
+      final String expected = """
          @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
          @prefix : <http://example.com/ns#> .
 
