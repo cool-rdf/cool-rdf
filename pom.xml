@@ -69,8 +69,6 @@
         <eclipse-code-formatter.version>4.38</eclipse-code-formatter.version>
 
         <!-- General dependency versions -->
-        <asciidoctorj.version>3.0.1</asciidoctorj.version>
-        <asciidoctor-multipage.version>0.0.16</asciidoctor-multipage.version>
         <caffeine.version>3.2.3</caffeine.version>
         <classgraph.version>4.8.184</classgraph.version>
         <commons-codec.version>1.20.0</commons-codec.version>
@@ -84,7 +82,6 @@
         <jruby.version>10.0.2.0</jruby.version>
         <logback.version>1.5.23</logback.version>
         <lombok.version>1.18.42</lombok.version>
-        <mavengem-wagon.version>1.0.3</mavengem-wagon.version>
         <openllet.version>2.6.5</openllet.version>
         <owlapi.version>5.5.1</owlapi.version>
         <picocli.version>4.7.7</picocli.version>
@@ -98,13 +95,11 @@
         <mockito.version>5.21.0</mockito.version>
 
         <!-- Plugin versions -->
-        <asciidoctor-maven-plugin.version>3.2.0</asciidoctor-maven-plugin.version>
         <build-helper-maven-plugin.version>3.6.1</build-helper-maven-plugin.version>
         <central-publishing-maven-plugin.version>0.9.0</central-publishing-maven-plugin.version>
         <checkstyle.version>10.26.1</checkstyle.version>
         <exec-maven-plugin.version>3.6.3</exec-maven-plugin.version>
         <flatten-maven-plugin.version>1.7.3</flatten-maven-plugin.version>
-        <gem-maven-plugin.version>2.0.1</gem-maven-plugin.version>
         <git-commit-id-maven-plugin.version>9.0.2</git-commit-id-maven-plugin.version>
         <groovy-maven-plugin.version>2.1.1</groovy-maven-plugin.version>
         <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
@@ -174,11 +169,6 @@
             </dependency>
 
             <!-- General dependencies -->
-            <dependency>
-                <groupId>org.asciidoctor</groupId>
-                <artifactId>asciidoctorj</artifactId>
-                <version>${asciidoctorj.version}</version>
-            </dependency>
             <dependency>
                 <groupId>com.github.ben-manes.caffeine</groupId>
                 <artifactId>caffeine</artifactId>
@@ -341,11 +331,6 @@
         <pluginManagement>
             <plugins>
                 <plugin>
-                    <groupId>org.asciidoctor</groupId>
-                    <artifactId>asciidoctor-maven-plugin</artifactId>
-                    <version>${asciidoctor-maven-plugin.version}</version>
-                </plugin>
-                <plugin>
                     <groupId>org.sonatype.central</groupId>
                     <artifactId>central-publishing-maven-plugin</artifactId>
                     <version>${central-publishing-maven-plugin.version}</version>
@@ -364,11 +349,6 @@
                     <groupId>org.codehaus.mojo</groupId>
                     <artifactId>flatten-maven-plugin</artifactId>
                     <version>${flatten-maven-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>de.saumya.mojo</groupId>
-                    <artifactId>gem-maven-plugin</artifactId>
-                    <version>${gem-maven-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>io.github.git-commit-id</groupId>
