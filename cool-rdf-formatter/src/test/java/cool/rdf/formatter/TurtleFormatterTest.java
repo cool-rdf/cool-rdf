@@ -517,7 +517,8 @@ public class TurtleFormatterTest {
    }
 
    @Test
-   @DisabledIf( value = "cool.rdf.core.test.shared.TestUtil#systemUsesProxy" )
+   @DisabledIf( value = "cool.rdf.core.test.shared.TestUtil#systemUsesProxy",
+      disabledReason = "Implementation currently doesn't work with a proxy" )
    public void testFormatting() {
       final Model model = ModelFactory.createDefaultModel();
       model
