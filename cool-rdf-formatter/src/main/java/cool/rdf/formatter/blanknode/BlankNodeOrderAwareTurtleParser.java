@@ -44,11 +44,9 @@ import org.apache.jena.sparql.util.Context;
 
 public class BlankNodeOrderAwareTurtleParser {
    /**
-    * Parses the TTL <code>content</code> and returns a {@link ParseResult}, containing the new
-    * {@link Model} and a
-    * {@link BlankNodeMetadata} object that makes the ordering of the blank nodes in the original
-    * <code>content</code>
-    * accessible for further processing.
+    * Parses the TTL {@code content} and returns a {@link ParseResult}, containing the new
+    * {@link Model} and a {@link BlankNodeMetadata} object that makes the ordering of the blank nodes
+    * in the original {@code content} accessible for further processing.
     *
     * @param content RDF in TTL format
     * @return the parse result and the blank node ordering
@@ -56,9 +54,9 @@ public class BlankNodeOrderAwareTurtleParser {
    public static ParseResult parseModel( final String content ) {
       final BlankNodeMetadata bnodeMetadata = new BlankNodeMetadata();
 
-      final Lang TTL_bn = LangBuilder.create( "TTL_BN", "text/bogus" )
+      final Lang ttlBn = LangBuilder.create( "TTL_BN", "text/bogus" )
             .build();
-      RDFParserRegistry.registerLangTriples( TTL_bn, ( language, profile ) -> {
+      RDFParserRegistry.registerLangTriples( ttlBn, ( language, profile ) -> {
          final ParserProfile profileWrapper = new ParserProfileWrapper( profile ) {
             @Override
             public Node createBlankNode( final Node scope, final String label, final long line, final long col ) {
@@ -107,8 +105,8 @@ public class BlankNodeOrderAwareTurtleParser {
       } );
       final Graph graph = RDFParser.source( new ByteArrayInputStream( content.getBytes() ) ).labelToNode( LabelToNode
             .createUseLabelAsGiven() )
-            .lang( TTL_bn ).toGraph();
-      RDFParserRegistry.removeRegistration( TTL_bn );
+            .lang( ttlBn ).toGraph();
+      RDFParserRegistry.removeRegistration( ttlBn );
       final Model model = ModelFactory.createModelForGraph( graph );
       bnodeMetadata.linkGraphNodesToModelResources( model );
       return new ParseResult( model, bnodeMetadata );

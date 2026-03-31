@@ -178,12 +178,11 @@ public interface RdfModel extends Model {
    /**
     * Similar to {@link Model#listStatements(Resource, Property, RDFNode)}, list all statements
     * matching a pattern. The
-    * statements selected are those whose subject matches the <code>subject</code> argument, whose
+    * statements selected are those whose subject matches the {@code subject} argument, whose
     * predicate matches
-    * the <code>predicate</code> argument and whose object matches the <code>object</code> argument. If
+    * the {@code predicate} argument and whose object matches the {@code object} argument. If
     * an argument is
-    * <code>null</code> it matches anything.
-    * </p>
+    * {@code null} it matches anything.
     *
     * @param subject the subject of the pattern
     * @param predicate the predicate of the pattern
