@@ -116,7 +116,6 @@
         <maven-install-plugin.version>3.1.4</maven-install-plugin.version>
         <maven-javadoc-plugin.version>3.12.0</maven-javadoc-plugin.version>
         <maven-jar-plugin.version>3.5.0</maven-jar-plugin.version>
-        <maven-release-plugin.version>3.3.1</maven-release-plugin.version>
         <maven-resources-plugin.version>3.5.0</maven-resources-plugin.version>
         <maven-shade-plugin.version>3.6.2</maven-shade-plugin.version>
         <maven-source-plugin.version>3.4.0</maven-source-plugin.version>
@@ -436,11 +435,6 @@
                 </plugin>
                 <plugin>
                     <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-release-plugin</artifactId>
-                    <version>${maven-release-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>${maven-resources-plugin.version}</version>
                 </plugin>
@@ -565,27 +559,6 @@
                 <version>${maven-failsafe-plugin.version}</version>
                 <configuration>
                     <skipITs>${maven.failsafe.skip}</skipITs>
-                </configuration>
-            </plugin>
-
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-release-plugin</artifactId>
-                <version>${maven-release-plugin.version}</version>
-                <configuration>
-                    <!-- release:prepare -->
-                    <autoVersionSubmodules>true</autoVersionSubmodules>
-                    <preparationGoals>clean verify</preparationGoals>
-                    <scmCommentPrefix>[Release]</scmCommentPrefix>
-                    <signTag>true</signTag>
-                    <scmDevelopmentCommitComment>@{prefix} reset version to snapshot</scmDevelopmentCommitComment>
-                    <!--suppress UnresolvedMavenProperty -->
-                    <scmReleaseCommitComment>@{prefix} release @{releaseLabel}</scmReleaseCommitComment>
-                    <tagNameFormat>v@{project.version}</tagNameFormat>
-                    <updateWorkingCopyVersions>true</updateWorkingCopyVersions>
-                    <developmentVersion>DEV-SNAPSHOT</developmentVersion>
-                    <!-- release:perform -->
-                    <releaseProfiles>prepare-release,maven-central</releaseProfiles>
                 </configuration>
             </plugin>
 
