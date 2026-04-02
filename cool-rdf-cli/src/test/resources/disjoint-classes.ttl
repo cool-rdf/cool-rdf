@@ -4,4 +4,3 @@
 :foo a owl:Class .
 :bar a owl:Class ;
    owl:disjointWith :foo .
-

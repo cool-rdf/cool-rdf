@@ -4,4 +4,3 @@
 :C1 a owl:Class .
 :C2 a owl:Class ;
    owl:disjointWith :C1 .
-

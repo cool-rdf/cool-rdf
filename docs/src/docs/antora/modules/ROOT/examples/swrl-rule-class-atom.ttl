@@ -27,4 +27,3 @@ var:a a swrl:Variable .
       ]
    )
 ] .
-

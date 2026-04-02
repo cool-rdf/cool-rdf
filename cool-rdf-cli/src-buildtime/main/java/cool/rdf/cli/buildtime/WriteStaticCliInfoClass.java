@@ -56,7 +56,7 @@ public class WriteStaticCliInfoClass {
              * The name of the CLI command
              */
             public static final String COMMAND_NAME = "${commandName}";
-            
+
             /**
              * The project URL
              */

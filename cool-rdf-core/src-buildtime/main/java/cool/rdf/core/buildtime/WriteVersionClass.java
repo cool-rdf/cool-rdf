@@ -50,7 +50,7 @@ public class WriteVersionClass {
          */
 
          package ${package};
-         
+
          import javax.annotation.processing.Generated;
 
          /**

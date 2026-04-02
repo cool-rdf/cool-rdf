@@ -23,5 +23,3 @@ Installation instructions and the usage guide can be found in the [Online Docume
 ## Contact
 
 **owl-cli** is developed by Andreas Textor <<mail@atextor.de>>.
-
-

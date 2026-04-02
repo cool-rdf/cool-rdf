@@ -9,4 +9,3 @@ asciidoc:
     page-component-version: snapshot
 nav:
   - modules/ROOT/nav.adoc
-

@@ -54,9 +54,9 @@ public class WritePrefixesClass {
          */
 
         package ${package};
-         
+
         import javax.annotation.processing.Generated;
-                
+
         import cool.rdf.core.model.RdfPrefix;
 
         /**
@@ -66,27 +66,27 @@ public class WritePrefixesClass {
         @Generated( value = "${generatorClass}", date = "${isoBuildDate}" )
         public enum ${className} implements RdfPrefix {
         ${entries};
-            
+
             private final String prefix;
             private final String uri;
-            
+
             ${className}( final String uri ) {
                 this.prefix = null;
                 this.uri = uri;
             }
-            
+
             ${className}( final String prefix, final String uri ) {
                 this.prefix = prefix;
                 this.uri = uri;
             }
-            
+
             @Override
             public String prefix() {
                 return this.prefix == null
                     ? this.toString().toLowerCase()
                     : this.prefix;
             }
-            
+
             @Override
             public String uri() {
                 return uri;

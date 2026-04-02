@@ -40,4 +40,3 @@ jobs:
         with:
           name: cool-rdf-cli-jar
           path: cool-rdf-cli/target/cool-rdf-cli-DEV-SNAPSHOT.jar
-
