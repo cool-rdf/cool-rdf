@@ -584,14 +584,24 @@
                 <configuration>
                     <formats>
                         <format>
-                            <!-- define the files to apply to -->
                             <includes>
                                 <include>.gitattributes</include>
                                 <include>.gitignore</include>
+                                <include>**/*.java</include>
+                                <include>**/*.md</include>
+                                <include>**/*.adoc</include>
+                                <include>**/*.ttl</include>
+                                <include>**/*.xml</include>
+                                <include>**/*.yml</include>
                             </includes>
-                            <!-- define the steps to apply to those files -->
+                            <excludes>
+                                <exclude>**/target/**</exclude>
+                                <exclude>.idea/**</exclude>
+                            </excludes>
                             <trimTrailingWhitespace/>
                             <endWithNewline/>
+                            <encoding>${project.build.sourceEncoding}</encoding>
+                            <lineEndings>UNIX</lineEndings>
                         </format>
                     </formats>
                     <java>
@@ -610,8 +620,6 @@
                         <licenseHeader>
                             <file>${maven.multiModuleProjectDirectory}/.development/coolrdf-license-header.txt</file>
                         </licenseHeader>
-                        <trimTrailingWhitespace/>
-                        <endWithNewline/>
                     </java>
                 </configuration>
             </plugin>
