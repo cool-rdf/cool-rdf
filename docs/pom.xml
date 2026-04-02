@@ -316,6 +316,11 @@
 
         <profile>
             <id>antora</id>
+            <activation>
+                <property>
+                    <name>!antora-local</name>
+                </property>
+            </activation>
             <build>
                 <plugins>
                     <plugin>
@@ -344,6 +349,11 @@
         <!-- Execute Antora to build documentation, but use antora-local.yml -->
         <profile>
             <id>antora-local</id>
+            <activation>
+                <property>
+                    <name>antora-local</name>
+                </property>
+            </activation>
             <build>
                 <plugins>
                     <plugin>

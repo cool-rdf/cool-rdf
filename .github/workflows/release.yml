@@ -55,7 +55,7 @@ jobs:
           mvn -B versions:commit
 
           # Actual build
-          mvn -B clean deploy -Prelease,antora
+          mvn -B clean deploy -Drelease
         shell: bash
         env:
           MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
