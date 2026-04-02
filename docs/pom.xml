@@ -378,5 +378,50 @@
                 </plugins>
             </build>
         </profile>
+
+        <profile>
+            <id>release</id>
+            <activation>
+                <property>
+                    <name>release</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>software.xdev</groupId>
+                        <artifactId>find-and-replace-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>set-release-version-in-antora</id>
+                                <phase>process-sources</phase>
+                                <goals>
+                                    <goal>file-contents</goal>
+                                </goals>
+                                <configuration>
+                                    <baseDir>src/docs/antora</baseDir>
+                                    <fileMask>antora.yml</fileMask>
+                                    <findRegex>release-version: snapshot</findRegex>
+                                    <replaceValue>release-version: ${project.version}</replaceValue>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>set-release-tag-in-antora</id>
+                                <phase>process-sources</phase>
+                                <goals>
+                                    <goal>file-contents</goal>
+                                </goals>
+                                <configuration>
+                                    <baseDir>src/docs/antora</baseDir>
+                                    <fileMask>antora.yml</fileMask>
+                                    <findRegex>release-tag: snapshot</findRegex>
+                                    <replaceValue>release-tag: v${project.version}</replaceValue>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
     </profiles>
 </project>
