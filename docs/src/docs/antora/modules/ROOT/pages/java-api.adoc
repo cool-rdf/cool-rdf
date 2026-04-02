@@ -1,0 +1,396 @@
+// -*- fill-column: 100; -*-
+= Cool RDF Java API
+
+The functionality that powers the subcommands of the xref:cool-cli.adoc[] is also available as a set
+of Java libraries. They are are either described in the sections below, or the documentation is not
+yet available.
+
+[[cool-rdf-formatter]]
+== cool-rdf-formatter
+
+*cool-rdf-formatter* is a Java library for pretty printing
+ link:https://www.w3.org/TR/turtle/[RDF/Turtle] documents in a _configurable_ and
+ _reproducible_ way.
+
+It takes as input a formatting style and an link:https://jena.apache.org[Apache Jena] Model and
+produces as output a pretty-printed RDF/Turtle document.
+
+=== Why?
+
+==== Reproducible Formatting
+
+Every RDF library comes with its own serializers, for example an Apache Jena Model can be written
+link:https://jena.apache.org/documentation/io/rdf-output.html[in multiple ways], the easiest being
+calling the write method on a model itself: `model.write(System.out, "TURTLE")`. However, due to the
+nature of RDF, outgoing edges of a node in the graph have no order. When serializing a model, there
+are multiple valid ways to do so. For example, the following two models are identical on RDF-level,
+even though the order of the properties differs in the serialization:
+
+[cols="a,a"]
+|===
+|
+[source,turtle]
+----
+@prefix : <http://example.com/> .
+
+:test
+  :blorb "blorb" ;
+  :floop "floop" .
+----
+|
+[source,turtle]
+----
+@prefix : <http://example.com/> .
+
+:test
+  :floop "floop" ;
+  :blorb "blorb" .
+----
+|===
+
+Therefore, when a model is serialized, one of many different (valid) serializations could be the
+result. This is a problem when different versions of a model file are compared, for example when
+used as artifacts in a git repository. Additionally, serialized files are often formatted in one
+style hardcoded in the respective library. So while https://jena.apache.org/[Apache Jena] and for
+example link:http://librdf.org/raptor/[libraptor2] both write valid RDF/Turtle, the files are
+formatted differently. You would not want the code of a project formatted differently in different
+files, would you?
+
+*cool-rdf-formatter* addresses these problems by taking care of serialization order and providing
+ a way to customize the formatting style.
+
+==== Nice and Configurable Formatting
+
+Most serializers, while creating valid RDF/Turtle, create _ugly_ formatting. Obviously, what is ugly
+and what isn't is highly subjective, so this should be configurable. *cool-rdf-formatter*
+addresses this by making the formatting style configurable, e.g. how alignment should be done, where
+extra spaces should be inserted and even if indendation is using tabs or spaces. A default style is
+provided that reflects sane settings (i.e., the author's opinion). An RDF document formatted using
+the default style could look like this:
+
+[source,turtle]
+----
+@prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> . # <1>
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix : <http://example.com/relations#> .
+
+:Male a owl:Class ; # <2>
+  owl:disjointWith :Female ; # <3>
+  owl:equivalentClass [ # <4>
+    a owl:Restriction ;
+    owl:hasSelf true ; # <5>
+    owl:onProperty :isMale ;
+  ] ;
+  rdfs:subClassOf :Person .
+
+:hasBrother a owl:ObjectProperty ;
+  owl:propertyChainAxiom ( :hasSibling :isMale ) ; # <6>
+  rdfs:range :Male .
+
+:hasUncle a owl:ObjectProperty, owl:IrreflexiveProperty ; # <7>
+  owl:propertyChainAxiom ( :hasParent :hasSibling :hasHusband ) ; # <7>
+  owl:propertyChainAxiom ( :hasParent :hasBrother ) ;
+  rdfs:range :Male .
+----
+<1> Prefixes are sorted by common, then custom. They are _not_ aligned on the colon because that
+looks bad when one prefix string is much longer than the others.
+<2> `rdf:type` is always written as `a`. It is always the first predicate and written in the same
+line as the subject.
+<3> Indentation is done using a fixed size, like in any other format or language. Predicates are not
+aligned to subjects with an arbitrary length.
+<4> Anonymous nodes are written using the `[ ]` notation whenever possible.
+<5> Literal shortcuts are used where possible (e.g. no `"true"^^xsd:boolean`).
+<6> RDF Lists are always written using the `( )` notation, no blank node IDs or
+`rdf:next`/`rdf:first` seen here.
+<7> The same predicates on the same subjects are repeated rather than using the `,` notation,
+because especially when the objects are longer (nested anonymous nodes), it is difficult to
+understand. The exception to this rule is for different `rdf:type`&#8203;s.
+
+=== Usage in Maven
+
+Add the following dependency to your Maven `pom.xml`:
+
+[source,xml,subs="attributes+,+quotes"]
+----
+<dependency>
+  <groupId>cool.rdf</groupId>
+  <artifactId>cool-rdf-formatter</artifactId>
+  <version>{release-version}</version>
+</dependency>
+----
+
+Gradle/Groovy: `implementation 'de.atextor:turtle-formatter:{release-version}'`
+
+Gradle/Kotlin: `implementation("de.atextor:turtle-formatter:{release-version}")`
+
+=== Calling the formatter
+
+[source,java]
+----
+import java.io.FileInputStream;
+import cool.rdf.formatter.FormattingStyle;
+import cool.rdf.formatter.TurtleFormatter;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+
+// ...
+
+// Determine formatting style
+FormattingStyle style = FormattingStyle.DEFAULT;
+TurtleFormatter formatter = new TurtleFormatter(style);
+// Build or load a Jena Model.
+// Use the style's base URI for loading the model.
+Model model = ModelFactory.createDefaultModel();
+model.read(new FileInputStream("data.ttl"), style.emptyRdfBase, "TURTLE");
+// Either create a string...
+String prettyPrintedModel = formatter.apply(model);
+// ...or write directly to an OutputStream
+formatter.accept(model, System.out);
+----
+
+=== Customizing the style
+
+Instead of passing `FormattingStyle.DEFAULT`, you can create a custom `FormattingStyle` object.
+
+[source,java]
+----
+FormattingStyle style = FormattingStyle.builder(). ... .build();
+----
+
+The following options can be set on the FormattingStyle builder:
+
+[cols="1,3,1"]
+|===
+| Option | Description | Default
+
+| `emptyRdfBase`
+| Set the URI that should be left out in formatting. If you don't care about this, don't change it
+  and use the FormattingStyle's emptyRdfBase field as the base URI when loading/creating the model
+  that will be formatted, see <<calling-the-formatter>>
+| `urn:cool-rdf:empty`
+
+| `alignPrefixes`
+a| Boolean. Example:
+[source,turtle]
+----
+# true
+@prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix example: <http://example.com/> .
+
+# false
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix example: <http://example.com/> .
+----
+| `false`
+
+| `alignPredicates` +
+`firstPredicateInNewLine`
+a| Boolean. Example:
+[source,turtle]
+----
+# firstPredicateInNewLine false
+# alignPredicates true
+:test a rdf:Resource ;
+      :blorb "blorb" ;
+      :floop "floop" .
+
+# firstPredicateInNewLine false
+# alignPredicates false
+:test a rdf:Resource ;
+  :blorb "blorb" ;
+  :floop "floop" .
+
+# firstPredicateInNewLine true
+# alignPredicates does not matter
+:test
+  a rdf:Resource ;
+  :blorb "blorb" ;
+  :floop "floop" .
+----
+| `false` (for both)
+
+| `alignObjects`
+a| Boolean. Example:
+[source,turtle]
+----
+# alignObjects true
+:test
+  a           rdf:Resource ;
+  :blorb      "blorb" ;
+  :floopfloop "floopfloop" .
+
+# alignObjects false
+:test
+  a rdf:Resource ;
+  :blorb "blorb" ;
+  :floopfloop "floopfloop" .
+----
+| `false`
+
+| `charset`*
+| One of `LATIN1`, `UTF_16_BE`, `UTF_16_LE`, `UTF_8`, `UTF_8_BOM`
+| `UTF_8`
+
+| `doubleFormat`
+| A
+  link:https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/NumberFormat.html[NumberFormat]
+  that describes how `xsd:double` literals are formatted if `enableDoubleFormatting` is `true`
+| `0.\####E0`
+
+| `enableDoubleFormatting`
+| Enables formatting of `xsd:double` values (see `doubleFormat` option)
+| `false`
+
+| `endOfLine`*
+| One of `LF`, `CR`, `CRLF`. If unsure, please see link:https://en.wikipedia.org/wiki/Newline[Newline]
+| `LF`
+
+| `indentStyle`*
+| `SPACE` or `TAB`. Note that when choosing `TAB`, `alignPredicates` and `alignObjects` are automatically treated as `false`
+| `SPACE`
+
+| `quoteStyle`
+| `ALWAYS_SINGLE_QUOTES`, `TRIPLE_QUOTES_FOR_MULTILINE` or `ALWAYS_TRIPLE_QUOTES`. Determines which
+  quotes should be used for literals. Triple-quoted strings can contain literal quotes and line breaks.
+
+| `TRIPLE_QUOTES_FOR_MULTILINE`
+
+| `indentSize`*
+| Integer. When using `indentStyle` `SPACE`, defines the indentation size.
+| `2`
+
+| `insertFinalNewLine`*
+| Boolean. Determines whether there is a line break after the last line
+| `true`
+
+| `useAForRdfType`
+| Boolean. Determines whether `rdf:type` is written as `a` or as `rdf:type`.
+| `true`
+
+| `keepUnusedPrefixes`
+| Boolean. If `true`, keeps prefixes that are not part of any statement.
+| `false`
+
+| `useCommaByDefault`
+a| Boolean. Determines whether to use commas for identical predicates. Example:
+[source,turtle]
+----
+# useCommaByDefault false
+:test a rdf:Resource ;
+  :blorb "someBlorb" ;
+  :blorb "anotherBlorb" .
+
+# useCommaByDefault true
+:test a rdf:Resource ;
+  :blorb "someBlorb", "anotherBlorb" .
+----
+| `false`
+
+| `commaForPredicate`
+a| A set of predicates that, when used multiple times, are separated by commas, even when
+`useCommaByDefault` is `false`. Example:
+[source,turtle]
+----
+# useCommaByDefault false, commaForPredicate contains
+# 'rdf:type', firstPredicateInNewLine true
+:test a ex:something, owl:NamedIndividual ;
+  :blorb "someBlorb" ;
+  :blorb "anotherBlorb" .
+
+# useCommaByDefault false, commaForPredicate is empty,
+# firstPredicateInNewLine false
+:test
+  a ex:something ;
+  a owl:NamedIndividual ;
+  :blorb "someBlorb" ;
+  :blorb "anotherBlorb" .
+----
+| `Set.of(rdf:type)`
+
+| `noCommaForPredicate`
+| Analogous to `commaForPredicate`: A set of predicates that, when used multiple times, are _not_
+  separated by commas, even when `useCommaByDefault` is `true`.
+| Empty
+
+| `prefixOrder`
+a| A list of namespace prefixes that defines the order of `@prefix` directives. Namespaces from the
+list always appear first (in this order), every other prefix will appear afterwards,
+lexicographically sorted. Example:
+[source,turtle]
+----
+# prefixOrder contains "rdf" and "owl" (in this order), so
+# they will appear in this order at the top (when the model
+# contains them!), followed by all other namespaces
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix example: <http://example.com/> .
+----
+| `List.of(rdf rdfs xsd owl)`
+
+| `subjectOrder`
+| A list of resources that determines the order in which subjects appear. For a subject `s` there
+  must exist a statement `s rdf:type t` in the model and an entry for `t` in the `subjectOrder` list
+  for the element to be considered in the ordering, i.e., when `subjectOrder` contains `:Foo` and
+  `:Bar` in that order, the pretty-printed model will show first all `:Foo`&#8203;s, then all
+  `:Bar`&#8203;s, then everything else lexicographically sorted.
+
+| `List.of(rdfs:Class owl:Ontology owl:Class rdf:Property owl:ObjectProperty owl:DatatypeProperty
+  owl:AnnotationProperty owl:NamedIndividual owl:AllDifferent owl:Axiom)`
+
+| `predicateOrder`
+
+a| A list of properties that determine the order in which predicates appear for a subject. First all
+properties that are in the list are shown in that order, then everything else lexicographically
+sorted. For example, when `predicateOrder` contains `:z`, `:y`, `:x` in that order and the subject
+has statements for the properties `:a`, `:x` and `:z`:
+[source,turtle]
+----
+:test
+  :z "z" ;
+  :x "x" ;
+  :a "a" .
+----
+| `List.of(rdf:type rdfs:label rdfs:comment dcterms:description)`
+
+| `objectOrder`
+
+a| A list of RDFNodes (i.e. resources or literals) that determine the order in which objects appear
+for a predicate, when there are multiple statements with the same subject and the same predicate.
+First all objects that are in the list are shown in that order, then everything else
+lexicographically sorted. For example, when `objectOrder` contains `:Foo` and `:Bar` in that order:
+[source,turtle]
+----
+:test a :Foo, :Bar .
+----
+| `List.of(owl:NamedIndividual owl:ObjectProperty owl:DatatypeProperty owl:AnnotationProperty
+  owl:FunctionalProperty owl:InverseFunctionalProperty owl:TransitiveProperty owl:SymmetricProperty
+  owl:AsymmetricProperty owl:ReflexiveProperty owl:IrreflexiveProperty)`
+
+| `anonymousNodeIdGenerator`
+a| A `BiFunction` that takes a resource (blank node) and an integer (counter) and determines the
+name for a blank node in the formatted output, if it needs to be locally named. Consider the
+following model:
+[source,turtle]
+----
+:test :foo _:b0 .
+:test2 :bar _:b0 .
+----
+There is no way to serialize this model in RDF/Turtle while using the inline blank node syntax `[ ]`
+for the anonymous node `_:b0`. If, as in this example, the node in question already has a label, the
+label is re-used. Otherwise, the anonymousNodeIdGenerator is used to generate it.
+| `(r, i) -> "gen" + i`
+
+| `{after,before}{Opening,Closing}{Parenthesis,SquareBrackets}`, +
+`{after,before}{Comma,Dot,Semicolon}`
+| `NEWLINE`, `NOTHING` or `SPACE`. Various options for formatting gaps and line breaks. It is not
+  recommended to change those, as the default style represents the commonly accepted best practices
+  for formatting turtle already.
+| Varied
+
+| `wrapListItems`
+| `ALWAYS`, `NEVER` or `FOR_LONG_LINES`. Controls how line breaks are added after elements in RDF lists.
+| `FOR_LONG_LINES`
+
+|===
+
+&#42; Adapted from link:https://editorconfig.org/#file-format-details[EditorConfig]

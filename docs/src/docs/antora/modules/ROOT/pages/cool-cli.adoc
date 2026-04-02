@@ -1,7 +1,43 @@
 // -*- fill-column: 100; -*-
-= Usage
+= `cool` command line tool
 
-NOTE: Although the package is called *owl-cli*, the command you invoke is called `owl`.
+== Installation
+
+=== Requirements
+
+* To run the `cool` command line tool, you need Java 25 or later.
+
+* Additional, optional dependencies:
+
+** https://www.graphviz.org/[Graphviz] for the xref:cool-cli.adoc#diagram-command[generation of diagrams]
+*** Install on Windows (using https://chocolatey.org/[Chocolatey]): `choco install graphviz`
+*** Install on MacOs (using https://brew.sh/[Brew]): `brew install graphviz`
+*** Install on Ubuntu/Debian Linux: `apt install graphviz`
+
+=== Download and Install `cool`
+
+The latest version is *{release-version}*. Download here: *https://github.com/atextor/owl-cli/releases/download/{release-tag}/owl-cli-{release-version}.jar[cool-rdf-cli-{release-version}.jar]*
+
+You can find older releases at the https://github.com/cool-rdf/cool-rdf/releases/[Github releases].
+
+[NOTE]
+====
+On MacOs and Linux, you can use the following convenience script to download the `cool` .jar file
+and install it as `cool` command in your shell.
+
+[source,shell,subs="attributes+,+quotes"]
+----
+curl -L -o ~/.local/share/owl-cli/owl-cli.jar --create-dirs https://github.com/atextor/owl-cli/releases/download/{release-tag}/owl-cli-{release-version}.jar
+echo 'function owl() { java -jar ~/.local/share/owl-cli/owl-cli.jar $*; }' >> ~/.bashrc
+source ~/.bashrc
+----
+====
+
+After installation, you can use the `cool` command.
+
+== Usage
+
+You call `cool` (or alternatively `java -jar cool-rdf-cli-{release-version}.jar`) with subcommands and arguments.
 
 You can call the built-in overview of commands and arguments via `--help`:
 
@@ -9,7 +45,7 @@ You can call the built-in overview of commands and arguments via `--help`:
 ----
 Usage:
 
-Usage: owl [-v] [--help] [--version] [COMMAND]
+Usage: owl [-Dhv] [--version] [COMMAND]
 
 Description:
 
@@ -29,7 +65,7 @@ take its own arguments, for example:
 
 [source,shell]
 ----
-owl diagram --format png
+cool diagram --format png
 ----
 
 Commands that take ontology files as an input support all formats that are
@@ -56,7 +92,7 @@ xref:diagram-notation.adoc[Diagram Notation].
 [#diagram-usage]
 === General Usage
 
-General usage: `owl diagram [options] input [output]`, where `input` can be
+General usage: `cool diagram [options] input [output]`, where `input` can be
 either an ontology file or `-` (which means: read from standard in) and `output`
 can be either an ontology file or `-` (which means: write to standard out). If
 `output` is not given, the output filename is the input filename with its file
@@ -143,7 +179,7 @@ Simple invocation with default arguments:
 [source,shell]
 ----
 # Will create myontology.svg
-owl diagram myontology.ttl
+cool diagram myontology.ttl
 ----
 
 Invocation where the output is specified as standard out and piped to
@@ -151,15 +187,15 @@ https://imagemagick.org/script/convert.php[convert] to create a different format
 
 [source,shell]
 ----
-owl diagram myontology.ttl - | convert - myontology.jpg
+cool diagram myontology.ttl - | convert - myontology.jpg
 ----
 
 Invocation where an ontology is downloaded, some terms are filtered and then
-piped to owl diagram:
+piped to `cool diagram`:
 [source,shell]
 ----
 curl http://www.ontologydesignpatterns.org/cp/owl/partof.owl | \
-grep -v 'comment|cpannotation|versionInfo' | owl diagram - partof.svg
+grep -v 'comment|cpannotation|versionInfo' | cool diagram - partof.svg
 ----
 
 [#write-command]
@@ -177,7 +213,7 @@ https://www.w3.org/TeamSubmission/n3/[N3] format as input and writes it out in a
 When writing RDF/Turtle, the formatting of the resulting output can be configured extensively, as
 this makes use of the https://github.com/atextor/turtle-formatter[turtle-formatter library].
 
-General usage: `owl write [options] input [output]`, where `input` can be either an RDF file, a URL
+General usage: `cool write [options] input [output]`, where `input` can be either an RDF file, a URL
 (starting with `http` or `https`) or `-` (which means: read from standard in) and `output` can be
 either an RDF file or `-` (which means: write to standard out). If
 `output` is not given, the output filename is the input filename with its file
@@ -331,36 +367,36 @@ Simple invocation with default arguments:
 [source,shell]
 ----
 # Read myontology.ttl and print it in formatted Turtle format
-owl write myontology.ttl
+cool write myontology.ttl
 
 # Read myontology.owl in RDF/XML format and print it in formatted Turtle format, writing output.ttl
-owl write -i rdfxml myontology.owl output.ttl
+cool write -i rdfxml myontology.owl output.ttl
 
 # Read myontology.n3 in N3 format and print it in formatted Turtle format to stdout
-owl write -i n3 myontology.n3
+cool write -i n3 myontology.n3
 
 # Read myontology.nt in N-Triples format and print it in RDF/XML format to stdout
-owl write -i ntriple -o rdfxml myontology.nt
+cool write -i ntriple -o rdfxml myontology.nt
 ----
 
 Read an N-Triples file and write formatted Turtle, while also configuring which prefixes should be used:
 
 [source,shell]
 ----
-owl write -prdf -powl -pxsd -p'ex=http://example.com#' -i ntriple myontology.nt
+cool write -prdf -powl -pxsd -p'ex=http://example.com#' -i ntriple myontology.nt
 ----
 
 Read a Turtle file and print it out, while configuring the output's formatting and prefix order:
 
 [source,shell]
 ----
-owl write --indentSize 4 --writeRdfType --prefixOrder owl --prefixOrder rdf myontology.turtle
+cool write --indentSize 4 --writeRdfType --prefixOrder owl --prefixOrder rdf myontology.turtle
 ----
 
 Read a remote ontology in RDF/XML format and print it in formatted Turtle format:
 [source,shell]
 ----
-owl write -i rdfxml 'http://www.ontologydesignpatterns.org/cp/owl/partof.owl'
+cool write -i rdfxml 'http://www.ontologydesignpatterns.org/cp/owl/partof.owl'
 ----
 
 [#infer-command]
@@ -373,7 +409,7 @@ owl write -i rdfxml 'http://www.ontologydesignpatterns.org/cp/owl/partof.owl'
 The `infer` command takes an OWL ontology as input and performs OWL 2 DL reasoning on it. Reasoning
 is done using the https://github.com/Galigator/openllet[Openllet] reasoner.
 
-General usage: `owl infer input [output]`, where `input` can be either an ontology file, an URL or
+General usage: `cool infer input [output]`, where `input` can be either an ontology file, an URL or
 `-` (which means: read from standard in) and `output` can be either an ontology file or `-` (which
 means: write to standard out). If `input` is a file and `output` is not given, the input file is
 overwritten with the inferenced result. If `input` is `-` and `output` is not given, the output is
@@ -385,5 +421,5 @@ set to standard out.
 Perform reasoning on the input ontology and write results to stdout:
 [source,shell]
 ----
-owl infer ontology.ttl -
+cool infer ontology.ttl -
 ----

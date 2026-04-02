@@ -70,7 +70,7 @@ public class CoolWrite extends AbstractCommand implements Runnable {
 
    private static final Configuration CONFIG = RdfWriter.DEFAULT_CONFIGURATION;
 
-   private final String fallbackUri = "urn:owl-cli:empty";
+   private final String fallbackUri = "urn:cool-rdf:empty";
 
    @SuppressWarnings( "unused" )
    @CommandLine.Mixin
