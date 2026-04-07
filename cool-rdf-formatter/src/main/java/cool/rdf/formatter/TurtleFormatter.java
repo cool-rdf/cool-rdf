@@ -21,6 +21,7 @@ import static java.util.function.Predicate.not;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.nio.charset.Charset;
 import java.nio.charset.StandardCharsets;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -94,7 +95,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
 
    private final String endOfLine;
 
-   private final java.nio.charset.Charset encoding;
+   private final Charset encoding;
 
    private final Comparator<Map.Entry<String, String>> prefixOrder;
 
@@ -514,7 +515,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
             : style.afterOpeningParenthesis;
       final State opened = writeDelimiter( "(", style.beforeOpeningParenthesis, afterOpeningParenthesis,
             continuationIndent( state.indentationLevel ), state );
-      final java.util.List<RDFNode> elementList = resource.as( RDFList.class ).asJavaList();
+      final List<RDFNode> elementList = resource.as( RDFList.class ).asJavaList();
 
       int index = 0;
       State currentState = opened;

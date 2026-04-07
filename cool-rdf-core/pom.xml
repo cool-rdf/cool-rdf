@@ -30,10 +30,7 @@
     <name>Cool RDF Core</name>
 
     <properties>
-        <generated.sources>${project.basedir}/src-gen</generated.sources>
-        <build.time.sources>${project.basedir}/src-buildtime</build.time.sources>
-        <shared.test.sources>${project.basedir}/src/test-shared</shared.test.sources>
-        <git-properties-filename>${generated.sources}/main/resources/git.properties</git-properties-filename>
+        <git-properties-filename>${generated.sources.resources}/git.properties</git-properties-filename>
     </properties>
 
     <dependencies>
@@ -69,7 +66,7 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${generated.sources}/main/java</source>
+                                <source>${generated.sources.java}</source>
                             </sources>
                         </configuration>
                     </execution>
@@ -82,7 +79,7 @@
                         <configuration>
                             <resources>
                                 <resource>
-                                    <directory>${generated.sources}/main/resources</directory>
+                                    <directory>${generated.sources.resources}</directory>
                                 </resource>
                             </resources>
                         </configuration>
@@ -220,7 +217,7 @@
                             <arguments>
                                 <argument>${git-properties-filename}</argument>
                                 <argument>cool.rdf.core.Version</argument>
-                                <argument>${generated.sources}/main/java/cool/rdf/core/Version.java</argument>
+                                <argument>${generated.sources.java}/cool/rdf/core/Version.java</argument>
                                 <!--suppress MavenModelInspection -->
                                 <argument>${developersString}</argument>
                             </arguments>
@@ -241,7 +238,7 @@
                             <arguments>
                                 <argument>${build.time.sources}/main/resources</argument>
                                 <argument>cool.rdf.core.Prefixes</argument>
-                                <argument>${generated.sources}/main/java/cool/rdf/core/Prefixes.java</argument>
+                                <argument>${generated.sources.java}/cool/rdf/core/Prefixes.java</argument>
                                 <!--suppress MavenModelInspection -->
                                 <argument>${developersString}</argument>
                             </arguments>

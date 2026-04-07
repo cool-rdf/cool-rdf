@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,98 +16,98 @@
 
 package cool.rdf.core.buildtime;
 
-import cool.rdf.core.util.StringTemplate;
-
 import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.Date;
+import java.time.ZonedDateTime;
 import java.util.Map;
 import java.util.Properties;
 
+import cool.rdf.core.util.StringTemplate;
+
 /**
- * This class is executed at build time and will write the Java file containing static build version information.
+ * This class is executed at build time and will write the Java file containing static build version
+ * information.
  */
 public class WriteVersionClass {
-    private static final StringTemplate VERSION_CLASS_TEMPLATE = new StringTemplate( """
-        /*
-         * Copyright ${year} ${copyrightHolder}
-         *
-         * Licensed under the Apache License, Version 2.0 (the "License");
-         * you may not use this file except in compliance with the License.
-         * You may obtain a copy of the License at
-         *
-         * http://www.apache.org/licenses/LICENSE-2.0
-         *
-         * Unless required by applicable law or agreed to in writing, software
-         * distributed under the License is distributed on an "AS IS" BASIS,
-         * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-         * See the License for the specific language governing permissions and
-         * limitations under the License.
-         */
+   private static final StringTemplate VERSION_CLASS_TEMPLATE = new StringTemplate( """
+      /*
+       * Copyright ${year} ${copyrightHolder}
+       *
+       * Licensed under the Apache License, Version 2.0 (the "License");
+       * you may not use this file except in compliance with the License.
+       * You may obtain a copy of the License at
+       *
+       * http://www.apache.org/licenses/LICENSE-2.0
+       *
+       * Unless required by applicable law or agreed to in writing, software
+       * distributed under the License is distributed on an "AS IS" BASIS,
+       * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+       * See the License for the specific language governing permissions and
+       * limitations under the License.
+       */
 
-         package ${package};
+       package ${package};
 
-         import javax.annotation.processing.Generated;
+       import javax.annotation.processing.Generated;
 
-         /**
-          * Provides static build version information.
-          * Generated class, do not edit.
-          */
-         @Generated( value = "${generatorClass}", date = "${isoBuildDate}" )
-         public class ${className} {
-            /**
-             * The version of the package
-             */
-            public static final String VERSION = "${version}";
+       /**
+        * Provides static build version information.
+        * Generated class, do not edit.
+        */
+       @Generated( value = "${generatorClass}", date = "${isoBuildDate}" )
+       public class ${className} {
+          /**
+           * The version of the package
+           */
+          public static final String VERSION = "${version}";
 
-            /**
-             * The commit id of the package
-             */
-            public static final String COMMIT_ID = "${commitId}";
+          /**
+           * The commit id of the package
+           */
+          public static final String COMMIT_ID = "${commitId}";
 
-            /**
-             * The build date
-             */
-            public static final String BUILD_DATE = "${buildDate}";
-         }
-         """ );
+          /**
+           * The build date
+           */
+          public static final String BUILD_DATE = "${buildDate}";
+       }
+       """ );
 
-    /**
-     * args[0]: the path to git.properties
-     * args[1]: fully qualified class name to generate
-     * args[2]: the path to the file to write
-     * args[3]: name of the copyright holder
-     *
-     * @param args the arguments
-     */
-    public static void main( final String[] args ) {
-        final String gitPropertiesFile = args[0];
-        final String fullyQualifiedClassName = args[1];
-        final String copyrightHolder = args[3];
-        final int lastDot = fullyQualifiedClassName.lastIndexOf( "." );
-        final String packageName = fullyQualifiedClassName.substring( 0, lastDot );
-        final String className = fullyQualifiedClassName.substring( lastDot + 1 );
+   /**
+    * args[0]: the path to git.properties
+    * args[1]: fully qualified class name to generate
+    * args[2]: the path to the file to write
+    * args[3]: name of the copyright holder
+    *
+    * @param args the arguments
+    */
+   static void main( final String[] args ) {
+      final String gitPropertiesFile = args[0];
+      final String fullyQualifiedClassName = args[1];
+      final String copyrightHolder = args[3];
+      final int lastDot = fullyQualifiedClassName.lastIndexOf( "." );
+      final String packageName = fullyQualifiedClassName.substring( 0, lastDot );
+      final String className = fullyQualifiedClassName.substring( lastDot + 1 );
 
-        final Properties gitProperties;
-        try ( final InputStream gitPropertiesInputStream = new FileInputStream( gitPropertiesFile ) ) {
-            gitProperties = new Properties();
-            gitProperties.load( gitPropertiesInputStream );
-        } catch ( final IOException exception ) {
-            System.err.println( "Could not open git.properties" );
-            System.exit( 1 );
-            return;
-        }
+      final Properties gitProperties;
+      try ( final InputStream gitPropertiesInputStream = new FileInputStream( gitPropertiesFile ) ) {
+         gitProperties = new Properties();
+         gitProperties.load( gitPropertiesInputStream );
+      } catch ( final IOException exception ) {
+         System.err.println( "Could not open git.properties" );
+         System.exit( 1 );
+         return;
+      }
 
-        final File targetFile = new File( args[2] );
-        targetFile.getParentFile().mkdirs();
+      final File targetFile = new File( args[2] );
+      targetFile.getParentFile().mkdirs();
 
-        final Date currentDate = new Date();
-
-        final String content = VERSION_CLASS_TEMPLATE.apply( Map.of(
+      final ZonedDateTime currentDate = ZonedDateTime.now();
+      final String content = VERSION_CLASS_TEMPLATE.apply( Map.of(
             "generatorClass", WriteVersionClass.class.getCanonicalName(),
             "year", DateFormats.YEAR_FORMAT.format( currentDate ),
             "copyrightHolder", copyrightHolder,
@@ -117,14 +117,14 @@ public class WriteVersionClass {
             "commitId", gitProperties.getProperty( "git.commit.id" ),
             "buildDate", DateFormats.SIMPLE_DATE_FORMAT.format( currentDate ),
             "isoBuildDate", DateFormats.ISO_8601_FORMAT.format( currentDate )
-        ) );
+      ) );
 
-        try {
-            final BufferedWriter writer = new BufferedWriter( new FileWriter( targetFile ) );
-            writer.write( content );
-            writer.close();
-        } catch ( final IOException exception ) {
-            throw new RuntimeException( exception );
-        }
-    }
+      try {
+         final BufferedWriter writer = new BufferedWriter( new FileWriter( targetFile ) );
+         writer.write( content );
+         writer.close();
+      } catch ( final IOException exception ) {
+         throw new RuntimeException( exception );
+      }
+   }
 }

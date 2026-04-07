@@ -34,8 +34,6 @@
         <main.class>cool.rdf.cli.Cool</main.class>
         <binary.name>cool</binary.name>
         <packaging.type>jar</packaging.type>
-        <generated.sources>${project.basedir}/src-gen</generated.sources>
-        <build.time.sources>${project.basedir}/src-buildtime</build.time.sources>
     </properties>
 
     <dependencies>
@@ -138,7 +136,7 @@
                         </goals>
                         <configuration>
                             <sources>
-                                <source>${build.time.sources}/main/java</source>
+                                <source>${build.time.sources.java}</source>
                             </sources>
                         </configuration>
                     </execution>
@@ -216,7 +214,7 @@
                             <arguments>
                                 <argument>${binary.name}</argument>
                                 <argument>cool.rdf.cli.StaticCliInfo</argument>
-                                <argument>${generated.sources}/main/java/cool/rdf/cli/StaticCliInfo.java</argument>
+                                <argument>${generated.sources.java}/cool/rdf/cli/StaticCliInfo.java</argument>
                                 <argument>${project.developers}</argument>
                                 <argument>${project.parent.url}</argument>
                             </arguments>

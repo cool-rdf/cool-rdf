@@ -66,6 +66,12 @@
         <maven.shade.skip>false</maven.shade.skip>
         <jacoco.skip>false</jacoco.skip>
         <eclipse-code-formatter.version>4.38</eclipse-code-formatter.version>
+        <generated.sources>${project.basedir}/src-gen</generated.sources>
+        <generated.sources.java>${generated.sources}/main/java</generated.sources.java>
+        <generated.sources.resources>${generated.sources}/main/resources</generated.sources.resources>
+        <build.time.sources>${project.basedir}/src-buildtime</build.time.sources>
+        <build.time.sources.java>${build.time.sources}/main/java</build.time.sources.java>
+        <shared.test.sources>${project.basedir}/src/test-shared</shared.test.sources>
 
         <!-- General dependency versions -->
         <caffeine.version>3.2.3</caffeine.version>
@@ -587,7 +593,6 @@
                             <includes>
                                 <include>.gitattributes</include>
                                 <include>.gitignore</include>
-                                <include>**/*.java</include>
                                 <include>**/*.md</include>
                                 <include>**/*.adoc</include>
                                 <include>**/*.ttl</include>
@@ -607,12 +612,12 @@
                     <java>
                         <includes>
                             <include>src/main/java/**/*.java</include>
+                            <include>src-buildtime/main/java/**/*.java</include>
                             <include>src/test/java/**/*.java</include>
                         </includes>
                         <eclipse>
                             <version>${eclipse-code-formatter.version}</version>
-                            <file>${maven.multiModuleProjectDirectory}/.development/coolrdf-eclipse-code-style.xml
-                            </file>
+                            <file>${maven.multiModuleProjectDirectory}/.development/coolrdf-eclipse-code-style.xml</file>
                         </eclipse>
                         <importOrder>
                             <file>${maven.multiModuleProjectDirectory}/.development/coolrdf-eclipse.importorder</file>
@@ -620,6 +625,10 @@
                         <licenseHeader>
                             <file>${maven.multiModuleProjectDirectory}/.development/coolrdf-license-header.txt</file>
                         </licenseHeader>
+                        <trimTrailingWhitespace/>
+                        <endWithNewline/>
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                        <lineEndings>UNIX</lineEndings>
                     </java>
                 </configuration>
             </plugin>

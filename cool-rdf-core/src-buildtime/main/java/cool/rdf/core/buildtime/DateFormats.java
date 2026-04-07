@@ -1,5 +1,5 @@
 /*
- * Copyright 2025 Andreas Textor
+ * Copyright Andreas Textor
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,16 +16,15 @@
 
 package cool.rdf.core.buildtime;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 
 /**
  * Date format constants for build time code generation.
  */
 public class DateFormats {
-    public static final DateFormat ISO_8601_FORMAT = new SimpleDateFormat( "yyyy-MM-dd'T'HH:mm:ss.SSSX" );
+   public static final DateTimeFormatter ISO_8601_FORMAT = DateTimeFormatter.ofPattern( "yyyy-MM-dd'T'HH:mm:ss.SSSX" );
 
-    public static final DateFormat SIMPLE_DATE_FORMAT = new SimpleDateFormat( "yyyy-MM-dd" );
+   public static final DateTimeFormatter SIMPLE_DATE_FORMAT = DateTimeFormatter.ofPattern( "yyyy-MM-dd" );
 
-    public static final DateFormat YEAR_FORMAT = new SimpleDateFormat( "yyyy" );
+   public static final DateTimeFormatter YEAR_FORMAT = DateTimeFormatter.ofPattern( "yyyy" );
 }
