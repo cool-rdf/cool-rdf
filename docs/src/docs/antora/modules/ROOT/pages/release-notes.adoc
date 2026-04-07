@@ -36,7 +36,7 @@ xref:cool-cli.adoc[] for more information.
 
 === How to migrate from turtle-formatter to Cool RDF cool-turtle-formatter
 
-1. Change your Maven coordinates from `de.atextor:turtle-formatter:1.2.16` to `cool.rdf:cool-rdf-formatter:1.0.0`.
+1. Change your Maven coordinates from `de.atextor:turtle-formatter:1.2.16` to `cool.rdf:cool-rdf-formatter:2.0.0`.
 2. Change usages of classes in the Java package `de.atextor.turtle.formatter` to the package `cool.rdf.formatter`.
 3. Update from Java 17 to Java 25.
 
