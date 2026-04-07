@@ -25,7 +25,6 @@ import java.util.Optional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cool.rdf.core.Version;
 import cool.rdf.infer.Configuration;
 import cool.rdf.infer.Inferrer;
 import picocli.CommandLine;
@@ -40,7 +39,7 @@ import picocli.CommandLine;
    parameterListHeading = "%n@|bold Parameters|@:%n",
    optionListHeading = "%n@|bold Options|@:%n",
    footer = "%nSee the online documentation for details:%n"
-         + "https://atextor.de/owl-cli/main/" + Version.VERSION + "/usage.html#infer-command" )
+         + StaticCliInfo.PROJECT_URL + "/cool-rdf/cool-cli.html#infer-command" )
 public class CoolInfer extends AbstractCommand implements Runnable {
    /**
     * The name of this subcommand

@@ -91,8 +91,8 @@ public class DiagramGenerator {
                && !graphvizStderr.startsWith( "Warning:" )
                && !graphvizStderr.contains( "Pango-WARNING" ) ) {
             LOG.debug( "Dot returned an error: {}", graphvizStderr );
-            return Try.failure( new RuntimeException( "An error occurred while running dot. This is most likely "
-                  + "due to a bug in owl-cli. Captured message was: " + graphvizStderr ) );
+            return Try.failure( new RuntimeException( "An error occurred while running dot. "
+                  + "Captured message was: " + graphvizStderr ) );
          }
 
          if ( configuration.format == Configuration.Format.PNG ) {

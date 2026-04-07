@@ -40,7 +40,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cool.rdf.core.Prefixes;
-import cool.rdf.core.Version;
 import cool.rdf.core.model.RdfModel;
 import cool.rdf.core.model.RdfPrefix;
 import cool.rdf.core.model.impl.DefaultRdfPrefix;
@@ -59,7 +58,7 @@ import picocli.CommandLine;
    parameterListHeading = "%n@|bold Parameters|@:%n",
    optionListHeading = "%n@|bold Options|@:%n",
    footer = "%nSee the online documentation for details:%n"
-         + "https://atextor.de/owl-cli/main/" + Version.VERSION + "/usage.html#write-command" )
+         + StaticCliInfo.PROJECT_URL + "/cool-rdf/cool-cli.html#write-command" )
 public class CoolWrite extends AbstractCommand implements Runnable {
    /**
     * The name of this subcommand

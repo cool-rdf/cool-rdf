@@ -62,16 +62,13 @@ public class SWRLObjectMapper implements SWRLObjectVisitorEx<Graph> {
    /**
     * The "marker" ID, see {@link #IS_RULE_SYNTAX_PART}.
     */
-   private static final IRI LITERAL_ID = IRI.create( "urn:owl-cli:literal-id" );
+   private static final IRI LITERAL_ID = IRI.create( "urn:cool-rdf:literal-id" );
 
    /**
     * During traversal of the rule expression tree, both Literal nodes and other GraphElements (mainly
-    * Edges) are
-    * collected. The values of the Literal nodes are concatenated in the end to render the final rule
-    * representation.
-    * In order to differentiate the to-be-concatenated Literal nodes from "regular" Literal nodes that
-    * might occur,
-    * they are given an internal identifier "marker" IRI. The concatenation is done in
+    * Edges) are collected. The values of the Literal nodes are concatenated in the end to render the final rule
+    * representation. In order to differentiate the to-be-concatenated Literal nodes from "regular" Literal nodes
+    * that might occur, they are given an internal identifier "marker" IRI. The concatenation is done in
     * {@link OWLAxiomMapper#visit(SWRLRule)}.
     */
    public static final Predicate<GraphElement> IS_RULE_SYNTAX_PART = graphElement -> graphElement.is( Literal.class )

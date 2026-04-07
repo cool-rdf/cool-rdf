@@ -29,7 +29,6 @@ import org.apache.commons.io.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import cool.rdf.core.Version;
 import cool.rdf.diagram.owl.Configuration;
 import cool.rdf.diagram.owl.DiagramGenerator;
 import cool.rdf.diagram.owl.GraphvizDocument;
@@ -48,7 +47,7 @@ import picocli.CommandLine;
    parameterListHeading = "%n@|bold Parameters|@:%n",
    optionListHeading = "%n@|bold Options|@:%n",
    footer = "%nSee the online documentation for details:%n"
-         + "https://atextor.de/owl-cli/main/" + Version.VERSION + "/usage.html#diagram-command" )
+         + StaticCliInfo.PROJECT_URL + "/cool-rdf/cool-cli.html#diagram-command" )
 public class CoolDiagram extends AbstractCommand implements Runnable {
    /**
     * The name of this subcommand

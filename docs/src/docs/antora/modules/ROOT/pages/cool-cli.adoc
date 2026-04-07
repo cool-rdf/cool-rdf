@@ -16,7 +16,7 @@
 
 === Download and Install `cool`
 
-The latest version is *{release-version}*. Download here: *https://github.com/atextor/owl-cli/releases/download/{release-tag}/owl-cli-{release-version}.jar[cool-rdf-cli-{release-version}.jar]*
+The latest version is *{release-version}*. Download here: *https://github.com/cool-rdf/cool-rdf/releases/download/{release-tag}/cool-rdf-cli-{release-version}.jar[cool-rdf-cli-{release-version}.jar]*
 
 You can find older releases at the https://github.com/cool-rdf/cool-rdf/releases/[Github releases].
 
@@ -27,8 +27,8 @@ and install it as `cool` command in your shell.
 
 [source,shell,subs="attributes+,+quotes"]
 ----
-curl -L -o ~/.local/share/owl-cli/owl-cli.jar --create-dirs https://github.com/atextor/owl-cli/releases/download/{release-tag}/owl-cli-{release-version}.jar
-echo 'function owl() { java -jar ~/.local/share/owl-cli/owl-cli.jar $*; }' >> ~/.bashrc
+curl -L -o ~/.local/share/cool-rdf/cool-rdf-cli.jar --create-dirs https://github.com/cool-rdf/cool-rdf/releases/download/{release-tag}/cool-rdf-cli-{release-version}.jar
+echo 'function cool() { java -jar ~/.local/share/cool-rdf/cool-rdf-cli.jar $*; }' >> ~/.bashrc
 source ~/.bashrc
 ----
 ====

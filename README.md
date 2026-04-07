@@ -1,6 +1,6 @@
 # Cool RDF
 
-[![build](https://github.com/cool-rdf/cool-rdf/actions/workflows/pull-request.yml/badge.svg)](https://github.com/atextor/owl-cli/actions/workflows/build.yml)
+[![build](https://github.com/cool-rdf/cool-rdf/actions/workflows/pull-request.yml/badge.svg)](https://github.com/cool-rdf/cool-rdf/actions/workflows/pull-request.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
 [![Maven Central](https://maven-badges.herokuapp.com/maven-central/cool.rdf/cool-rdf-parent/badge.svg)](https://maven-badges.herokuapp.com/maven-central/cool.rdf/cool-rdf-parent)
 
@@ -22,4 +22,3 @@ Installation instructions and the usage guide can be found at [https://rdf.cool/
 
 If you are interested in how Cool RDF relates to `owl-cli` or `turtle-formatter`, please see
 [Legacy Projects](https://rdf.cool/cool-rdf/release-notes.adoc#legacy-projects).
-
