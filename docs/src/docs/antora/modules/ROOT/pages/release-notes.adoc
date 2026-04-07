@@ -1,9 +1,9 @@
 // -*- fill-column: 100; -*-
 = Release Notes
 
-== Version 1.0.0
+== Version 2.0.0
 
-* The first release of Cool RDF.
+* The first release with the new project name: Cool RDF.
 * Includes both a Java API and the `cool` command line tool, both of which include functionality to format RDF/Turtle
 documents and generate diagrams for OWL ontologies.
 * The projects merges the features of the previously separate projects _owl-cli_ and _turtle-formatter_. Please have a
@@ -14,7 +14,7 @@ look at the next section for details and a migration guide.
 
 === Merge of the projects
 
-Cool RDF 1.0.0 merges and updates the previously separate projects _owl-cli_ and _turtle-formatter_,
+Cool RDF 2.0.0 merges and updates the previously separate projects _owl-cli_ and _turtle-formatter_,
 using their respective latest releases, owl-cli 1.2.5 and turtle-formatter 1.2.16.
 This implies the following changes:
 
