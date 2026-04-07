@@ -374,6 +374,12 @@
                         <configuration>
                             <skipPublishing>true</skipPublishing>
                         </configuration>
+                        <executions>
+                            <execution>
+                                <id>injected-central-publishing</id>
+                                <phase>none</phase>
+                            </execution>
+                        </executions>
                     </plugin>
                 </plugins>
             </build>
