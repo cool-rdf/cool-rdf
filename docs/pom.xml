@@ -154,6 +154,26 @@
             </plugin>
 
             <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>run-antora</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <workingDirectory>${project.build.directory}</workingDirectory>
+                            <executable>${antora-cli}</executable>
+                            <commandlineArgs>antora-playbook.yml --stacktrace --fetch</commandlineArgs>
+                            <useMavenLogger>true</useMavenLogger>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
                 <executions>
@@ -306,71 +326,6 @@
                                     <arguments>install
                                         @djencks/asciidoctor-mathjax@${antora-mathjax-extension.version}
                                     </arguments>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <profile>
-            <id>antora</id>
-            <activation>
-                <property>
-                    <name>!antora-local</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>run-antora</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <workingDirectory>${project.build.directory}</workingDirectory>
-                                    <executable>${antora-cli}</executable>
-                                    <commandlineArgs>antora-playbook.yml --stacktrace --fetch</commandlineArgs>
-                                    <useMavenLogger>true</useMavenLogger>
-                                </configuration>
-                            </execution>
-                        </executions>
-                    </plugin>
-                </plugins>
-            </build>
-        </profile>
-
-        <!-- Execute Antora to build documentation, but use antora-local.yml -->
-        <profile>
-            <id>antora-local</id>
-            <activation>
-                <property>
-                    <name>antora-local</name>
-                </property>
-            </activation>
-            <build>
-                <plugins>
-                    <plugin>
-                        <groupId>org.codehaus.mojo</groupId>
-                        <artifactId>exec-maven-plugin</artifactId>
-                        <executions>
-                            <execution>
-                                <id>run-antora</id>
-                                <phase>compile</phase>
-                                <goals>
-                                    <goal>exec</goal>
-                                </goals>
-                                <configuration>
-                                    <workingDirectory>${project.build.directory}</workingDirectory>
-                                    <executable>${antora-cli}</executable>
-                                    <commandlineArgs>antora-local.yml --stacktrace --fetch</commandlineArgs>
-                                    <useMavenLogger>true</useMavenLogger>
                                 </configuration>
                             </execution>
                         </executions>
