@@ -1,239 +1,81 @@
-name: release
-
+name: Release
 on:
-  push:
-    tags:
-      - 'v*.*.*'
-
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'Release version'
+        required: true
 jobs:
-  build-linux:
+  build:
+    name: Build
     runs-on: ubuntu-latest
-    timeout-minutes: 30
-    env:
-      OS: Ubuntu
-    name: ubuntu
+
     steps:
-      - name: Check Out Repo
-        uses: actions/checkout@v2
-        with:
-          fetch-depth: 0
-      - name: Cache Gradle
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches/
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: ${{ runner.os }}-gradle-
-      - name: Setup Environment
-        # - Install SDKMAN
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install dependencies
+        # - Install msttcorefonts, so we have the Verdana font available for diagram generation
         # - Install graphviz, so we have the dot binary available for diagram generation
-        # - Install GraalVM 21.3.0.r17 (JDK 17)
         run: |-
-          curl -sL https://get.sdkman.io | bash
-          echo sdkman_auto_answer=true > $HOME/.sdkman/etc/config
-          echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config
-          source $HOME/.sdkman/bin/sdkman-init.sh
-          sdk update
-          ls /etc/apt/sources.list.d
-          find /etc/apt -type f -name '*.list' -exec sed -i -e '/dl.bintray.com\/sbt/d' "{}" \;
           sudo apt-get update
+          echo msttcorefonts msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
+          sudo apt-get install ttf-mscorefonts-installer
           sudo apt-get install -y graphviz
           sudo apt-get install -y build-essential libz-dev
-          sdk list java
-          sdk install java 17.0.8-graal || true
-          sdk use java 17.0.8-graal
-          gu install native-image
-          unset _JAVA_OPTIONS
-          echo Path settings: $PATH
-          which native-image
-          which java
-          java -version
-          file `which native-image`
-          native-image --version
-      - name: Set env
-        run: echo "RELEASE_VERSION=$(grep version= gradle.properties | sed 's/.*=//')" >> $GITHUB_ENV
-      - name: Gradle Build
-        run: |-
-          source $HOME/.sdkman/bin/sdkman-init.sh
-          ./gradlew clean generateStaticProperties test check nativeImage integrationTest --stacktrace --no-daemon
-      - name: Run UPX
-        uses: crazy-max/ghaction-upx@v1.4.0
-        with:
-          version: latest
-          files: cli/build/bin/owl
-          args: -9
-      - name: Prepare Artifacts
-        run: |-
-          mv cli/build/bin/owl owl-x86_64-linux-${RELEASE_VERSION}
-          mv cli/build/libs/owl-cli-${RELEASE_VERSION}.jar .
-      - name: Upload Linux Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: artifacts-linux
-          path: |
-            owl-x86_64-linux-${{ env.RELEASE_VERSION }}
-            owl-cli-${{ env.RELEASE_VERSION }}.jar
 
-  build-macos:
-    runs-on: macos-latest
-    timeout-minutes: 30
-    env:
-      OS: Macos
-    name: macos
-    steps:
-      - name: Check Out Repo
-        uses: actions/checkout@v2
+      - name: Set up JDK 25
+        uses: actions/setup-java@v5
         with:
-          fetch-depth: 0
-      - name: Cache Gradle
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches/
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: ${{ runner.os }}-gradle-
-      - name: Setup Environment
-        # - Install SDKMAN
-        # - Install GraalVM 21.3.0.r17 (JDK 17)
-        run: |-
-          curl -sL https://get.sdkman.io | bash
-          echo sdkman_auto_answer=true > $HOME/.sdkman/etc/config
-          echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config
-          source $HOME/.sdkman/bin/sdkman-init.sh
-          sdk update
-          brew install graphviz
-          sdk list java
-          sdk install java 17.0.8-graal || true
-          sdk use java 17.0.8-graal
-          gu install native-image
-          unset _JAVA_OPTIONS
-          echo Path settings: $PATH
-          which native-image
-          which java
-          java -version
-          file `which native-image`
-          native-image --version
-      - name: Set env
-        run: echo "RELEASE_VERSION=$(grep version= gradle.properties | sed 's/.*=//')" >> $GITHUB_ENV
-      - name: Gradle Build
-        run: |-
-          source $HOME/.sdkman/bin/sdkman-init.sh
-          ./gradlew clean generateStaticProperties test check nativeImage integrationTest --stacktrace --no-daemon
-      - name: Prepare Artifacts
-        run: mv cli/build/bin/owl owl-x86_64-apple-darwin-${RELEASE_VERSION}
-      - name: Upload Macos Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: artifacts-macos
-          path: owl-x86_64-apple-darwin-${{ env.RELEASE_VERSION }}
+          distribution: 'temurin'
+          java-version: '25.0.1'
+          server-id: central
+          gpg-private-key: ${{ secrets.PGP_KEY }}
+          gpg-passphrase: PGP_KEY_PASSWORD
+          server-username: MAVEN_CENTRAL_USERNAME
+          server-password: MAVEN_CENTRAL_TOKEN
+          overwrite-settings: false
 
-  build-windows:
-    runs-on: windows-latest
-    timeout-minutes: 30
-    env:
-      OS: Windows
-    name: windows
-    steps:
-      - name: Check Out Repo
-        uses: actions/checkout@v2
+      - name: Cache Maven packages
+        uses: actions/cache@v4
         with:
-          fetch-depth: 0
-      - uses: ilammy/msvc-dev-cmd@v1.10.0
-      - uses: microsoft/setup-msbuild@v1.1
-      - name: Cache Gradle
-        uses: actions/cache@v2
-        with:
-          path: ~/.gradle/caches/
-          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
-          restore-keys: ${{ runner.os }}-gradle-
-      - name: Setup Environment
-        # - Install SDKMAN
-        # - Install graphviz, so we have the dot binary available for diagram generation
-        # - Install GraalVM 21.3.0.r17 (JDK 17)
-        run: |-
-          choco install zip --execution-timeout=600
-          choco install unzip --execution-timeout=600
-          choco install graphviz --execution-timeout=600
-          curl -sL https://get.sdkman.io | bash
-          echo sdkman_auto_answer=true > $HOME/.sdkman/etc/config
-          echo sdkman_auto_selfupdate=true >> $HOME/.sdkman/etc/config
-          source $HOME/.sdkman/bin/sdkman-init.sh
-          sdk update
-          sdk list java
-          sdk install java 17.0.8-graal || true
-          sdk use java 17.0.8-graal
-          echo Path settings: $PATH
-          export PATH=$HOME/.sdkman/candidates/java/current/lib/installer/bin:$PATH
-          export GRAALVM_HOME=$HOME/.sdkman/candidates/java/17.0.8-graal
-          gu.cmd install native-image
-          find $HOME/.sdkman -type f -name '*native-image*'
-          unset _JAVA_OPTIONS
-          export PATH=$HOME/.sdkman/candidates/java/current/lib/svm/bin:$PATH
-          which native-image
-          which java
-          java -version
-          file `which native-image`
-          native-image --version
-        shell: bash
-      - name: Set env
-        run: echo "RELEASE_VERSION=$(grep version= gradle.properties | sed 's/.*=//')" >> $GITHUB_ENV
-        shell: bash
-      - name: Gradle Build
-        run: |-
-          source $HOME/.sdkman/bin/sdkman-init.sh
-          ./gradlew clean generateStaticProperties test check nativeImage integrationTest --info --stacktrace --no-daemon
-        shell: bash
-      - name: Prepare Artifacts
-        run: mv cli/build/bin/owl owl-x86_64-windows-${RELEASE_VERSION}.exe
-        shell: bash
-      - name: Run UPX
-        uses: crazy-max/ghaction-upx@v1.4.0
-        with:
-          version: latest
-          files: ./*.exe
-          args: -9
-      - name: Upload Windows Artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: artifacts-windows
-          path: owl-x86_64-windows-${{ env.RELEASE_VERSION }}.exe
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
 
-  publish:
-    needs: [build-linux, build-macos, build-windows]
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check Out Repo
-        uses: actions/checkout@v2
+      - name: Build and release to Maven Central
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+
+          # Required for reactor dependencies
+          mvn -B clean install -DskipTests
+          mvn -B versions:set -DnewVersion=${{ github.event.inputs.release_version }}
+          mvn -B versions:commit
+
+          # Actual build
+          mvn -B clean deploy -Drelease
+        shell: bash
+        env:
+          MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
+          MAVEN_CENTRAL_TOKEN: ${{ secrets.MAVEN_CENTRAL_TOKEN }}
+          PGP_KEY_PASSWORD: ${{ secrets.PGP_KEY_PASSWORD }}
+
+      - name: Create GitHub release
+        uses: softprops/action-gh-release@de2c0eb89ae2a093876385947365aca7b0e5f844v1 # v0.1.15
         with:
-          fetch-depth: 0
-      - name: Fetch Linux Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: artifacts-linux
-      - name: Fetch Macos Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: artifacts-macos
-      - name: Fetch Windows Artifacts
-        uses: actions/download-artifact@v4
-        with:
-          name: artifacts-windows
-      - name: Set env
-        run: echo "RELEASE_VERSION=$(grep version= gradle.properties | sed 's/.*=//')" >> $GITHUB_ENV
-      - name: Push Release
-        uses: "marvinpinto/action-automatic-releases@latest"
-        with:
-          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          body: "Release version ${{ github.event.inputs.release_version }}"
+          tag_name: v${{ github.event.inputs.release_version }}
+          draft: false
           prerelease: false
-          title: "Release v${{ env.RELEASE_VERSION }}"
-          files: |-
-            owl-cli-${{ env.RELEASE_VERSION }}.jar
-            owl-x86_64-linux-${{ env.RELEASE_VERSION }}
-            owl-x86_64-apple-darwin-${{ env.RELEASE_VERSION }}
-            owl-x86_64-windows-${{ env.RELEASE_VERSION }}.exe
+          files: |
+            cool-rdf/cli/target/cool-rdf-cli-${{ github.event.inputs.release_version }}.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN  }}
 
-  buildDone:
-    name: Build Ok
-    needs: publish
-    runs-on: ubuntu-latest
-    steps:
-      - name: Build Ok
-        run: echo 'all builds passed'
+      - name: Deploy GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@d92aa235d04922e8f08b40ce78cc5442fcfbfa2f # v4.8.0
+        with:
+          branch: gh-pages
+          folder: docs/target/build/site

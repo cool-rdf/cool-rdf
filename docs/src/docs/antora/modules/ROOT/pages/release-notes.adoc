@@ -1,0 +1,198 @@
+// -*- fill-column: 100; -*-
+= Release Notes
+
+== Version 1.0.0
+
+* The first release of Cool RDF.
+* Includes both a Java API and the `cool` command line tool, both of which include functionality to format RDF/Turtle
+documents and generate diagrams for OWL ontologies.
+* The projects merges the features of the previously separate projects _owl-cli_ and _turtle-formatter_. Please have a
+look at the next section for details and a migration guide.
+
+[[legacy-projects]]
+== Legacy Projects: owl-cli and turtle-formatter
+
+=== Merge of the projects
+
+Cool RDF 1.0.0 merges and updates the previously separate projects _owl-cli_ and _turtle-formatter_,
+using their respective latest releases, owl-cli 1.2.5 and turtle-formatter 1.2.16.
+This implies the following changes:
+
+* The command line tool is not anymore called `owl`, but `cool`.
+* The new merged project is built using Maven instead of Gradle.
+* The code of turtle-formatter is now part of the `cool-rdf-formatter` module. The package
+`de.atextor.turtle.formatter` is now called `cool.rdf.formatter`.
+* The Java API now provides all modules (everything that is available as subcommands from the command line tool),
+not only the RDF/Turtle formatting.
+
+You can find the legacy projects' release notes below.
+
+=== How to migrate from owl-cli to Cool RDF `cool` command line tool
+
+`cool` is provided as an executable .jar file, which means you need to have Java 25 or later installed to run it;
+no native binaries (.exe for Windows, and equivalent executable files for Linux and MacOs) are currently provided.
+Other than that, `cool` behaves very similar (including the same subcommands) to the `owl` command. Please see
+xref:cool-cli.adoc[] for more information.
+
+=== How to migrate from turtle-formatter to Cool RDF cool-turtle-formatter
+
+1. Change your Maven coordinates from `de.atextor:turtle-formatter:1.2.16` to `cool.rdf:cool-rdf-formatter:1.0.0`.
+2. Change usages of classes in the Java package `de.atextor.turtle.formatter` to the package `cool.rdf.formatter`.
+3. Update from Java 17 to Java 25.
+
+For more details, see xref:java-api.adoc#cool-rdf-formatter[cool-rdf-formatter].
+
+== Legacy Release Notes
+
+=== owl-cli Version 1.2.6 (unreleased)
+* Changes in xref:cool-cli.adoc#write-command[write] command: Correct formatting of `rdf:Lists` with
+  additional properties; fixed decimal formatting in locales other than US, deterministic ordering
+  of blank nodes. Double values are now by default formatted like in the source model.
+
+=== owl-cli Version 1.2.5
+* Changes in xref:cool-cli.adoc#write-command[write] command: `rdf:type` used as an object in a triple
+  is not rendered as `a` any more.
+
+=== owl-cli Version 1.2.4
+* Changes in xref:cool-cli.adoc#write-command[write] command: Triple-quotes strings that happen to end
+  with a quote are escaped correctly.
+
+=== owl-cli Version 1.2.3
+
+* Changes in xref:cool-cli.adoc#write-command[write] command: Special characters in the URIs are
+  serialized correctly (using Jena RIOT); if characters are invalid in a local name, the full URI is
+  printed. The longest available prefixes are used.
+
+=== owl-cli Version 1.2.2
+
+* Change in xref:cool-cli.adoc#write-command[write] command: Dashes, underscores and full stops in the
+  name part of local names are not escaped any more. Both variants are valid, but reading RDF/Turtle
+  is easier without the escapes.
+
+=== owl-cli Version 1.2.1
+
+* Bugfix in xref:cool-cli.adoc#write-command[write] command: Dashes in the prefix part of local names
+  are not escaped any more
+
+=== owl-cli Version 1.2.0
+
+* Adds the xref:cool-cli.adoc#infer-command[infer] command to perform OWL DL reasoning on an input
+  ontology.
+* Bugfixes in xref:cool-cli.adoc#write-command[write] command: Local names (curies) with escaped
+  special characters are correctly parsed now; local names and literals are correctly escaped when
+  writing.
+
+=== owl-cli Version 1.1.0
+
+* Adds the xref:cool-cli.adoc#write-command[write] command to read RDF files in multiple formats and
+  write them out. When choosing RDF/Turtle as output format, the output is pretty-printed and
+  formatting can be controlled.
+
+=== owl-cli Version 1.0.0
+
+* This is the first released version.
+* It supports the xref:cool-cli.adoc#diagram-command[diagram] command to automatically generate diagrams from OWL ontologies.
+
+=== turtle-formatter 1.2.17 (unreleased)
+
+* Replace Platform-dependent line terminators in multiline strings with unix style newlines (\n, \r, and \r\n -> \n)
+
+=== turtle-formatter 1.2.16
+
+* Bugfix: Empty RDF lists are formatted as empty set of parenthesis again
+
+=== turtle-formatter 1.2.15
+
+* Bugfix: RDF list nodes containing other properties than rdf:rest and rdf:first are formatted correctly
+
+=== turtle-formatter 1.2.14
+
+* Bugfix: xsd:double numbers are correctly typed even when lexically equivalent to decimals
+
+=== turtle-formatter 1.2.13
+
+* Feature: Skip double formatting
+
+=== turtle-formatter 1.2.12
+
+* Bugfix: Handle RDF lists that start with a non-anonymous node
+* Bugfix: Handle blank node cycles
+* Bugfix: Ensure constant blank node ordering
+* Bugfix: Set Locale for NumberFormat to US
+* Change default subjectOrder to show rdfs:Class after owl:Ontology
+
+=== turtle-formatter 1.2.11
+
+* Bugfix: rdf:type is not printed as a when used as an object
+* Update all dependencies, including Apache Jena to 4.10.0
+
+=== turtle-formatter 1.2.10
+
+* Configured endOfLine style is honored in prefix formatting
+
+=== turtle-formatter 1.2.9
+
+* The dummy base URI is now configurable in the formatting style. Its default value was changed
+(to urn:turtleformatter:internal) to make it a valid URI.
+
+=== turtle-formatter 1.2.8
+
+* Bugfix: Quotes that are the last character in a triple-quoted string are escaped correctly
+* New style switch: FormattingStyle.quoteStyle
+
+=== turtle-formatter 1.2.7
+
+* Bugfix: URIs and local names are formatted using Jena RIOT; no invalid local names are printed any longer
+
+=== turtle-formatter 1.2.6
+
+* Fix typo in FormattingStyle property (indentPredicates)
+* Fix alignment of repeated identical predicates
+
+=== turtle-formatter 1.2.5
+
+* Dashes, underscores and full stops in the name part of local names are not escaped any more. Technically not a bug
+fix since both is valid, but it's nicer to read
+
+=== turtle-formatter 1.2.4
+
+* Bugfix: Dashes in prefixes of local names are not escaped any more
+
+=== turtle-formatter 1.2.3
+
+* Bugfix: Special characters in local names (curies) and literals are properly escaped
+
+=== turtle-formatter 1.2.2
+
+* Enable writing URIs with an empty base: use TurtleFormatter.EMPTY_BASE as value for "base" when reading a model using
+Jena's model.read()
+* Update build to Java 17
+
+=== turtle-formatter 1.2.1
+
+* Improve formatting for blank nodes nested in lists
+* Use triple quotes for literals containing line breaks
+* Use Jena's mechanisms for escaping special characters in literals
+
+=== turtle-formatter 1.2.0
+
+* Add wrapListItems configuration option
+* Change license from LGPL 3.0 to Apache 2.0
+
+=== turtle-formatter 1.1.1
+
+* Make fields of FormattingStyle public, so that DEFAULT config is readable
+
+=== turtle-formatter 1.1.0
+
+* Bugfix: Subjects with a rdf:type not in subjectOrder are rendered correctly
+* Adjust default subjectOrder and predicateOrder
+* Add new option keepUnusedPrefixes and by default render only used prefixes
+
+=== turtle-formatter 1.0.1
+
+* Fix POM so that dependency can be used as jar
+
+=== turtle-formatter 1.0.0
+
+* First version

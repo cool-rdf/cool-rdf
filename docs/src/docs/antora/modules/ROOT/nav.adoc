@@ -1,0 +1,5 @@
+* xref:index.adoc[Getting Started]
+* xref:cool-cli.adoc[`cool` command line tool]
+* xref:java-api.adoc[Cool RDF Java API]
+* xref:release-notes.adoc[Release Notes]
+* xref:diagram-notation.adoc[Diagram Notation]

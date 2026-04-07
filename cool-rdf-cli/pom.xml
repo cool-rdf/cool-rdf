@@ -1,0 +1,343 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2024 Andreas Textor
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>cool-rdf-parent</artifactId>
+        <groupId>cool.rdf</groupId>
+        <version>DEV-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>cool-rdf-cli</artifactId>
+    <name>Cool RDF Command Line Interface</name>
+
+    <properties>
+        <regular.jar>${project.artifactId}-${project.version}</regular.jar>
+        <main.class>cool.rdf.cli.Cool</main.class>
+        <binary.name>cool</binary.name>
+        <packaging.type>jar</packaging.type>
+    </properties>
+
+    <dependencies>
+        <!-- Module dependencies -->
+        <dependency>
+            <groupId>cool.rdf</groupId>
+            <artifactId>cool-rdf-core</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cool.rdf</groupId>
+            <artifactId>cool-rdf-diagram-owl</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cool.rdf</groupId>
+            <artifactId>cool-rdf-infer</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cool.rdf</groupId>
+            <artifactId>cool-rdf-formatter</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>cool.rdf</groupId>
+            <artifactId>cool-rdf-write</artifactId>
+        </dependency>
+
+        <!-- General dependencies -->
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>ch.qos.logback</groupId>
+            <artifactId>logback-classic</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>info.picocli</groupId>
+            <artifactId>picocli</artifactId>
+        </dependency>
+
+        <!-- Test dependencies -->
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-api</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-engine</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.junit.jupiter</groupId>
+            <artifactId>junit-jupiter-params</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.assertj</groupId>
+            <artifactId>assertj-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.github.classgraph</groupId>
+            <artifactId>classgraph</artifactId>
+            <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.mockito</groupId>
+            <artifactId>mockito-core</artifactId>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add-src-gen-source</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${generated.sources}/main/java</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>add-src-buildtime-source</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>add-source</goal>
+                        </goals>
+                        <configuration>
+                            <sources>
+                                <source>${build.time.sources.java}</source>
+                            </sources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-clean-plugin</artifactId>
+                <configuration>
+                    <filesets>
+                        <fileset>
+                            <directory>${generated.sources}</directory>
+                        </fileset>
+                    </filesets>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>${maven-compiler-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>compile-build-time-code</id>
+                        <phase>process-sources</phase>
+                        <goals>
+                            <goal>compile</goal>
+                        </goals>
+                        <configuration>
+                            <compileSourceRoots>${build.time.sources}</compileSourceRoots>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>default-compile</id>
+                        <phase>compile</phase>
+                        <configuration>
+                            <annotationProcessorPaths combine.children="append">
+                                <path>
+                                    <groupId>info.picocli</groupId>
+                                    <artifactId>picocli-codegen</artifactId>
+                                    <version>${picocli.version}</version>
+                                </path>
+                            </annotationProcessorPaths>
+                            <compilerArgs>
+                                <arg>-Aproject=${project.groupId}/${project.artifactId}</arg>
+                                <arg>--add-exports</arg>
+                                <arg>java.desktop/sun.awt=ALL-UNNAMED</arg>
+                                <arg>--add-exports</arg>
+                                <arg>java.desktop/sun.font=ALL-UNNAMED</arg>
+                            </compilerArgs>
+                            <forceJavacCompilerUse>true</forceJavacCompilerUse>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>generate-static-cli-info-class</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>java</goal>
+                        </goals>
+                        <configuration>
+                            <mainClass>cool.rdf.cli.buildtime.WriteStaticCliInfoClass</mainClass>
+                            <!-- args[0]: the name of the CLI command -->
+                            <!-- args[1]: fully qualified class name to generate -->
+                            <!-- args[2]: the path to the file to write -->
+                            <!-- args[3]: the copyright holder -->
+                            <!-- args[4]: the project URL -->
+                            <arguments>
+                                <argument>${binary.name}</argument>
+                                <argument>cool.rdf.cli.StaticCliInfo</argument>
+                                <argument>${generated.sources.java}/cool/rdf/cli/StaticCliInfo.java</argument>
+                                <argument>${project.developers}</argument>
+                                <argument>${project.parent.url}</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-surefire-plugin</artifactId>
+                <version>${maven-surefire-plugin.version}</version>
+                <configuration>
+                    <forkCount>1</forkCount>
+                    <reuseForks>false</reuseForks>
+                    <skip>${maven.surefire.skip}</skip>
+                    <includes>
+                        <include>**/CoolTest.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-failsafe-plugin</artifactId>
+                <version>${maven-failsafe-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <phase>integration-test</phase>
+                        <goals>
+                            <goal>integration-test</goal>
+                        </goals>
+                        <configuration>
+                            <systemPropertyVariables>
+                                <executableJar>${project.build.directory}/${regular.jar}.jar</executableJar>
+                                <binary>${project.build.directory}/${binary.name}</binary>
+                                <packaging.type>${packaging.type}</packaging.type>
+                            </systemPropertyVariables>
+                            <forkCount>1</forkCount>
+                            <reuseForks>true</reuseForks>
+                            <includes>
+                                <include>**/ExecutableJarTest.java</include>
+                                <include>**/BinaryTest.java</include>
+                            </includes>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>${maven-shade-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>default-shade</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <finalName>${regular.jar}</finalName>
+                            <createDependencyReducedPom>false</createDependencyReducedPom>
+                            <skip>${maven.shade.skip}</skip>
+                            <transformers>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <manifestEntries>
+                                        <Main-Class>${main.class}</Main-Class>
+                                    </manifestEntries>
+                                </transformer>
+                                <transformer
+                                        implementation="org.apache.maven.plugins.shade.resource.ServicesResourceTransformer"/>
+                            </transformers>
+                            <artifactSet>
+                                <excludes>
+                                    <!-- OWL API components that contain identical classes to the ones -->
+                                    <!-- already given in owlapi-distribution -->
+                                    <exclude>net.sourceforge.owlapi:owlapi-api</exclude>
+                                    <exclude>net.sourceforge.owlapi:owlapi-apibinding</exclude>
+                                    <exclude>net.sourceforge.owlapi:owlapi-compatibility</exclude>
+                                    <exclude>net.sourceforge.owlapi:owlapi-impl</exclude>
+                                    <exclude>net.sourceforge.owlapi:owlapi-parsers</exclude>
+                                    <exclude>net.sourceforge.owlapi:owlapi-oboformat</exclude>
+                                    <exclude>net.sourceforge.owlapi:owlapi-rio</exclude>
+                                    <exclude>net.sourceforge.owlapi:owlapi-tools</exclude>
+                                </excludes>
+                            </artifactSet>
+                            <filters>
+                                <!-- Required to prevent overlapping resources -->
+                                <filter>
+                                    <artifact>*:*</artifact>
+                                    <excludes>
+                                        <exclude>module-info.class</exclude>
+                                        <exclude>META-INF/*</exclude>
+                                        <exclude>META-INF/sisu/javax.inject.Named</exclude>
+                                        <exclude>META-INF/plexus/components.xml</exclude>
+                                        <exclude>META-INF.versions*/**</exclude>
+                                        <exclude>META-INF/versions*/**</exclude>
+                                        <exclude>META-INF/maven/**</exclude>
+                                        <exclude>plugin.xml</exclude>
+                                        <exclude>about.html</exclude>
+                                    </excludes>
+                                </filter>
+                                <!-- Required to override the excludes above -->
+                                <filter>
+                                    <artifact>${project.groupId}:${project.artifactId}</artifact>
+                                    <excludeDefaults>false</excludeDefaults>
+                                    <includes>
+                                        <include>**</include>
+                                        <include>META-INF/**</include>
+                                        <include>git.properties</include>
+                                    </includes>
+                                    <excludes>
+                                        <!-- Explicitly exclude build-time-only code from jar -->
+                                        <exclude>cool/rdf/core/buildtime/**</exclude>
+                                    </excludes>
+                                </filter>
+                            </filters>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>

@@ -1,0 +1,6 @@
+@prefix : <https://rdf.cool/vocab/example#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+:foo a owl:Class .
+:bar a owl:Class ;
+   owl:disjointWith :foo .

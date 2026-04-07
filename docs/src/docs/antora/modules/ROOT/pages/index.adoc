@@ -1,0 +1,25 @@
+// -*- fill-column: 100; -*-
+= Cool RDF
+
+Cool RDF (formerly known as owl-cli and turtle-formatter) is a set of high-level Java libraries
+and a command line tool, called `cool`, for working with https://en.wikipedia.org/wiki/Resource_Description_Framework[RDF]
+documents and https://en.wikipedia.org/wiki/Web_Ontology_Language[OWL] ontologies. Currently you can:
+
+* generate a diagram for an OWL ontology with the xref:cool-cli.adoc#diagram-command[diagram command],
+* read any RDF document in https://www.w3.org/TR/turtle/[RDF/Turtle],
+https://www.w3.org/TR/rdf-syntax-grammar/[RDF/XML],
+https://www.w3.org/TR/n-triples/[RDF N-Triples] or
+https://www.w3.org/TeamSubmission/n3/[N3] format and write it in configurable, pretty-printed
+RDF/Turtle or one of the other formats using the xref:cool-cli.adoc#write-command[write command],
+* perform OWL DL reasoning on an input ontology using the xref:cool-cli.adoc#infer-command[infer command].
+
+You can find the source code at https://github.com/cool-rdf/cool-rdf.
+
+== More information
+
+If you want to use the `cool` command line tool, you can find installation and running instructions in xref:cool-cli.adoc[`cool` command line tool].
+
+If you want to use Cool RDF as a library in your Java program, please see xref:java-api.adoc[Cool RDF Java API].
+
+If you are interested how Cool RDF relates to `owl-cli` or `turtle-formatter`, please see
+xref:release-notes.adoc#legacy-projects[Legacy Projects].

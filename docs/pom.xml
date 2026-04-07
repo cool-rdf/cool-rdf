@@ -1,0 +1,382 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  ~ Copyright 2025 Andreas Textor
+  ~
+  ~ Licensed under the Apache License, Version 2.0 (the "License");
+  ~ you may not use this file except in compliance with the License.
+  ~ You may obtain a copy of the License at
+  ~
+  ~ http://www.apache.org/licenses/LICENSE-2.0
+  ~
+  ~ Unless required by applicable law or agreed to in writing, software
+  ~ distributed under the License is distributed on an "AS IS" BASIS,
+  ~ WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+  ~ See the License for the specific language governing permissions and
+  ~ limitations under the License.
+  -->
+
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>cool-rdf-parent</artifactId>
+        <groupId>cool.rdf</groupId>
+        <version>DEV-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>docs</artifactId>
+    <name>Cool RDF Docs</name>
+
+    <properties>
+        <maven.surefire.skip>false</maven.surefire.skip>
+        <maven.failsafe.skip>false</maven.failsafe.skip>
+        <maven.javadoc.skip>true</maven.javadoc.skip>
+        <jacoco.skip>true</jacoco.skip>
+
+        <frontend-maven-plugin.version>2.0.0</frontend-maven-plugin.version>
+        <nodejs.version>16.18.0</nodejs.version>
+        <npm.version>9.6.0</npm.version>
+        <antora.version>3.0.0</antora.version>
+
+        <nodejs-directory>${project.build.directory}/node</nodejs-directory>
+        <node-modules-directory>${project.build.directory}/node_modules</node-modules-directory>
+        <antora-lunr-extension.version>1.0.0-alpha.1</antora-lunr-extension.version>
+        <antora-mathjax-extension.version>0.0.9</antora-mathjax-extension.version>
+        <antora-cli>${node-modules-directory}/@antora/cli/bin/antora</antora-cli>
+    </properties>
+
+    <dependencies>
+        <!-- build CLI first, so that we can generate diagrams -->
+        <dependency>
+            <groupId>cool.rdf</groupId>
+            <artifactId>cool-rdf-cli</artifactId>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>com.github.eirslett</groupId>
+                    <artifactId>frontend-maven-plugin</artifactId>
+                    <version>${frontend-maven-plugin.version}</version>
+                </plugin>
+            </plugins>
+        </pluginManagement>
+
+        <plugins>
+            <plugin>
+                <artifactId>maven-resources-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-resources</id>
+                        <phase>process-resources</phase>
+                        <goals>
+                            <goal>resources</goal>
+                        </goals>
+                        <configuration>
+                            <outputDirectory>${project.build.directory}</outputDirectory>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>build-helper-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>add-antora-sources</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>src/docs/antora</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                    <execution>
+                        <id>add-antora-generated-sources</id>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>add-resource</goal>
+                        </goals>
+                        <configuration>
+                            <resources>
+                                <resource>
+                                    <directory>src-gen/docs/antora</directory>
+                                </resource>
+                            </resources>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <phase>generate-resources</phase>
+                        <id>generate-diagrams</id>
+                        <configuration>
+                            <target name="main">
+                                <apply executable="java"
+                                       dest="${project.basedir}/src/docs/antora/modules/ROOT/assets/images/generated"
+                                       parallel="false"
+                                       failonerror="true"
+                                       failifexecutionfails="true"
+                                       verbose="true">
+                                    <arg value="-jar"/>
+                                    <arg value="${project.basedir}/../cool-rdf-cli/target/cool-rdf-cli-${project.version}.jar"/>
+                                    <arg value="diagram"/>
+                                    <arg value="--direction"/>
+                                    <arg value="detect"/>
+                                    <srcfile/>
+                                    <targetfile/>
+                                    <fileset dir="${project.basedir}/src/docs/antora/modules/ROOT/examples"
+                                             includes="*.ttl"/>
+                                    <mapper type="glob" from="*.ttl" to="*.svg"/>
+                                </apply>
+                            </target>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>run-antora</id>
+                        <phase>compile</phase>
+                        <goals>
+                            <goal>exec</goal>
+                        </goals>
+                        <configuration>
+                            <workingDirectory>${project.build.directory}</workingDirectory>
+                            <executable>${antora-cli}</executable>
+                            <commandlineArgs>antora-playbook.yml --stacktrace --fetch</commandlineArgs>
+                            <useMavenLogger>true</useMavenLogger>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-jar-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-jar</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <configuration>
+                    <skipSource>true</skipSource>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-deploy-plugin</artifactId>
+                <configuration>
+                    <skip>true</skip>
+                </configuration>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-install-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>default-install</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>none</phase>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+    <profiles>
+        <profile>
+            <id>download-nodejs</id>
+            <activation>
+                <file>
+                    <missing>${basedir}/target/node</missing>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>install-node</id>
+                                <phase>initialize</phase>
+                                <goals>
+                                    <goal>install-node-and-npm</goal>
+                                </goals>
+                                <configuration>
+                                    <environmentVariables>
+                                        <strict-ssl>false</strict-ssl>
+                                    </environmentVariables>
+                                    <!-- frontend-maven-plugin will add a "/node" to the back -->
+                                    <!-- of this path, so do NOT use ${node-directory} here -->
+                                    <installDirectory>target</installDirectory>
+                                    <nodeVersion>v${nodejs.version}</nodeVersion>
+                                    <npmVersion>${npm.version}</npmVersion>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <!-- Download Antora and its requirements if necessary -->
+        <profile>
+            <id>download-antora</id>
+            <activation>
+                <file>
+                    <!-- Note we can't use ${antora-cli} here because profile activation happens before variable
+                     interpolation :( -->
+                    <missing>${basedir}/target/node_modules</missing>
+                </file>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>com.github.eirslett</groupId>
+                        <artifactId>frontend-maven-plugin</artifactId>
+                        <configuration>
+                            <installDirectory>target</installDirectory>
+                            <workingDirectory>target</workingDirectory>
+                        </configuration>
+                        <executions>
+                            <execution>
+                                <id>install-antora</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <configuration>
+                                    <!--suppress MavenModelInspection -->
+                                    <arguments>install @antora/cli@${antora.version}</arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>install-antora-site-generator</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <configuration>
+                                    <!--suppress MavenModelInspection -->
+                                    <arguments>install @antora/site-generator@${antora.version}</arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>install-antora-lunr-extension</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <configuration>
+                                    <!--suppress MavenModelInspection -->
+                                    <arguments>install @antora/lunr-extension@${antora-lunr-extension.version}
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>install-asciidoctor-mathjax</id>
+                                <phase>generate-sources</phase>
+                                <goals>
+                                    <goal>npm</goal>
+                                </goals>
+                                <configuration>
+                                    <!--suppress MavenModelInspection -->
+                                    <arguments>install
+                                        @djencks/asciidoctor-mathjax@${antora-mathjax-extension.version}
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+
+        <profile>
+            <id>release</id>
+            <activation>
+                <property>
+                    <name>release</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>software.xdev</groupId>
+                        <artifactId>find-and-replace-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>set-release-version-in-antora</id>
+                                <phase>process-sources</phase>
+                                <goals>
+                                    <goal>file-contents</goal>
+                                </goals>
+                                <configuration>
+                                    <baseDir>src/docs/antora</baseDir>
+                                    <fileMask>antora.yml</fileMask>
+                                    <findRegex>release-version: snapshot</findRegex>
+                                    <replaceValue>release-version: ${project.version}</replaceValue>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>set-release-tag-in-antora</id>
+                                <phase>process-sources</phase>
+                                <goals>
+                                    <goal>file-contents</goal>
+                                </goals>
+                                <configuration>
+                                    <baseDir>src/docs/antora</baseDir>
+                                    <fileMask>antora.yml</fileMask>
+                                    <findRegex>release-tag: snapshot</findRegex>
+                                    <replaceValue>release-tag: v${project.version}</replaceValue>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
+</project>
