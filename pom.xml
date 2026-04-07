@@ -766,6 +766,7 @@
                             <publishingServerId>central</publishingServerId>
                             <checksums>all</checksums>
                             <autoPublish>false</autoPublish>
+                            <deploymentName>${project.groupId}:${project.artifactId}:${project.version}</deploymentName>
                             <excludeArtifacts>
                                 <artifact>docs</artifact>
                             </excludeArtifacts>
