@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Cool RDF :: Cool RDF</title>
+    <link rel="canonical" href="https://rdf.cool/cool-rdf/index.html">
+    <meta name="generator" content="Antora 3.0.0">
+    <link rel="stylesheet" href="../_/css/site.css">
+    <script>var uiRootPath = '../_'</script>
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://rdf.cool">Cool RDF</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <input id="search-input" type="text" placeholder="Search docs">
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="cool-rdf" data-version="master">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html">Cool RDF</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="index.html">Getting Started</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="cool-cli.html"><code>cool</code> command line tool</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="java-api.html">Cool RDF Java API</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-notes.html">Release Notes</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="diagram-notation.html">Diagram Notation</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Cool RDF</span>
+    <span class="version">master</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="index.html">Cool RDF</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="index.html">master</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link is-current"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Cool RDF</a></li>
+    <li><a href="index.html">Getting Started</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/cool-rdf/cool-rdf/edit/main/docs/src/docs/antora/modules/ROOT/pages/index.adoc">Contribute to this page</a></div>
+  </div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Cool RDF</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>Cool RDF (formerly known as owl-cli and turtle-formatter) is a set of high-level Java libraries
+and a command line tool, called <code>cool</code>, for working with <a href="https://en.wikipedia.org/wiki/Resource_Description_Framework">RDF</a>
+documents and <a href="https://en.wikipedia.org/wiki/Web_Ontology_Language">OWL</a> ontologies. Currently you can:</p>
+</div>
+<div class="ulist">
+<ul>
+<li>
+<p>generate a diagram for an OWL ontology with the <a href="cool-cli.html#diagram-command" class="xref page">diagram command</a>,</p>
+</li>
+<li>
+<p>read any RDF document in <a href="https://www.w3.org/TR/turtle/">RDF/Turtle</a>,
+<a href="https://www.w3.org/TR/rdf-syntax-grammar/">RDF/XML</a>,
+<a href="https://www.w3.org/TR/n-triples/">RDF N-Triples</a> or
+<a href="https://www.w3.org/TeamSubmission/n3/">N3</a> format and write it in configurable, pretty-printed
+RDF/Turtle or one of the other formats using the <a href="cool-cli.html#write-command" class="xref page">write command</a>,</p>
+</li>
+<li>
+<p>perform OWL DL reasoning on an input ontology using the <a href="cool-cli.html#infer-command" class="xref page">infer command</a>.</p>
+</li>
+</ul>
+</div>
+<div class="paragraph">
+<p>You can find the source code at <a href="https://github.com/cool-rdf/cool-rdf" class="bare">https://github.com/cool-rdf/cool-rdf</a>.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="more-information"><a class="anchor" href="#more-information"></a>More information</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>If you want to use the <code>cool</code> command line tool, you can find installation and running instructions in <a href="cool-cli.html" class="xref page"><code>cool</code> command line tool</a>.</p>
+</div>
+<div class="paragraph">
+<p>If you want to use Cool RDF as a library in your Java program, please see <a href="java-api.html" class="xref page">Cool RDF Java API</a>.</p>
+</div>
+<div class="paragraph">
+<p>If you are interested how Cool RDF relates to <code>owl-cli</code> or <code>turtle-formatter</code>, please see
+<a href="release-notes.html#legacy-projects" class="xref page">Legacy Projects</a>.</p>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <div class="footer-container">
+    <p>Copyright © 2025 Cool RDF project</p>
+  </div>
+</footer>
+<script src="../_/js/site.js"></script>
+<script src="../_/js/vendor/lunr.min.js"></script>
+<script src="../_/js/vendor/search-ui.js" id="search-script" data-site-root-path=".." data-stylesheet="../_/css/search.css"></script>
+<script async src="../search-index.js"></script>
+<script async src="../_/js/vendor/highlight.js"></script>
+  </body>
+</html>
