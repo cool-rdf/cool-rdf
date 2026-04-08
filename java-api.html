@@ -1,0 +1,625 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Cool RDF Java API :: Cool RDF</title>
+    <link rel="canonical" href="https://rdf.cool/java-api.html">
+    <meta name="generator" content="Antora 3.0.0">
+    <link rel="stylesheet" href="./_/css/site.css">
+    <script>var uiRootPath = './_'</script>
+<meta name="msapplication-TileColor" content="#da532c">
+<meta name="theme-color" content="#ffffff">
+  </head>
+  <body class="article">
+<header class="header">
+  <nav class="navbar">
+    <div class="navbar-brand">
+      <a class="navbar-item" href="https://rdf.cool">Cool RDF</a>
+      <button class="navbar-burger" data-target="topbar-nav">
+        <span></span>
+        <span></span>
+        <span></span>
+      </button>
+    </div>
+    <div id="topbar-nav" class="navbar-menu">
+      <div class="navbar-end">
+        <div class="navbar-item">
+          <input id="search-input" type="text" placeholder="Search docs">
+        </div>
+      </div>
+    </div>
+  </nav>
+</header>
+<div class="body">
+<div class="nav-container" data-component="ROOT" data-version="">
+  <aside class="nav">
+    <div class="panels">
+<div class="nav-panel-menu is-active" data-panel="menu">
+  <nav class="nav-menu">
+    <h3 class="title"><a href="index.html">Cool RDF</a></h3>
+<ul class="nav-list">
+  <li class="nav-item" data-depth="0">
+<ul class="nav-list">
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="index.html">Getting Started</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="cool-cli.html"><code>cool</code> command line tool</a>
+  </li>
+  <li class="nav-item is-current-page" data-depth="1">
+    <a class="nav-link" href="java-api.html">Cool RDF Java API</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="release-notes.html">Release Notes</a>
+  </li>
+  <li class="nav-item" data-depth="1">
+    <a class="nav-link" href="diagram-notation.html">Diagram Notation</a>
+  </li>
+</ul>
+  </li>
+</ul>
+  </nav>
+</div>
+<div class="nav-panel-explore" data-panel="explore">
+  <div class="context">
+    <span class="title">Cool RDF</span>
+    <span class="version">default</span>
+  </div>
+  <ul class="components">
+    <li class="component is-current">
+      <a class="title" href="index.html">Cool RDF</a>
+      <ul class="versions">
+        <li class="version is-current is-latest">
+          <a href="index.html">default</a>
+        </li>
+      </ul>
+    </li>
+  </ul>
+</div>
+    </div>
+  </aside>
+</div>
+<main class="article">
+<div class="toolbar" role="navigation">
+<button class="nav-toggle"></button>
+  <a href="index.html" class="home-link"></a>
+<nav class="breadcrumbs" aria-label="breadcrumbs">
+  <ul>
+    <li><a href="index.html">Cool RDF</a></li>
+    <li><a href="java-api.html">Cool RDF Java API</a></li>
+  </ul>
+</nav>
+  <div class="edit-this-page"><a href="https://github.com/cool-rdf/cool-rdf/edit/main/docs/src/docs/antora/modules/ROOT/pages/java-api.adoc">Contribute to this page</a></div>
+  </div>
+  <div class="content">
+<aside class="toc sidebar" data-title="Contents" data-levels="2">
+  <div class="toc-menu"></div>
+</aside>
+<article class="doc">
+<h1 class="page">Cool RDF Java API</h1>
+<div id="preamble">
+<div class="sectionbody">
+<div class="paragraph">
+<p>The functionality that powers the subcommands of the <a href="cool-cli.html" class="xref page"><code>cool</code> command line tool</a> is also available as a set
+of Java libraries. They are are either described in the sections below, or the documentation is not
+yet available.</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="cool-rdf-formatter"><a class="anchor" href="#cool-rdf-formatter"></a>cool-rdf-formatter</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p><strong>cool-rdf-formatter</strong> is a Java library for pretty printing
+ <a href="https://www.w3.org/TR/turtle/">RDF/Turtle</a> documents in a <em>configurable</em> and
+ <em>reproducible</em> way.</p>
+</div>
+<div class="paragraph">
+<p>It takes as input a formatting style and an <a href="https://jena.apache.org">Apache Jena</a> Model and
+produces as output a pretty-printed RDF/Turtle document.</p>
+</div>
+<div class="sect2">
+<h3 id="why"><a class="anchor" href="#why"></a>Why?</h3>
+<div class="sect3">
+<h4 id="reproducible-formatting"><a class="anchor" href="#reproducible-formatting"></a>Reproducible Formatting</h4>
+<div class="paragraph">
+<p>Every RDF library comes with its own serializers, for example an Apache Jena Model can be written
+<a href="https://jena.apache.org/documentation/io/rdf-output.html">in multiple ways</a>, the easiest being
+calling the write method on a model itself: <code>model.write(System.out, "TURTLE")</code>. However, due to the
+nature of RDF, outgoing edges of a node in the graph have no order. When serializing a model, there
+are multiple valid ways to do so. For example, the following two models are identical on RDF-level,
+even though the order of the properties differs in the serialization:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 50%;">
+<col style="width: 50%;">
+</colgroup>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-turtle hljs" data-lang="turtle">@prefix : &lt;http://example.com/&gt; .
+
+:test
+  :blorb "blorb" ;
+  :floop "floop" .</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-turtle hljs" data-lang="turtle">@prefix : &lt;http://example.com/&gt; .
+
+:test
+  :floop "floop" ;
+  :blorb "blorb" .</code></pre>
+</div>
+</div></div></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>Therefore, when a model is serialized, one of many different (valid) serializations could be the
+result. This is a problem when different versions of a model file are compared, for example when
+used as artifacts in a git repository. Additionally, serialized files are often formatted in one
+style hardcoded in the respective library. So while <a href="https://jena.apache.org/">Apache Jena</a> and for
+example <a href="http://librdf.org/raptor/">libraptor2</a> both write valid RDF/Turtle, the files are
+formatted differently. You would not want the code of a project formatted differently in different
+files, would you?</p>
+</div>
+<div class="paragraph">
+<p><strong>cool-rdf-formatter</strong> addresses these problems by taking care of serialization order and providing
+ a way to customize the formatting style.</p>
+</div>
+</div>
+<div class="sect3">
+<h4 id="nice-and-configurable-formatting"><a class="anchor" href="#nice-and-configurable-formatting"></a>Nice and Configurable Formatting</h4>
+<div class="paragraph">
+<p>Most serializers, while creating valid RDF/Turtle, create <em>ugly</em> formatting. Obviously, what is ugly
+and what isn&#8217;t is highly subjective, so this should be configurable. <strong>cool-rdf-formatter</strong>
+addresses this by making the formatting style configurable, e.g. how alignment should be done, where
+extra spaces should be inserted and even if indendation is using tabs or spaces. A default style is
+provided that reflects sane settings (i.e., the author&#8217;s opinion). An RDF document formatted using
+the default style could look like this:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-turtle hljs" data-lang="turtle">@prefix rdfs: &lt;http://www.w3.org/2000/01/rdf-schema#&gt; . <i class="conum" data-value="1"></i><b>(1)</b>
+@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .
+@prefix : &lt;http://example.com/relations#&gt; .
+
+:Male a owl:Class ; <i class="conum" data-value="2"></i><b>(2)</b>
+  owl:disjointWith :Female ; <i class="conum" data-value="3"></i><b>(3)</b>
+  owl:equivalentClass [ <i class="conum" data-value="4"></i><b>(4)</b>
+    a owl:Restriction ;
+    owl:hasSelf true ; <i class="conum" data-value="5"></i><b>(5)</b>
+    owl:onProperty :isMale ;
+  ] ;
+  rdfs:subClassOf :Person .
+
+:hasBrother a owl:ObjectProperty ;
+  owl:propertyChainAxiom ( :hasSibling :isMale ) ; <i class="conum" data-value="6"></i><b>(6)</b>
+  rdfs:range :Male .
+
+:hasUncle a owl:ObjectProperty, owl:IrreflexiveProperty ; <i class="conum" data-value="7"></i><b>(7)</b>
+  owl:propertyChainAxiom ( :hasParent :hasSibling :hasHusband ) ; <i class="conum" data-value="7"></i><b>(7)</b>
+  owl:propertyChainAxiom ( :hasParent :hasBrother ) ;
+  rdfs:range :Male .</code></pre>
+</div>
+</div>
+<div class="colist arabic">
+<table>
+<tr>
+<td><i class="conum" data-value="1"></i><b>1</b></td>
+<td>Prefixes are sorted by common, then custom. They are <em>not</em> aligned on the colon because that
+looks bad when one prefix string is much longer than the others.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="2"></i><b>2</b></td>
+<td><code>rdf:type</code> is always written as <code>a</code>. It is always the first predicate and written in the same
+line as the subject.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="3"></i><b>3</b></td>
+<td>Indentation is done using a fixed size, like in any other format or language. Predicates are not
+aligned to subjects with an arbitrary length.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="4"></i><b>4</b></td>
+<td>Anonymous nodes are written using the <code>[ ]</code> notation whenever possible.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="5"></i><b>5</b></td>
+<td>Literal shortcuts are used where possible (e.g. no <code>"true"^^xsd:boolean</code>).</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="6"></i><b>6</b></td>
+<td>RDF Lists are always written using the <code>( )</code> notation, no blank node IDs or
+<code>rdf:next</code>/<code>rdf:first</code> seen here.</td>
+</tr>
+<tr>
+<td><i class="conum" data-value="7"></i><b>7</b></td>
+<td>The same predicates on the same subjects are repeated rather than using the <code>,</code> notation,
+because especially when the objects are longer (nested anonymous nodes), it is difficult to
+understand. The exception to this rule is for different <code>rdf:type</code>&#8203;s.</td>
+</tr>
+</table>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="usage-in-maven"><a class="anchor" href="#usage-in-maven"></a>Usage in Maven</h3>
+<div class="paragraph">
+<p>Add the following dependency to your Maven <code>pom.xml</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-xml hljs" data-lang="xml">&lt;dependency&gt;
+  &lt;groupId&gt;cool.rdf&lt;/groupId&gt;
+  &lt;artifactId&gt;cool-rdf-formatter&lt;/artifactId&gt;
+  &lt;version&gt;2.0.0&lt;/version&gt;
+&lt;/dependency&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>Gradle/Groovy: <code>implementation 'de.atextor:turtle-formatter:2.0.0'</code></p>
+</div>
+<div class="paragraph">
+<p>Gradle/Kotlin: <code>implementation("de.atextor:turtle-formatter:2.0.0")</code></p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="calling-the-formatter"><a class="anchor" href="#calling-the-formatter"></a>Calling the formatter</h3>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">import java.io.FileInputStream;
+import cool.rdf.formatter.FormattingStyle;
+import cool.rdf.formatter.TurtleFormatter;
+import org.apache.jena.rdf.model.Model;
+import org.apache.jena.rdf.model.ModelFactory;
+
+// ...
+
+// Determine formatting style
+FormattingStyle style = FormattingStyle.DEFAULT;
+TurtleFormatter formatter = new TurtleFormatter(style);
+// Build or load a Jena Model.
+// Use the style's base URI for loading the model.
+Model model = ModelFactory.createDefaultModel();
+model.read(new FileInputStream("data.ttl"), style.emptyRdfBase, "TURTLE");
+// Either create a string...
+String prettyPrintedModel = formatter.apply(model);
+// ...or write directly to an OutputStream
+formatter.accept(model, System.out);</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="customizing-the-style"><a class="anchor" href="#customizing-the-style"></a>Customizing the style</h3>
+<div class="paragraph">
+<p>Instead of passing <code>FormattingStyle.DEFAULT</code>, you can create a custom <code>FormattingStyle</code> object.</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-java hljs" data-lang="java">FormattingStyle style = FormattingStyle.builder(). ... .build();</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>The following options can be set on the FormattingStyle builder:</p>
+</div>
+<table class="tableblock frame-all grid-all stretch">
+<colgroup>
+<col style="width: 20%;">
+<col style="width: 60%;">
+<col style="width: 20%;">
+</colgroup>
+<thead>
+<tr>
+<th class="tableblock halign-left valign-top">Option</th>
+<th class="tableblock halign-left valign-top">Description</th>
+<th class="tableblock halign-left valign-top">Default</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>emptyRdfBase</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Set the URI that should be left out in formatting. If you don&#8217;t care about this, don&#8217;t change it
+  and use the FormattingStyle&#8217;s emptyRdfBase field as the base URI when loading/creating the model
+  that will be formatted, see <a href="#calling-the-formatter">Calling the formatter</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>urn:cool-rdf:empty</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>alignPrefixes</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Boolean. Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-turtle hljs" data-lang="turtle"># true
+@prefix rdf:     &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
+@prefix example: &lt;http://example.com/&gt; .
+
+# false
+@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
+@prefix example: &lt;http://example.com/&gt; .</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>alignPredicates</code><br>
+<code>firstPredicateInNewLine</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Boolean. Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-turtle hljs" data-lang="turtle"># firstPredicateInNewLine false
+# alignPredicates true
+:test a rdf:Resource ;
+      :blorb "blorb" ;
+      :floop "floop" .
+
+# firstPredicateInNewLine false
+# alignPredicates false
+:test a rdf:Resource ;
+  :blorb "blorb" ;
+  :floop "floop" .
+
+# firstPredicateInNewLine true
+# alignPredicates does not matter
+:test
+  a rdf:Resource ;
+  :blorb "blorb" ;
+  :floop "floop" .</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code> (for both)</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>alignObjects</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Boolean. Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-turtle hljs" data-lang="turtle"># alignObjects true
+:test
+  a           rdf:Resource ;
+  :blorb      "blorb" ;
+  :floopfloop "floopfloop" .
+
+# alignObjects false
+:test
+  a rdf:Resource ;
+  :blorb "blorb" ;
+  :floopfloop "floopfloop" .</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>charset</code>*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One of <code>LATIN1</code>, <code>UTF_16_BE</code>, <code>UTF_16_LE</code>, <code>UTF_8</code>, <code>UTF_8_BOM</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>UTF_8</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>doubleFormat</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A
+  <a href="https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/text/NumberFormat.html">NumberFormat</a>
+  that describes how <code>xsd:double</code> literals are formatted if <code>enableDoubleFormatting</code> is <code>true</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>0.####E0</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>enableDoubleFormatting</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Enables formatting of <code>xsd:double</code> values (see <code>doubleFormat</code> option)</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>endOfLine</code>*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">One of <code>LF</code>, <code>CR</code>, <code>CRLF</code>. If unsure, please see <a href="https://en.wikipedia.org/wiki/Newline">Newline</a></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>LF</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>indentStyle</code>*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SPACE</code> or <code>TAB</code>. Note that when choosing <code>TAB</code>, <code>alignPredicates</code> and <code>alignObjects</code> are automatically treated as <code>false</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>SPACE</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>quoteStyle</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ALWAYS_SINGLE_QUOTES</code>, <code>TRIPLE_QUOTES_FOR_MULTILINE</code> or <code>ALWAYS_TRIPLE_QUOTES</code>. Determines which
+  quotes should be used for literals. Triple-quoted strings can contain literal quotes and line breaks.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>TRIPLE_QUOTES_FOR_MULTILINE</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>indentSize</code>*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Integer. When using <code>indentStyle</code> <code>SPACE</code>, defines the indentation size.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>2</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>insertFinalNewLine</code>*</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean. Determines whether there is a line break after the last line</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>useAForRdfType</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean. Determines whether <code>rdf:type</code> is written as <code>a</code> or as <code>rdf:type</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>true</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>keepUnusedPrefixes</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Boolean. If <code>true</code>, keeps prefixes that are not part of any statement.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>useCommaByDefault</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>Boolean. Determines whether to use commas for identical predicates. Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-turtle hljs" data-lang="turtle"># useCommaByDefault false
+:test a rdf:Resource ;
+  :blorb "someBlorb" ;
+  :blorb "anotherBlorb" .
+
+# useCommaByDefault true
+:test a rdf:Resource ;
+  :blorb "someBlorb", "anotherBlorb" .</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>false</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>commaForPredicate</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>A set of predicates that, when used multiple times, are separated by commas, even when
+<code>useCommaByDefault</code> is <code>false</code>. Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-turtle hljs" data-lang="turtle"># useCommaByDefault false, commaForPredicate contains
+# 'rdf:type', firstPredicateInNewLine true
+:test a ex:something, owl:NamedIndividual ;
+  :blorb "someBlorb" ;
+  :blorb "anotherBlorb" .
+
+# useCommaByDefault false, commaForPredicate is empty,
+# firstPredicateInNewLine false
+:test
+  a ex:something ;
+  a owl:NamedIndividual ;
+  :blorb "someBlorb" ;
+  :blorb "anotherBlorb" .</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>Set.of(rdf:type)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>noCommaForPredicate</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Analogous to <code>commaForPredicate</code>: A set of predicates that, when used multiple times, are <em>not</em>
+  separated by commas, even when <code>useCommaByDefault</code> is <code>true</code>.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Empty</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>prefixOrder</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>A list of namespace prefixes that defines the order of <code>@prefix</code> directives. Namespaces from the
+list always appear first (in this order), every other prefix will appear afterwards,
+lexicographically sorted. Example:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-turtle hljs" data-lang="turtle"># prefixOrder contains "rdf" and "owl" (in this order), so
+# they will appear in this order at the top (when the model
+# contains them!), followed by all other namespaces
+@prefix rdf: &lt;http://www.w3.org/1999/02/22-rdf-syntax-ns#&gt; .
+@prefix owl: &lt;http://www.w3.org/2002/07/owl#&gt; .
+@prefix example: &lt;http://example.com/&gt; .</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>List.of(rdf rdfs xsd owl)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>subjectOrder</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">A list of resources that determines the order in which subjects appear. For a subject <code>s</code> there
+  must exist a statement <code>s rdf:type t</code> in the model and an entry for <code>t</code> in the <code>subjectOrder</code> list
+  for the element to be considered in the ordering, i.e., when <code>subjectOrder</code> contains <code>:Foo</code> and
+  <code>:Bar</code> in that order, the pretty-printed model will show first all <code>:Foo</code>&#8203;s, then all
+  <code>:Bar</code>&#8203;s, then everything else lexicographically sorted.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>List.of(rdfs:Class owl:Ontology owl:Class rdf:Property owl:ObjectProperty owl:DatatypeProperty
+  owl:AnnotationProperty owl:NamedIndividual owl:AllDifferent owl:Axiom)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>predicateOrder</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>A list of properties that determine the order in which predicates appear for a subject. First all
+properties that are in the list are shown in that order, then everything else lexicographically
+sorted. For example, when <code>predicateOrder</code> contains <code>:z</code>, <code>:y</code>, <code>:x</code> in that order and the subject
+has statements for the properties <code>:a</code>, <code>:x</code> and <code>:z</code>:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-turtle hljs" data-lang="turtle">:test
+  :z "z" ;
+  :x "x" ;
+  :a "a" .</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>List.of(rdf:type rdfs:label rdfs:comment dcterms:description)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>objectOrder</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>A list of RDFNodes (i.e. resources or literals) that determine the order in which objects appear
+for a predicate, when there are multiple statements with the same subject and the same predicate.
+First all objects that are in the list are shown in that order, then everything else
+lexicographically sorted. For example, when <code>objectOrder</code> contains <code>:Foo</code> and <code>:Bar</code> in that order:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-turtle hljs" data-lang="turtle">:test a :Foo, :Bar .</code></pre>
+</div>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>List.of(owl:NamedIndividual owl:ObjectProperty owl:DatatypeProperty owl:AnnotationProperty
+  owl:FunctionalProperty owl:InverseFunctionalProperty owl:TransitiveProperty owl:SymmetricProperty
+  owl:AsymmetricProperty owl:ReflexiveProperty owl:IrreflexiveProperty)</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>anonymousNodeIdGenerator</code></p></td>
+<td class="tableblock halign-left valign-top"><div class="content"><div class="paragraph">
+<p>A <code>BiFunction</code> that takes a resource (blank node) and an integer (counter) and determines the
+name for a blank node in the formatted output, if it needs to be locally named. Consider the
+following model:</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlightjs highlight"><code class="language-turtle hljs" data-lang="turtle">:test :foo _:b0 .
+:test2 :bar _:b0 .</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>There is no way to serialize this model in RDF/Turtle while using the inline blank node syntax <code>[ ]</code>
+for the anonymous node <code>_:b0</code>. If, as in this example, the node in question already has a label, the
+label is re-used. Otherwise, the anonymousNodeIdGenerator is used to generate it.</p>
+</div></div></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>(r, i) &#8594; "gen" + i</code></p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>{after,before}{Opening,Closing}{Parenthesis,SquareBrackets}</code>,<br>
+<code>{after,before}{Comma,Dot,Semicolon}</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>NEWLINE</code>, <code>NOTHING</code> or <code>SPACE</code>. Various options for formatting gaps and line breaks. It is not
+  recommended to change those, as the default style represents the commonly accepted best practices
+  for formatting turtle already.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock">Varied</p></td>
+</tr>
+<tr>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>wrapListItems</code></p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>ALWAYS</code>, <code>NEVER</code> or <code>FOR_LONG_LINES</code>. Controls how line breaks are added after elements in RDF lists.</p></td>
+<td class="tableblock halign-left valign-top"><p class="tableblock"><code>FOR_LONG_LINES</code></p></td>
+</tr>
+</tbody>
+</table>
+<div class="paragraph">
+<p>&#42; Adapted from <a href="https://editorconfig.org/#file-format-details">EditorConfig</a></p>
+</div>
+</div>
+</div>
+</div>
+</article>
+  </div>
+</main>
+</div>
+<footer class="footer">
+  <div class="footer-container">
+    <p>Copyright © 2025 Cool RDF project</p>
+  </div>
+</footer>
+<script src="./_/js/site.js"></script>
+<script src="./_/js/vendor/lunr.min.js"></script>
+<script src="./_/js/vendor/search-ui.js" id="search-script" data-site-root-path="." data-stylesheet="./_/css/search.css"></script>
+<script async src="./search-index.js"></script>
+<script async src="./_/js/vendor/highlight.js"></script>
+  </body>
+</html>
