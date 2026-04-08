@@ -221,7 +221,7 @@
             <id>download-nodejs</id>
             <activation>
                 <file>
-                    <missing>${basedir}/target/node</missing>
+                    <missing>${project.basedir}/target/node</missing>
                 </file>
             </activation>
             <build>
@@ -260,7 +260,7 @@
                 <file>
                     <!-- Note we can't use ${antora-cli} here because profile activation happens before variable
                      interpolation :( -->
-                    <missing>${basedir}/target/node_modules</missing>
+                    <missing>${project.basedir}/target/node_modules</missing>
                 </file>
             </activation>
             <build>
