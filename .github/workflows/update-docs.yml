@@ -1,0 +1,62 @@
+name: Release
+on:
+  workflow_dispatch:
+    inputs:
+      release_version:
+        description: 'Latest release version'
+        required: true
+jobs:
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Install dependencies
+        # - Install msttcorefonts, so we have the Verdana font available for diagram generation
+        # - Install graphviz, so we have the dot binary available for diagram generation
+        run: |-
+          sudo apt-get update
+          echo msttcorefonts msttcorefonts/accepted-mscorefonts-eula select true | sudo debconf-set-selections
+          sudo apt-get install ttf-mscorefonts-installer
+          sudo apt-get install -y graphviz
+          sudo apt-get install -y build-essential libz-dev
+
+      - name: Set up JDK 25
+        uses: actions/setup-java@v5
+        with:
+          distribution: 'temurin'
+          java-version: '25.0.1'
+          server-id: central
+          gpg-private-key: ${{ secrets.PGP_KEY }}
+          gpg-passphrase: PGP_KEY_PASSWORD
+          server-username: MAVEN_CENTRAL_USERNAME
+          server-password: MAVEN_CENTRAL_TOKEN
+          overwrite-settings: false
+
+      - name: Cache Maven packages
+        uses: actions/cache@v4
+        with:
+          path: ~/.m2/repository
+          key: ${{ runner.os }}-maven-${{ hashFiles('**/pom.xml') }}
+          restore-keys: |
+            ${{ runner.os }}-maven-
+
+      - name: Build
+        run: |
+          # Required for reactor dependencies
+          mvn -B clean install -DskipTests
+          mvn -B versions:set -DnewVersion=${{ github.event.inputs.release_version }}
+          mvn -B versions:commit
+
+          # Actual build
+          mvn -B clean install -Pdownload-nodejs,download-antora,set-release-version-in-docs
+        shell: bash
+
+      - name: Deploy GitHub Pages
+        uses: JamesIves/github-pages-deploy-action@d92aa235d04922e8f08b40ce78cc5442fcfbfa2f # v4.8.0
+        with:
+          branch: gh-pages
+          folder: docs/target/build/site
