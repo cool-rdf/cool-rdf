@@ -22,4 +22,4 @@ RDF/Turtle or one of the other formats using the [write command](https://rdf.coo
 Installation instructions and the usage guide can be found at [https://rdf.cool/cool-rdf/](https://rdf.cool/cool-rdf/).
 
 If you are interested in how Cool RDF relates to `owl-cli` or `turtle-formatter`, please see
-[Legacy Projects](https://rdf.cool/cool-rdf/release-notes.adoc#legacy-projects).
+[Legacy Projects](https://rdf.cool/cool-rdf/release-notes.html#legacy-projects).
