@@ -55,7 +55,7 @@ jobs:
           mvn -B versions:commit
 
           # Actual build
-          mvn -B clean deploy -Pdownload-nodejs,download-antora,prepare-release,release
+          mvn -B clean deploy -Pdownload-nodejs,download-antora,set-release-version-in-docs,prepare-release,release
         shell: bash
         env:
           MAVEN_CENTRAL_USERNAME: ${{ secrets.MAVEN_CENTRAL_USERNAME }}
