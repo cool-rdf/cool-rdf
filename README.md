@@ -2,7 +2,8 @@
 
 [![build](https://github.com/cool-rdf/cool-rdf/actions/workflows/pull-request.yml/badge.svg)](https://github.com/cool-rdf/cool-rdf/actions/workflows/pull-request.yml)
 [![License: Apache 2.0](https://img.shields.io/badge/License-Apache-blue.svg)](http://www.apache.org/licenses/LICENSE-2.0)
-[![Maven Central](https://maven-badges.herokuapp.com/maven-central/cool.rdf/cool-rdf-parent/badge.svg)](https://maven-badges.herokuapp.com/maven-central/cool.rdf/cool-rdf-parent)
+![Maven Central](https://img.shields.io/maven-central/v/cool.rdf/cool-rdf-parent)
+
 
 Cool RDF (formerly known as owl-cli and turtle-formatter) is a set of high-level Java libraries
 and a command line tool, called `cool`, for working with [RDF](https://en.wikipedia.org/wiki/Resource_Description_Framework)
