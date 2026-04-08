@@ -1,7 +1,7 @@
 site:
   title: "Cool RDF"
   url: https://rdf.cool
-  start_page: cool-rdf::index.adoc
+  start_page: ROOT::index.adoc
 content:
   sources:
     - url: ../..

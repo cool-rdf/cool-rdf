@@ -1,6 +1,6 @@
-name: cool-rdf
+name: ROOT
 title: Cool RDF
-version: master
+version: ~
 start_page: ROOT:index.adoc
 asciidoc:
   attributes:
