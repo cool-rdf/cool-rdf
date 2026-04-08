@@ -170,14 +170,18 @@ The following options can be set on the FormattingStyle builder:
 | `urn:cool-rdf:empty`
 
 | `alignPrefixes`
-a| Boolean. Example:
+a| One of `LEFT`, `RIGHT`, `OFF`. Example:
 [source,turtle]
 ----
-# true
+# left
 @prefix rdf:     <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix example: <http://example.com/> .
 
-# false
+# right
+@prefix     rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix example: <http://example.com/> .
+
+# off
 @prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix example: <http://example.com/> .
 ----
