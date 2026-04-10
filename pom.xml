@@ -83,7 +83,6 @@
         <httpclient.version>4.5.14</httpclient.version>
         <jena.version>5.6.0</jena.version>
         <jackson-databind.version>2.21.2</jackson-databind.version>
-        <jruby.version>10.0.4.0</jruby.version>
         <logback.version>1.5.32</logback.version>
         <lombok.version>1.18.44</lombok.version>
         <openllet.version>2.6.5</openllet.version>
@@ -243,11 +242,6 @@
                 <artifactId>apache-jena-libs</artifactId>
                 <version>${jena.version}</version>
                 <type>pom</type>
-            </dependency>
-            <dependency>
-                <groupId>org.jruby</groupId>
-                <artifactId>jruby</artifactId>
-                <version>${jruby.version}</version>
             </dependency>
             <dependency>
                 <groupId>ch.qos.logback</groupId>
