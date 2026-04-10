@@ -16,8 +16,6 @@
 
 package cool.rdf.diagram.owl.printers;
 
-import javax.annotation.Nonnull;
-
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLObjectInverseOf;
@@ -42,22 +40,22 @@ public class OWLPropertyExpressionPrinter implements OWLPropertyExpressionVisito
    }
 
    @Override
-   public String visit( final @Nonnull OWLObjectInverseOf property ) {
+   public String visit( final OWLObjectInverseOf property ) {
       return String.format( "inverse(%s)", property.getInverse().accept( this ) );
    }
 
    @Override
-   public String visit( final @Nonnull OWLObjectProperty property ) {
+   public String visit( final OWLObjectProperty property ) {
       return mappingConfig.getNameMapper().getName( property );
    }
 
    @Override
-   public String visit( final @Nonnull OWLDataProperty property ) {
+   public String visit( final OWLDataProperty property ) {
       return mappingConfig.getNameMapper().getName( property );
    }
 
    @Override
-   public String visit( final @Nonnull OWLAnnotationProperty property ) {
+   public String visit( final OWLAnnotationProperty property ) {
       return mappingConfig.getNameMapper().getName( property );
    }
 }

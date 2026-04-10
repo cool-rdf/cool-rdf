@@ -18,8 +18,6 @@ package cool.rdf.diagram.owl.mappers;
 
 import java.util.stream.Stream;
 
-import javax.annotation.Nonnull;
-
 import org.semanticweb.owlapi.model.OWLDataComplementOf;
 import org.semanticweb.owlapi.model.OWLDataIntersectionOf;
 import org.semanticweb.owlapi.model.OWLDataOneOf;
@@ -67,7 +65,7 @@ public class OWLDataMapper implements OWLDataVisitorEx<Graph> {
    }
 
    @Override
-   public Graph visit( final @Nonnull OWLDataComplementOf dataRange ) {
+   public Graph visit( final OWLDataComplementOf dataRange ) {
       final Node complementNode = new Complement( mappingConfig.getIdentifierMapper().getSyntheticId() );
       final Stream<GraphElement> remainingElements = createEdgeToDataRange( complementNode,
             dataRange.getDataRange() );
@@ -75,7 +73,7 @@ public class OWLDataMapper implements OWLDataVisitorEx<Graph> {
    }
 
    @Override
-   public Graph visit( final @Nonnull OWLDataOneOf dataRange ) {
+   public Graph visit( final OWLDataOneOf dataRange ) {
       final Node restrictionNode = new ClosedClass( mappingConfig.getIdentifierMapper().getSyntheticId() );
       return dataRange.values().map( value -> {
          final Graph valueGraph = value.accept( mappingConfig.getOwlDataMapper() );
@@ -85,7 +83,7 @@ public class OWLDataMapper implements OWLDataVisitorEx<Graph> {
    }
 
    @Override
-   public Graph visit( final @Nonnull OWLDataIntersectionOf dataRange ) {
+   public Graph visit( final OWLDataIntersectionOf dataRange ) {
       final Node intersectionNode = new Intersection( mappingConfig.getIdentifierMapper().getSyntheticId() );
       final Stream<GraphElement> remainingElements = dataRange.operands().flatMap( operand -> createEdgeToDataRange( intersectionNode,
             operand ) );
@@ -93,7 +91,7 @@ public class OWLDataMapper implements OWLDataVisitorEx<Graph> {
    }
 
    @Override
-   public Graph visit( final @Nonnull OWLDataUnionOf dataRange ) {
+   public Graph visit( final OWLDataUnionOf dataRange ) {
       final Node unionNode = new Union( mappingConfig.getIdentifierMapper().getSyntheticId() );
       final Stream<GraphElement> remainingElements = dataRange.operands().flatMap( operand -> createEdgeToDataRange( unionNode,
             operand ) );
@@ -101,19 +99,19 @@ public class OWLDataMapper implements OWLDataVisitorEx<Graph> {
    }
 
    @Override
-   public Graph visit( final @Nonnull OWLDatatypeRestriction restriction ) {
+   public Graph visit( final OWLDatatypeRestriction restriction ) {
       final Node typeNode = new Datatype( mappingConfig.getIdentifierMapper().getSyntheticId(),
             restriction.accept( mappingConfig.getOwlDataPrinter() ) );
       return Graph.of( typeNode );
    }
 
    @Override
-   public Graph visit( final @Nonnull OWLDatatype node ) {
+   public Graph visit( final OWLDatatype node ) {
       return node.accept( mappingConfig.getOwlEntityMapper() );
    }
 
    @Override
-   public Graph visit( final @Nonnull OWLLiteral node ) {
+   public Graph visit( final OWLLiteral node ) {
       final Node.Id id = mappingConfig.getIdentifierMapper().getSyntheticId();
       return Graph.of( new Literal( id, node.getLiteral() ) );
    }

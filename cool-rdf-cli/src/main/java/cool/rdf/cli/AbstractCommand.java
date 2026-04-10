@@ -24,8 +24,6 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Optional;
 
-import javax.annotation.Nonnull;
-
 import org.semanticweb.owlapi.apibinding.OWLManager;
 import org.semanticweb.owlapi.model.OWLOntology;
 import org.semanticweb.owlapi.model.OWLOntologyCreationException;
@@ -62,7 +60,7 @@ public abstract class AbstractCommand {
     * @param targetFileExtension the target file extension to use, if the output is empty
     * @return if successful, the output stream
     */
-   protected Try<OutputStream> openOutput( final @Nonnull String input, final Optional<String> output, final String targetFileExtension ) {
+   protected Try<OutputStream> openOutput( final String input, final Optional<String> output, final String targetFileExtension ) {
       if ( output.isPresent() ) {
          // Output is given as - --> write to stdout
          if ( output.get().equals( "-" ) ) {

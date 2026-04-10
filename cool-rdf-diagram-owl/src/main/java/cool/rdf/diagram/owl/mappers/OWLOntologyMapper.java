@@ -63,7 +63,6 @@ public class OWLOntologyMapper implements Function<OWLOntology, Set<GraphElement
             .map( axiom -> axiom.accept( mappingConfiguration.getOwlAxiomMapper() ) )
             .flatMap( Graph::toStream )
             .collect( Collectors.toSet() );
-
-      return transformers.stream().sequential().reduce( Function.identity(), Function::andThen ).apply( elements );
+      return transformers.stream().reduce( Function.identity(), Function::andThen ).apply( elements );
    }
 }

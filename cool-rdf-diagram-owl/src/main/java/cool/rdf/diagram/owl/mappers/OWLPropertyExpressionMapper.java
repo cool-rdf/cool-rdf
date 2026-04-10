@@ -16,8 +16,6 @@
 
 package cool.rdf.diagram.owl.mappers;
 
-import javax.annotation.Nonnull;
-
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLDataProperty;
 import org.semanticweb.owlapi.model.OWLObjectInverseOf;
@@ -49,7 +47,7 @@ public class OWLPropertyExpressionMapper implements OWLPropertyExpressionVisitor
    }
 
    @Override
-   public Graph visit( final @Nonnull OWLObjectInverseOf property ) {
+   public Graph visit( final OWLObjectInverseOf property ) {
       final Node inverseNode = new Inverse( mappingConfig.getIdentifierMapper().getSyntheticId() );
       final OWLPropertyExpression invertedProperty = property.getInverseProperty();
       final Graph propertyVisitorGraph = invertedProperty.accept( mappingConfig.getOwlPropertyExpressionMapper() );
@@ -59,7 +57,7 @@ public class OWLPropertyExpressionMapper implements OWLPropertyExpressionVisitor
    }
 
    @Override
-   public Graph visit( final @Nonnull OWLObjectProperty property ) {
+   public Graph visit( final OWLObjectProperty property ) {
       final Node.Id id = mappingConfig.getIdentifierMapper().getIdForIri( property.getIRI() );
       final String label = mappingConfig.getNameMapper().getName( property );
       final Node node = new ObjectProperty( id, label );
@@ -67,7 +65,7 @@ public class OWLPropertyExpressionMapper implements OWLPropertyExpressionVisitor
    }
 
    @Override
-   public Graph visit( final @Nonnull OWLDataProperty property ) {
+   public Graph visit( final OWLDataProperty property ) {
       final Node.Id id = mappingConfig.getIdentifierMapper().getIdForIri( property.getIRI() );
       final String label = mappingConfig.getNameMapper().getName( property );
       final Node node = new DataProperty( id, label );
@@ -75,7 +73,7 @@ public class OWLPropertyExpressionMapper implements OWLPropertyExpressionVisitor
    }
 
    @Override
-   public Graph visit( final @Nonnull OWLAnnotationProperty property ) {
+   public Graph visit( final OWLAnnotationProperty property ) {
       final Node.Id id = mappingConfig.getIdentifierMapper().getIdForIri( property.getIRI() );
       final String label = mappingConfig.getNameMapper().getName( property );
       final Node node = new AnnotationProperty( id, label );

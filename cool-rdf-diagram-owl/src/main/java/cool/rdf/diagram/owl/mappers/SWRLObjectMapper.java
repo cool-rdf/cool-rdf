@@ -22,8 +22,6 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Collectors;
 
-import javax.annotation.Nonnull;
-
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLPropertyExpression;
 import org.semanticweb.owlapi.model.SWRLArgument;
@@ -86,7 +84,7 @@ public class SWRLObjectMapper implements SWRLObjectVisitorEx<Graph> {
    }
 
    @Override
-   public Graph visit( final @Nonnull SWRLClassAtom atom ) {
+   public Graph visit( final SWRLClassAtom atom ) {
       final List<GraphElement> argumentGraphElements = argumentElements( atom );
       final String arguments = printArgumentElements( argumentGraphElements );
 
@@ -103,7 +101,7 @@ public class SWRLObjectMapper implements SWRLObjectVisitorEx<Graph> {
    }
 
    @Override
-   public Graph visit( final @Nonnull SWRLDataRangeAtom atom ) {
+   public Graph visit( final SWRLDataRangeAtom atom ) {
       final List<GraphElement> argumentGraphElements = argumentElements( atom );
       final String arguments = printArgumentElements( argumentGraphElements );
       final String label = String.format( "%s(%s)", atom.getPredicate().accept( mappingConfig.getOwlDataPrinter() ),
@@ -126,7 +124,7 @@ public class SWRLObjectMapper implements SWRLObjectVisitorEx<Graph> {
    }
 
    @Override
-   public Graph visit( final @Nonnull SWRLObjectPropertyAtom atom ) {
+   public Graph visit( final SWRLObjectPropertyAtom atom ) {
       return visitPropertyAtom( atom, atom.getPredicate() );
    }
 
@@ -147,13 +145,13 @@ public class SWRLObjectMapper implements SWRLObjectVisitorEx<Graph> {
    }
 
    @Override
-   public Graph visit( final @Nonnull SWRLDataPropertyAtom atom ) {
+   public Graph visit( final SWRLDataPropertyAtom atom ) {
       return visitPropertyAtom( atom, atom.getPredicate() );
    }
 
    @SuppressWarnings( "SpellCheckingInspection" )
    @Override
-   public Graph visit( final @Nonnull SWRLBuiltInAtom atom ) {
+   public Graph visit( final SWRLBuiltInAtom atom ) {
       final List<GraphElement> argumentGraphElements = argumentElements( atom );
       final String arguments = printArgumentElements( argumentGraphElements );
       final String builtin = Namespaces.SWRLB.inNamespace( atom.getPredicate() ) ? String.format( "swrlb:%s", atom.getPredicate()
@@ -165,7 +163,7 @@ public class SWRLObjectMapper implements SWRLObjectVisitorEx<Graph> {
 
    @SuppressWarnings( "SpellCheckingInspection" )
    @Override
-   public Graph visit( final @Nonnull SWRLVariable variable ) {
+   public Graph visit( final SWRLVariable variable ) {
       // Do not call namemapper for variable IRI fragment: variable name is not subject to be
       // rendered with prefix
       return Graph.of( new Literal( mappingConfig.getIdentifierMapper().getSyntheticIdForIri( LITERAL_ID ),
@@ -173,7 +171,7 @@ public class SWRLObjectMapper implements SWRLObjectVisitorEx<Graph> {
    }
 
    @Override
-   public Graph visit( final @Nonnull SWRLIndividualArgument argument ) {
+   public Graph visit( final SWRLIndividualArgument argument ) {
       final Node individual = argument.getIndividual().accept( mappingConfig.getOwlIndividualMapper() ).getNode();
       final String label = argument.getIndividual().accept( mappingConfig.getOwlIndividualPrinter() );
       final Literal literal = new Literal( mappingConfig.getIdentifierMapper()
@@ -183,7 +181,7 @@ public class SWRLObjectMapper implements SWRLObjectVisitorEx<Graph> {
    }
 
    @Override
-   public Graph visit( final @Nonnull SWRLLiteralArgument argument ) {
+   public Graph visit( final SWRLLiteralArgument argument ) {
       final OWL2Datatype literalType = argument.getLiteral().getDatatype().getBuiltInDatatype();
       final boolean quote = switch ( literalType.getCategory() ) {
          case CAT_STRING_WITH_LANGUAGE_TAG, CAT_STRING_WITHOUT_LANGUAGE_TAG, CAT_URI -> true;
@@ -197,7 +195,7 @@ public class SWRLObjectMapper implements SWRLObjectVisitorEx<Graph> {
    }
 
    @Override
-   public Graph visit( final @Nonnull SWRLSameIndividualAtom atom ) {
+   public Graph visit( final SWRLSameIndividualAtom atom ) {
       final List<GraphElement> argumentGraphElements = argumentElements( atom );
       final String arguments = printArgumentElements( argumentGraphElements );
       final String label = String.format( "sameAs(%s)", arguments );
@@ -211,7 +209,7 @@ public class SWRLObjectMapper implements SWRLObjectVisitorEx<Graph> {
    }
 
    @Override
-   public Graph visit( final @Nonnull SWRLDifferentIndividualsAtom node ) {
+   public Graph visit( final SWRLDifferentIndividualsAtom node ) {
       return TODO();
    }
 }

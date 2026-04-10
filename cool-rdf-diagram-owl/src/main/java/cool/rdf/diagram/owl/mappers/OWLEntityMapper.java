@@ -16,8 +16,6 @@
 
 package cool.rdf.diagram.owl.mappers;
 
-import javax.annotation.Nonnull;
-
 import org.semanticweb.owlapi.model.OWLAnnotationProperty;
 import org.semanticweb.owlapi.model.OWLClass;
 import org.semanticweb.owlapi.model.OWLDataProperty;
@@ -50,40 +48,40 @@ public class OWLEntityMapper implements OWLEntityVisitorEx<Graph> {
    }
 
    @Override
-   public Graph visit( final @Nonnull OWLClass classExpression ) {
+   public Graph visit( final OWLClass classExpression ) {
       final Node node = new Class( mappingConfig.getIdentifierMapper().getIdForIri( classExpression.getIRI() ),
             mappingConfig.getNameMapper().getName( classExpression ) );
       return Graph.of( node );
    }
 
    @Override
-   public Graph visit( final @Nonnull OWLDatatype dataType ) {
+   public Graph visit( final OWLDatatype dataType ) {
       final Node node = new Datatype( mappingConfig.getIdentifierMapper().getIdForIri( dataType.getIRI() ),
             mappingConfig.getNameMapper().getName( dataType ) );
       return Graph.of( node );
    }
 
    @Override
-   public Graph visit( final @Nonnull OWLNamedIndividual individual ) {
+   public Graph visit( final OWLNamedIndividual individual ) {
       return individual.accept( mappingConfig.getOwlIndividualMapper() );
    }
 
    @Override
-   public Graph visit( final @Nonnull OWLObjectProperty property ) {
+   public Graph visit( final OWLObjectProperty property ) {
       final Node node = new ObjectProperty( mappingConfig.getIdentifierMapper().getIdForIri( property.getIRI() ),
             mappingConfig.getNameMapper().getName( property ) );
       return Graph.of( node );
    }
 
    @Override
-   public Graph visit( final @Nonnull OWLDataProperty property ) {
+   public Graph visit( final OWLDataProperty property ) {
       final Node node = new DataProperty( mappingConfig.getIdentifierMapper().getIdForIri( property.getIRI() ),
             mappingConfig.getNameMapper().getName( property ) );
       return Graph.of( node );
    }
 
    @Override
-   public Graph visit( final @Nonnull OWLAnnotationProperty property ) {
+   public Graph visit( final OWLAnnotationProperty property ) {
       final Node node = new AnnotationProperty( mappingConfig.getIdentifierMapper().getIdForIri( property.getIRI() ),
             mappingConfig.getNameMapper().getName( property ) );
       return Graph.of( node );

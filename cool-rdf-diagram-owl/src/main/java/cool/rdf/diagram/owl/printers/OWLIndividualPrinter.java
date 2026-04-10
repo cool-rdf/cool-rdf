@@ -16,8 +16,6 @@
 
 package cool.rdf.diagram.owl.printers;
 
-import javax.annotation.Nonnull;
-
 import org.semanticweb.owlapi.model.OWLAnonymousIndividual;
 import org.semanticweb.owlapi.model.OWLIndividualVisitorEx;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
@@ -40,12 +38,12 @@ public class OWLIndividualPrinter implements OWLIndividualVisitorEx<String> {
    }
 
    @Override
-   public String visit( final @Nonnull OWLAnonymousIndividual individual ) {
+   public String visit( final OWLAnonymousIndividual individual ) {
       return "[]";
    }
 
    @Override
-   public String visit( final @Nonnull OWLNamedIndividual individual ) {
+   public String visit( final OWLNamedIndividual individual ) {
       return mappingConfiguration.getNameMapper().getName( individual );
    }
 }

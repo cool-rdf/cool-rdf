@@ -65,6 +65,7 @@ public class DiagramGenerator {
    private Try<Void> writeStreamToOutput( final InputStream in, final OutputStream out ) {
       try {
          in.transferTo( out );
+         // noinspection DataFlowIssue
          return Try.success( null );
       } catch ( final IOException exception ) {
          return Try.failure( exception );
@@ -101,6 +102,7 @@ public class DiagramGenerator {
             if ( output != System.out ) {
                output.close();
             }
+            // noinspection DataFlowIssue
             return Try.success( null );
          }
 
@@ -110,6 +112,7 @@ public class DiagramGenerator {
                   LOG.debug( "Writing to output {}", output );
                   try {
                      process.waitFor();
+                     // noinspection DataFlowIssue
                      return Try.success( null );
                   } catch ( final InterruptedException exception ) {
                      return Try.failure( exception );

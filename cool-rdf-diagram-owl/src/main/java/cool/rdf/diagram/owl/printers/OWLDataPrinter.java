@@ -18,8 +18,6 @@ package cool.rdf.diagram.owl.printers;
 
 import java.util.stream.Collectors;
 
-import javax.annotation.Nonnull;
-
 import org.semanticweb.owlapi.model.OWLDataComplementOf;
 import org.semanticweb.owlapi.model.OWLDataIntersectionOf;
 import org.semanticweb.owlapi.model.OWLDataOneOf;
@@ -48,47 +46,47 @@ public class OWLDataPrinter implements OWLDataVisitorEx<String> {
    }
 
    @Override
-   public String visit( final @Nonnull OWLDataComplementOf node ) {
+   public String visit( final OWLDataComplementOf node ) {
       return String.format( "not(%s)", node.getDataRange().accept( this ) );
    }
 
    @Override
-   public String visit( final @Nonnull OWLDataOneOf node ) {
+   public String visit( final OWLDataOneOf node ) {
       return node.values().map( literal -> literal.accept( this ) )
             .collect( Collectors.joining( ", ", "{", "}" ) );
    }
 
    @Override
-   public String visit( final @Nonnull OWLDataIntersectionOf node ) {
+   public String visit( final OWLDataIntersectionOf node ) {
       return node.operands().map( operand -> operand.accept( this ) )
             .collect( Collectors.joining( ", ", "and(", ")" ) );
    }
 
    @Override
-   public String visit( final @Nonnull OWLDataUnionOf node ) {
+   public String visit( final OWLDataUnionOf node ) {
       return node.operands().map( operand -> operand.accept( this ) )
             .collect( Collectors.joining( ", ", "or(", ")" ) );
    }
 
    @Override
-   public String visit( final @Nonnull OWLDatatypeRestriction node ) {
+   public String visit( final OWLDatatypeRestriction node ) {
       return node.getDatatype().accept( this ) + " " + node.facetRestrictions()
             .map( owlFacetRestriction -> owlFacetRestriction.accept( this ) )
             .collect( Collectors.joining( ", ", "[", "]" ) );
    }
 
    @Override
-   public String visit( final @Nonnull OWLFacetRestriction node ) {
+   public String visit( final OWLFacetRestriction node ) {
       return node.getFacet().getSymbolicForm() + " " + node.getFacetValue().getLiteral();
    }
 
    @Override
-   public String visit( final @Nonnull OWLDatatype node ) {
+   public String visit( final OWLDatatype node ) {
       return mappingConfig.getNameMapper().getName( node );
    }
 
    @Override
-   public String visit( final @Nonnull OWLLiteral node ) {
+   public String visit( final OWLLiteral node ) {
       if ( node.isBoolean() || node.isDouble() || node.isFloat() || node.isInteger() ) {
          return node.getLiteral();
       }

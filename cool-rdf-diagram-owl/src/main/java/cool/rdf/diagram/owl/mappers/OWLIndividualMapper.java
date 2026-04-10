@@ -16,8 +16,6 @@
 
 package cool.rdf.diagram.owl.mappers;
 
-import javax.annotation.Nonnull;
-
 import org.semanticweb.owlapi.model.OWLAnonymousIndividual;
 import org.semanticweb.owlapi.model.OWLIndividualVisitorEx;
 import org.semanticweb.owlapi.model.OWLNamedIndividual;
@@ -42,14 +40,14 @@ public class OWLIndividualMapper implements OWLIndividualVisitorEx<Graph> {
    }
 
    @Override
-   public Graph visit( final @Nonnull OWLAnonymousIndividual individual ) {
+   public Graph visit( final OWLAnonymousIndividual individual ) {
       final Node node = new Individual( mappingConfig.getIdentifierMapper().getSyntheticId(),
             individual.accept( mappingConfig.getOwlIndividualPrinter() ) );
       return Graph.of( node );
    }
 
    @Override
-   public Graph visit( final @Nonnull OWLNamedIndividual individual ) {
+   public Graph visit( final OWLNamedIndividual individual ) {
       final Node.Id id = mappingConfig.getIdentifierMapper().getIdForIri( individual.getIRI() );
       final String label = individual.accept( mappingConfig.getOwlIndividualPrinter() );
       final Node node = new Individual( id, label );

@@ -16,8 +16,6 @@
 
 package cool.rdf.diagram.owl.mappers;
 
-import javax.annotation.Nonnull;
-
 import org.semanticweb.owlapi.model.IRI;
 import org.semanticweb.owlapi.model.OWLAnnotation;
 import org.semanticweb.owlapi.model.OWLAnnotationObjectVisitorEx;
@@ -46,23 +44,23 @@ public class OWLAnnotationObjectMapper implements OWLAnnotationObjectVisitorEx<G
    }
 
    @Override
-   public Graph visit( final @Nonnull OWLAnnotation annotation ) {
+   public Graph visit( final OWLAnnotation annotation ) {
       return annotation.getProperty().accept( mappingConfig.getOwlPropertyExpressionMapper() );
    }
 
    @Override
-   public Graph visit( final @Nonnull IRI iri ) {
+   public Graph visit( final IRI iri ) {
       final Node.Id id = mappingConfig.getIdentifierMapper().getSyntheticId();
       return Graph.of( new IRIReference( id, iri ) );
    }
 
    @Override
-   public Graph visit( final @Nonnull OWLAnonymousIndividual individual ) {
+   public Graph visit( final OWLAnonymousIndividual individual ) {
       return individual.accept( mappingConfig.getOwlIndividualMapper() );
    }
 
    @Override
-   public Graph visit( final @Nonnull OWLLiteral node ) {
+   public Graph visit( final OWLLiteral node ) {
       return node.accept( mappingConfig.getOwlDataMapper() );
    }
 }

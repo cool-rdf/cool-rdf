@@ -31,13 +31,11 @@ import cool.rdf.diagram.owl.mappers.MappingConfiguration;
 /**
  * Implements a graph transformer that resolves
  * <a href="https://www.w3.org/TR/owl2-new-features/#F12:_Punning">Punning</a> in a graph: An input
- * ontology that uses
- * punning for e.g. an individual and a class results in a graph that contains both the individual
- * and the class as
- * nodes, but both share the same {@link Node.Id}, as it is derived from the element's
- * {@link org.semanticweb.owlapi.model.IRI}. This transformer replaces the nodes with new, uniquely
- * identified nodes
- * (that keep the original IRI in their IDs) and updates all edges in the graph accordingly.
+ * ontology that uses punning for e.g. an individual and a class results in a graph that contains
+ * both the individual and the class as nodes, but both share the same {@link Node.Id}, as it is
+ * derived from the element's {@link org.semanticweb.owlapi.model.IRI}. This transformer replaces
+ * the nodes with new, uniquely identified nodes (that keep the original IRI in their IDs) and
+ * updates all edges in the graph accordingly.
  */
 public class PunningRemover extends GraphTransformer {
    private final MappingConfiguration mappingConfiguration;

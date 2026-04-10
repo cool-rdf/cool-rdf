@@ -115,7 +115,7 @@ public class MapperTestBase {
       } catch ( final OWLOntologyCreationException e ) {
          fail( "Could not create ontology", e );
       }
-      return null;
+      throw new RuntimeException();
    }
 
    @SuppressWarnings( "unchecked" )

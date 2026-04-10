@@ -18,8 +18,6 @@ package cool.rdf.diagram.owl.printers;
 
 import java.util.stream.Collectors;
 
-import javax.annotation.Nonnull;
-
 import org.semanticweb.owlapi.model.HasCardinality;
 import org.semanticweb.owlapi.model.HasFiller;
 import org.semanticweb.owlapi.model.OWLClass;
@@ -62,40 +60,40 @@ public class OWLClassExpressionPrinter implements OWLClassExpressionVisitorEx<St
    }
 
    @Override
-   public String visit( final @Nonnull OWLObjectIntersectionOf classExpression ) {
+   public String visit( final OWLObjectIntersectionOf classExpression ) {
       return String.format( "and(%s)",
             classExpression.operands().map( operand -> operand.accept( this ) )
                   .collect( Collectors.joining( ", " ) ) );
    }
 
    @Override
-   public String visit( final @Nonnull OWLObjectUnionOf classExpression ) {
+   public String visit( final OWLObjectUnionOf classExpression ) {
       return String.format( "or(%s)",
             classExpression.operands().map( operand -> operand.accept( this ) )
                   .collect( Collectors.joining( ", " ) ) );
    }
 
    @Override
-   public String visit( final @Nonnull OWLObjectComplementOf classExpression ) {
+   public String visit( final OWLObjectComplementOf classExpression ) {
       return String.format( "not(%s)", classExpression.getOperand().accept( this ) );
    }
 
    @Override
-   public String visit( final @Nonnull OWLObjectSomeValuesFrom classExpression ) {
+   public String visit( final OWLObjectSomeValuesFrom classExpression ) {
       return String.format( "%s some %s",
             classExpression.getProperty().accept( mappingConfig.getOwlPropertyExpressionPrinter() ),
             classExpression.getFiller().accept( this ) );
    }
 
    @Override
-   public String visit( final @Nonnull OWLObjectAllValuesFrom classExpression ) {
+   public String visit( final OWLObjectAllValuesFrom classExpression ) {
       return String.format( "%s only %s",
             classExpression.getProperty().accept( mappingConfig.getOwlPropertyExpressionPrinter() ),
             classExpression.getFiller().accept( this ) );
    }
 
    @Override
-   public String visit( final @Nonnull OWLObjectHasValue classExpression ) {
+   public String visit( final OWLObjectHasValue classExpression ) {
       return String.format( "%s value %s",
             classExpression.getProperty().accept( mappingConfig.getOwlPropertyExpressionPrinter() ),
             classExpression.getFiller().accept( mappingConfig.getOwlIndividualMapper() ) );
@@ -119,7 +117,7 @@ public class OWLClassExpressionPrinter implements OWLClassExpressionVisitorEx<St
    }
 
    @Override
-   public String visit( final @Nonnull OWLObjectMinCardinality classExpression ) {
+   public String visit( final OWLObjectMinCardinality classExpression ) {
       if ( classExpression.isQualified() ) {
          return printQualifiedCardinalityRestriction( classExpression, "min" );
       }
@@ -127,7 +125,7 @@ public class OWLClassExpressionPrinter implements OWLClassExpressionVisitorEx<St
    }
 
    @Override
-   public String visit( final @Nonnull OWLObjectExactCardinality classExpression ) {
+   public String visit( final OWLObjectExactCardinality classExpression ) {
       if ( classExpression.isQualified() ) {
          return printQualifiedCardinalityRestriction( classExpression, "exactly" );
       }
@@ -135,7 +133,7 @@ public class OWLClassExpressionPrinter implements OWLClassExpressionVisitorEx<St
    }
 
    @Override
-   public String visit( final @Nonnull OWLObjectMaxCardinality classExpression ) {
+   public String visit( final OWLObjectMaxCardinality classExpression ) {
       if ( classExpression.isQualified() ) {
          return printQualifiedCardinalityRestriction( classExpression, "max" );
       }
@@ -143,56 +141,56 @@ public class OWLClassExpressionPrinter implements OWLClassExpressionVisitorEx<St
    }
 
    @Override
-   public String visit( final @Nonnull OWLObjectHasSelf classExpression ) {
+   public String visit( final OWLObjectHasSelf classExpression ) {
       return String.format( "%s Self",
             classExpression.getProperty().accept( mappingConfig.getOwlPropertyExpressionPrinter() ) );
    }
 
    @Override
-   public String visit( final @Nonnull OWLObjectOneOf classExpression ) {
+   public String visit( final OWLObjectOneOf classExpression ) {
       return classExpression.individuals()
             .map( individual -> individual.accept( mappingConfig.getOwlIndividualPrinter() ) )
             .collect( Collectors.joining( ", ", "{", "}" ) );
    }
 
    @Override
-   public String visit( final @Nonnull OWLDataSomeValuesFrom classExpression ) {
+   public String visit( final OWLDataSomeValuesFrom classExpression ) {
       return String.format( "%s some %s",
             classExpression.getProperty().accept( mappingConfig.getOwlPropertyExpressionPrinter() ),
             classExpression.getFiller().accept( mappingConfig.getOwlDataPrinter() ) );
    }
 
    @Override
-   public String visit( final @Nonnull OWLDataAllValuesFrom classExpression ) {
+   public String visit( final OWLDataAllValuesFrom classExpression ) {
       return String.format( "%s only %s",
             classExpression.getProperty().accept( mappingConfig.getOwlPropertyExpressionPrinter() ),
             classExpression.getFiller().accept( mappingConfig.getOwlDataPrinter() ) );
    }
 
    @Override
-   public String visit( final @Nonnull OWLDataHasValue classExpression ) {
+   public String visit( final OWLDataHasValue classExpression ) {
       return String.format( "%s value %s",
             classExpression.getProperty().accept( mappingConfig.getOwlPropertyExpressionPrinter() ),
             classExpression.getFiller().accept( mappingConfig.getOwlDataPrinter() ) );
    }
 
    @Override
-   public String visit( final @Nonnull OWLDataMinCardinality classExpression ) {
+   public String visit( final OWLDataMinCardinality classExpression ) {
       return printUnqualifiedCardinalityRestriction( classExpression, "min" );
    }
 
    @Override
-   public String visit( final @Nonnull OWLDataExactCardinality classExpression ) {
+   public String visit( final OWLDataExactCardinality classExpression ) {
       return printUnqualifiedCardinalityRestriction( classExpression, "exactly" );
    }
 
    @Override
-   public String visit( final @Nonnull OWLDataMaxCardinality classExpression ) {
+   public String visit( final OWLDataMaxCardinality classExpression ) {
       return printUnqualifiedCardinalityRestriction( classExpression, "max" );
    }
 
    @Override
-   public String visit( final @Nonnull OWLClass classExpression ) {
+   public String visit( final OWLClass classExpression ) {
       return mappingConfig.getNameMapper().getName( classExpression );
    }
 }
