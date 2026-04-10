@@ -22,7 +22,6 @@ import org.semanticweb.owlapi.model.IRI;
 import cool.rdf.diagram.owl.mappers.NameMapper;
 
 public class TestNameMapper implements NameMapper {
-
    @Override
    public String getName( final HasIRI object ) {
       return getName( object.getIRI() );

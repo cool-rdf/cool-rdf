@@ -86,6 +86,7 @@ public class DiagramGeneratorTest {
 
    final IdentifierMapper identifierMapper = new DefaultIdentifierMapper();
 
+   @SuppressWarnings( "HttpUrlsUsage" )
    @Provide
    Arbitrary<IRI> anyIRI() {
       return Arbitraries.of( IRI.create( "http://test.de#foo" ) );

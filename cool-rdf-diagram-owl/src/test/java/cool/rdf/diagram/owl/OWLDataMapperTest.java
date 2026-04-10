@@ -228,7 +228,7 @@ public class OWLDataMapperTest extends MapperTestBase {
       final List<Node> nodes = nodes( elements );
       assertThat( nodes ).hasSize( 1 );
 
-      final Node node = nodes.get( 0 );
+      final Node node = nodes.getFirst();
       assertThat( node.getClass() ).isEqualTo( Datatype.class );
       assertThat( node.as( Datatype.class ).getName() ).matches( ".*\\[> 4, <= 10]" );
    }

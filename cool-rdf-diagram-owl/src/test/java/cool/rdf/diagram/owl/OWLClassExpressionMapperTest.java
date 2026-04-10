@@ -722,9 +722,9 @@ public class OWLClassExpressionMapperTest extends MapperTestBase {
    @Test
    public void testOWLClass() {
       final OWLDeclarationAxiom axiom = getAxiom( ":Foo a owl:Class ." );
-      final OWLClass class_ = (OWLClass) axiom.getEntity();
+      final OWLClass clazz = (OWLClass) axiom.getEntity();
 
-      final Graph graph = mapper.visit( class_ );
+      final Graph graph = mapper.visit( clazz );
       assertThat( graph.getNode().getClass() ).isEqualTo( Class.class );
       assertThat( graph.getOtherElements() ).isEmpty();
    }

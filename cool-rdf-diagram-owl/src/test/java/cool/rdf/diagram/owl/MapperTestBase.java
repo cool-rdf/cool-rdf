@@ -75,10 +75,12 @@ public class MapperTestBase {
             .build();
    }
 
+   @SuppressWarnings( "HttpUrlsUsage" )
    protected IRI iri( final String element ) {
       return IRI.create( "http://test.de#" + element );
    }
 
+   @SuppressWarnings( "HttpUrlsUsage" )
    protected OWLOntology createOntology( final String content ) {
       final OWLOntologyManager ontologyManager = OWLManager.createOWLOntologyManager();
 

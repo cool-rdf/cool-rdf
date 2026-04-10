@@ -96,7 +96,7 @@ public class OWLAxiomMapperTest extends MapperTestBase {
       final List<Edge> edges = edges( result );
       assertThat( edges ).hasSize( 1 );
 
-      final Edge theEdge = edges.get( 0 );
+      final Edge theEdge = edges.getFirst();
       assertThat( theEdge ).matches( isEdgeWithFromAndTo( "Foo", "Bar" ) );
       assertThat( theEdge.getType() ).isEqualTo( Edge.Type.HOLLOW_ARROW );
    }
@@ -235,7 +235,7 @@ public class OWLAxiomMapperTest extends MapperTestBase {
       final List<Edge> edges = edges( result );
       assertThat( edges ).hasSize( 1 );
 
-      final Edge propertyToDomain = edges.iterator().next();
+      final Edge propertyToDomain = edges.getFirst();
       assertThat( propertyToDomain.getType() ).isEqualTo( Edge.Type.DEFAULT_ARROW );
       assertThat( propertyToDomain.getClass() ).isEqualTo( Edge.Decorated.class );
       assertThat( ( (Edge.Decorated) propertyToDomain ).getLabel() ).isEqualTo( Edge.Decorated.Label.DOMAIN );
@@ -260,7 +260,7 @@ public class OWLAxiomMapperTest extends MapperTestBase {
       final List<Edge> edges = edges( result );
       assertThat( edges ).hasSize( 1 );
 
-      final Edge propertyToDomain = edges.iterator().next();
+      final Edge propertyToDomain = edges.getFirst();
       assertThat( propertyToDomain.getType() ).isEqualTo( Edge.Type.DEFAULT_ARROW );
       assertThat( propertyToDomain.getClass() ).isEqualTo( Edge.Decorated.class );
       assertThat( ( (Edge.Decorated) propertyToDomain ).getLabel() ).isEqualTo( Edge.Decorated.Label.DOMAIN );
@@ -295,7 +295,7 @@ public class OWLAxiomMapperTest extends MapperTestBase {
       final OWLOntology ontology = createOntology( ontologyContent );
       final Set<GraphElement> result = ontology.axioms()
             .filter( axiom -> axiom.isOfType( AxiomType.EQUIVALENT_OBJECT_PROPERTIES ) )
-            .map( axiom -> (OWLEquivalentObjectPropertiesAxiom) axiom )
+            .map( OWLEquivalentObjectPropertiesAxiom.class::cast )
             .flatMap( element -> mapper.visit( element ).toStream() )
             .collect( Collectors.toSet() );
 
@@ -447,7 +447,7 @@ public class OWLAxiomMapperTest extends MapperTestBase {
       final List<Edge> edges = edges( result );
       assertThat( edges ).hasSize( 1 );
 
-      final Edge propertyToRange = edges.iterator().next();
+      final Edge propertyToRange = edges.getFirst();
       assertThat( propertyToRange.getType() ).isEqualTo( Edge.Type.DEFAULT_ARROW );
       assertThat( propertyToRange.getClass() ).isEqualTo( Edge.Decorated.class );
       assertThat( ( (Edge.Decorated) propertyToRange ).getLabel() ).isEqualTo( Edge.Decorated.Label.RANGE );
@@ -531,7 +531,7 @@ public class OWLAxiomMapperTest extends MapperTestBase {
       final List<Edge> edges = edges( result );
       assertThat( edges ).hasSize( 1 );
 
-      final Edge theEdge = edges.get( 0 );
+      final Edge theEdge = edges.getFirst();
       assertThat( theEdge ).matches( isEdgeWithFromAndTo( "foo", "bar" ) );
       assertThat( theEdge.getType() ).isEqualTo( Edge.Type.HOLLOW_ARROW );
    }
@@ -606,7 +606,7 @@ public class OWLAxiomMapperTest extends MapperTestBase {
       final List<Edge> edges = edges( result );
       assertThat( edges ).hasSize( 1 );
 
-      final Edge propertyToRange = edges.iterator().next();
+      final Edge propertyToRange = edges.getFirst();
       assertThat( propertyToRange.getType() ).isEqualTo( Edge.Type.DEFAULT_ARROW );
       assertThat( propertyToRange.getClass() ).isEqualTo( Edge.Decorated.class );
       assertThat( ( (Edge.Decorated) propertyToRange ).getLabel() ).isEqualTo( Edge.Decorated.Label.RANGE );
@@ -664,7 +664,7 @@ public class OWLAxiomMapperTest extends MapperTestBase {
       final OWLOntology ontology = createOntology( ontologyContent );
       final Set<GraphElement> result = ontology.axioms()
             .filter( axiom -> axiom.isOfType( AxiomType.EQUIVALENT_DATA_PROPERTIES ) )
-            .map( axiom -> (OWLEquivalentDataPropertiesAxiom) axiom )
+            .map( OWLEquivalentDataPropertiesAxiom.class::cast )
             .flatMap( element -> mapper.visit( element ).toStream() )
             .collect( Collectors.toSet() );
 
@@ -685,7 +685,7 @@ public class OWLAxiomMapperTest extends MapperTestBase {
       final List<Edge> edges = edges( result );
       assertThat( edges ).hasSize( 1 );
 
-      final Edge theEdge = edges.get( 0 );
+      final Edge theEdge = edges.getFirst();
       assertThat( theEdge ).matches( isEdgeWithFromAndTo( "Foo", "Thing" ) );
       assertThat( theEdge.getType() ).isEqualTo( Edge.Type.DEFAULT_ARROW );
    }
@@ -719,7 +719,7 @@ public class OWLAxiomMapperTest extends MapperTestBase {
       final OWLOntology ontology = createOntology( ontologyContent );
       final Set<GraphElement> result = ontology.axioms()
             .filter( axiom -> axiom.isOfType( AxiomType.EQUIVALENT_CLASSES ) )
-            .map( axiom -> (OWLEquivalentClassesAxiom) axiom )
+            .map( OWLEquivalentClassesAxiom.class::cast )
             .flatMap( element -> mapper.visit( element ).toStream() )
             .collect( Collectors.toSet() );
 
@@ -823,7 +823,7 @@ public class OWLAxiomMapperTest extends MapperTestBase {
       final List<Edge> edges = edges( result );
       assertThat( edges ).hasSize( 1 );
 
-      final Edge theEdge = edges.get( 0 );
+      final Edge theEdge = edges.getFirst();
       assertThat( theEdge ).matches( isEdgeWithFromAndTo( "foo", "bar" ) );
       assertThat( theEdge.getType() ).isEqualTo( Edge.Type.HOLLOW_ARROW );
    }
@@ -970,7 +970,7 @@ public class OWLAxiomMapperTest extends MapperTestBase {
       final Set<GraphElement> result = mapper.visit( axiom ).getElementSet();
       assertThat( result ).hasSize( 1 );
 
-      final Node theNode = nodes( result ).get( 0 );
+      final Node theNode = nodes( result ).getFirst();
       assertThat( theNode ).matches( isNodeWithId( "Foo" ) );
    }
 
@@ -985,7 +985,7 @@ public class OWLAxiomMapperTest extends MapperTestBase {
                       [ xsd:minExclusive "4"^^xsd:int ] [ xsd:maxInclusive "10"^^xsd:int ]
                   )
               ] .
-          """;
+         """;
 
       final OWLDatatypeDefinitionAxiom axiom = getAxiom( ontology, AxiomType.DATATYPE_DEFINITION );
 
