@@ -648,7 +648,7 @@
                             <file>${maven.multiModuleProjectDirectory}/.development/coolrdf-eclipse.importorder</file>
                         </importOrder>
                         <licenseHeader>
-                            <file>${maven.multiModuleProjectDirectory}/.development/coolrdf-license-header.txt</file>
+                            <file>${maven.multiModuleProjectDirectory}/.development/coolrdf-license-header-java.txt</file>
                         </licenseHeader>
                         <trimTrailingWhitespace/>
                         <endWithNewline/>
