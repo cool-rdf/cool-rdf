@@ -597,7 +597,6 @@
                                 <include>.gitignore</include>
                                 <include>**/*.md</include>
                                 <include>**/*.adoc</include>
-                                <include>**/*.ttl</include>
                                 <include>**/*.yml</include>
                             </includes>
                             <excludes>
@@ -608,6 +607,22 @@
                             <endWithNewline/>
                             <encoding>${project.build.sourceEncoding}</encoding>
                             <lineEndings>UNIX</lineEndings>
+                        </format>
+                        <format>
+                            <includes>
+                                <include>**/*.ttl</include>
+                            </includes>
+                            <excludes>
+                                <exclude>**/target/**</exclude>
+                            </excludes>
+                            <trimTrailingWhitespace/>
+                            <endWithNewline/>
+                            <encoding>${project.build.sourceEncoding}</encoding>
+                            <lineEndings>UNIX</lineEndings>
+                            <licenseHeader>
+                                <file>${maven.multiModuleProjectDirectory}/.development/coolrdf-license-header-ttl.txt</file>
+                                <delimiter>@</delimiter>
+                            </licenseHeader>
                         </format>
                         <format>
                             <includes>
