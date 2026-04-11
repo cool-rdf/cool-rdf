@@ -599,7 +599,6 @@
                                 <include>**/*.md</include>
                                 <include>**/*.adoc</include>
                                 <include>**/*.ttl</include>
-                                <include>**/*.xml</include>
                                 <include>**/*.yml</include>
                             </includes>
                             <excludes>
@@ -610,6 +609,30 @@
                             <endWithNewline/>
                             <encoding>${project.build.sourceEncoding}</encoding>
                             <lineEndings>UNIX</lineEndings>
+                        </format>
+                        <format>
+                            <includes>
+                                <include>**/*.xml</include>
+                            </includes>
+                            <excludes>
+                                <exclude>**/target/**</exclude>
+                            </excludes>
+                            <trimTrailingWhitespace/>
+                            <endWithNewline/>
+                            <encoding>${project.build.sourceEncoding}</encoding>
+                            <lineEndings>UNIX</lineEndings>
+                            <licenseHeader>
+                                <file>${maven.multiModuleProjectDirectory}/.development/coolrdf-license-header-xml.txt</file>
+                                <skipLinesMatching>&lt;\?xml version="1\.0"|&lt;!DOCTYPE</skipLinesMatching>
+                                <!--
+                                  * <project> - pom.xml
+                                  * <configuration> - logback.xml
+                                  * <module> - checkstyle.xml
+                                  * <code_theme> - intellij code style
+                                  * <profiles> - eclipse code style
+                                -->
+                                <delimiter>^&lt;project|^&lt;configuration|^&lt;module|^&lt;code_scheme|^&lt;profiles</delimiter>
+                            </licenseHeader>
                         </format>
                     </formats>
                     <java>
