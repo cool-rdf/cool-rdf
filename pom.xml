@@ -630,6 +630,8 @@
                             </includes>
                             <excludes>
                                 <exclude>**/target/**</exclude>
+                                <exclude>.idea/**</exclude>
+                                <exclude>**/pom.xml</exclude>
                             </excludes>
                             <trimTrailingWhitespace/>
                             <endWithNewline/>
@@ -642,13 +644,37 @@
                                   * <project> - pom.xml
                                   * <configuration> - logback.xml
                                   * <module> - checkstyle.xml
-                                  * <code_theme> - intellij code style
+                                  * <code_theme> - IntelliJ code style
                                   * <profiles> - eclipse code style
                                 -->
                                 <delimiter>^&lt;project|^&lt;configuration|^&lt;module|^&lt;code_scheme|^&lt;profiles</delimiter>
                             </licenseHeader>
                         </format>
                     </formats>
+                    <pom>
+                        <includes>
+                            <include>**/pom.xml</include>
+                        </includes>
+                        <sortPom>
+                            <encoding>${project.build.sourceEncoding}</encoding>
+                            <lineSeparator>\n</lineSeparator>
+                            <endWithNewline>true</endWithNewline>
+                            <expandEmptyElements>false</expandEmptyElements>
+                            <spaceBeforeCloseEmptyElement>true</spaceBeforeCloseEmptyElement>
+                            <keepBlankLines>true</keepBlankLines>
+                            <endWithNewline>true</endWithNewline>
+                            <nrOfIndentSpace>4</nrOfIndentSpace>
+                            <indentBlankLines>false</indentBlankLines>
+                            <indentAttribute>schemaLocation</indentAttribute>
+                            <sortOrderFile>${maven.multiModuleProjectDirectory}/.development/coolrdf-pom-sortorder.xml</sortOrderFile>
+                            <sortDependencies/>
+                            <sortDependencyManagement/>
+                            <sortDependencyExclusions/>
+                            <sortProperties>false</sortProperties>
+                            <sortModules>false</sortModules>
+                            <sortExecutions>false</sortExecutions>
+                        </sortPom>
+                    </pom>
                     <java>
                         <includes>
                             <include>src/main/java/**/*.java</include>
