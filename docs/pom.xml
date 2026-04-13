@@ -14,16 +14,15 @@
   ~ See the License for the specific language governing permissions and
   ~ limitations under the License.
   -->
-<project xmlns="http://maven.apache.org/POM/4.0.0"
-         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
     <parent>
-        <artifactId>cool-rdf-parent</artifactId>
         <groupId>cool.rdf</groupId>
+        <artifactId>cool-rdf-parent</artifactId>
         <version>DEV-SNAPSHOT</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
-    <modelVersion>4.0.0</modelVersion>
 
     <artifactId>docs</artifactId>
     <name>Cool RDF Docs</name>
@@ -122,32 +121,26 @@
                 <artifactId>maven-antrun-plugin</artifactId>
                 <executions>
                     <execution>
-                        <phase>generate-resources</phase>
                         <id>generate-diagrams</id>
-                        <configuration>
-                            <target name="main">
-                                <apply executable="java"
-                                       dest="${project.basedir}/src/docs/antora/modules/ROOT/assets/images/generated"
-                                       parallel="false"
-                                       failonerror="true"
-                                       failifexecutionfails="true"
-                                       verbose="true">
-                                    <arg value="-jar"/>
-                                    <arg value="${project.basedir}/../cool-rdf-cli/target/cool-rdf-cli-${project.version}.jar"/>
-                                    <arg value="diagram"/>
-                                    <arg value="--direction"/>
-                                    <arg value="detect"/>
-                                    <srcfile/>
-                                    <targetfile/>
-                                    <fileset dir="${project.basedir}/src/docs/antora/modules/ROOT/examples"
-                                             includes="*.ttl"/>
-                                    <mapper type="glob" from="*.ttl" to="*.svg"/>
-                                </apply>
-                            </target>
-                        </configuration>
+                        <phase>generate-resources</phase>
                         <goals>
                             <goal>run</goal>
                         </goals>
+                        <configuration>
+                            <target name="main">
+                                <apply dest="${project.basedir}/src/docs/antora/modules/ROOT/assets/images/generated" executable="java" failifexecutionfails="true" failonerror="true" parallel="false" verbose="true">
+                                    <arg value="-jar" />
+                                    <arg value="${project.basedir}/../cool-rdf-cli/target/cool-rdf-cli-${project.version}.jar" />
+                                    <arg value="diagram" />
+                                    <arg value="--direction" />
+                                    <arg value="detect" />
+                                    <srcfile />
+                                    <targetfile />
+                                    <fileset dir="${project.basedir}/src/docs/antora/modules/ROOT/examples" includes="*.ttl" />
+                                    <mapper from="*.ttl" to="*.svg" type="glob" />
+                                </apply>
+                            </target>
+                        </configuration>
                     </execution>
                 </executions>
             </plugin>
@@ -302,8 +295,7 @@
                                 </goals>
                                 <configuration>
                                     <!--suppress MavenModelInspection -->
-                                    <arguments>install @antora/lunr-extension@${antora-lunr-extension.version}
-                                    </arguments>
+                                    <arguments>install @antora/lunr-extension@${antora-lunr-extension.version}</arguments>
                                 </configuration>
                             </execution>
                             <execution>
@@ -315,8 +307,7 @@
                                 <configuration>
                                     <!--suppress MavenModelInspection -->
                                     <arguments>install
-                                        @djencks/asciidoctor-mathjax@${antora-mathjax-extension.version}
-                                    </arguments>
+                                        @djencks/asciidoctor-mathjax@${antora-mathjax-extension.version}</arguments>
                                 </configuration>
                             </execution>
                         </executions>
@@ -325,50 +316,50 @@
             </build>
         </profile>
 
-       <profile>
-          <id>set-release-version-in-docs</id>
-          <activation>
-             <property>
-                <name>release</name>
-             </property>
-          </activation>
-          <build>
-             <plugins>
-                <plugin>
-                   <groupId>software.xdev</groupId>
-                   <artifactId>find-and-replace-maven-plugin</artifactId>
-                   <executions>
-                      <execution>
-                         <id>set-release-version-in-antora</id>
-                         <phase>process-sources</phase>
-                         <goals>
-                            <goal>file-contents</goal>
-                         </goals>
-                         <configuration>
-                            <baseDir>src/docs/antora</baseDir>
-                            <fileMask>antora.yml</fileMask>
-                            <findRegex>release-version: snapshot</findRegex>
-                            <replaceValue>release-version: ${project.version}</replaceValue>
-                         </configuration>
-                      </execution>
-                      <execution>
-                         <id>set-release-tag-in-antora</id>
-                         <phase>process-sources</phase>
-                         <goals>
-                            <goal>file-contents</goal>
-                         </goals>
-                         <configuration>
-                            <baseDir>src/docs/antora</baseDir>
-                            <fileMask>antora.yml</fileMask>
-                            <findRegex>release-tag: snapshot</findRegex>
-                            <replaceValue>release-tag: v${project.version}</replaceValue>
-                         </configuration>
-                      </execution>
-                   </executions>
-                </plugin>
-             </plugins>
-          </build>
-       </profile>
+        <profile>
+            <id>set-release-version-in-docs</id>
+            <activation>
+                <property>
+                    <name>release</name>
+                </property>
+            </activation>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>software.xdev</groupId>
+                        <artifactId>find-and-replace-maven-plugin</artifactId>
+                        <executions>
+                            <execution>
+                                <id>set-release-version-in-antora</id>
+                                <phase>process-sources</phase>
+                                <goals>
+                                    <goal>file-contents</goal>
+                                </goals>
+                                <configuration>
+                                    <baseDir>src/docs/antora</baseDir>
+                                    <fileMask>antora.yml</fileMask>
+                                    <findRegex>release-version: snapshot</findRegex>
+                                    <replaceValue>release-version: ${project.version}</replaceValue>
+                                </configuration>
+                            </execution>
+                            <execution>
+                                <id>set-release-tag-in-antora</id>
+                                <phase>process-sources</phase>
+                                <goals>
+                                    <goal>file-contents</goal>
+                                </goals>
+                                <configuration>
+                                    <baseDir>src/docs/antora</baseDir>
+                                    <fileMask>antora.yml</fileMask>
+                                    <findRegex>release-tag: snapshot</findRegex>
+                                    <replaceValue>release-tag: v${project.version}</replaceValue>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
 
         <profile>
             <id>release</id>

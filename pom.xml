@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?xml version="1.0" encoding="UTF-8"?>
 <!--
   ~ Copyright Cool RDF project
   ~
@@ -15,7 +15,7 @@
   ~ limitations under the License.
   -->
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>cool.rdf</groupId>
@@ -25,15 +25,9 @@
 
     <name>Cool RDF</name>
     <description>Cool RDF provides APIs and a command line interface to transform, manipulate,
-        validate and visualize RDF and OWL documents.
-    </description>
-    <inceptionYear>2019</inceptionYear>
+        validate and visualize RDF and OWL documents.</description>
     <url>https://rdf.cool</url>
-
-    <issueManagement>
-        <system>GitHub Issues</system>
-        <url>https://github.com/cool-rdf/cool-rdf/issues</url>
-    </issueManagement>
+    <inceptionYear>2019</inceptionYear>
 
     <licenses>
         <license>
@@ -49,11 +43,26 @@
         </developer>
     </developers>
 
+    <modules>
+        <module>cool-rdf-core</module>
+        <module>cool-rdf-diagram-owl</module>
+        <module>cool-rdf-infer</module>
+        <module>cool-rdf-formatter</module>
+        <module>cool-rdf-write</module>
+        <module>cool-rdf-cli</module>
+        <module>docs</module>
+    </modules>
+
     <scm>
         <connection>scm:git:https://github.com/cool-rdf/cool-rdf.git</connection>
         <developerConnection>scm:git:https://github.com/cool-rdf/cool-rdf.git</developerConnection>
         <url>https://github.com/cool-rdf/cool-rdf/tree/main</url>
     </scm>
+
+    <issueManagement>
+        <system>GitHub Issues</system>
+        <url>https://github.com/cool-rdf/cool-rdf/issues</url>
+    </issueManagement>
 
     <properties>
         <!-- General settings -->
@@ -130,16 +139,6 @@
         <versions-maven-plugin.version>2.21.0</versions-maven-plugin.version>
         <spotless-maven-plugin.version>3.4.0</spotless-maven-plugin.version>
     </properties>
-
-    <modules>
-        <module>cool-rdf-core</module>
-        <module>cool-rdf-diagram-owl</module>
-        <module>cool-rdf-infer</module>
-        <module>cool-rdf-formatter</module>
-        <module>cool-rdf-write</module>
-        <module>cool-rdf-cli</module>
-        <module>docs</module>
-    </modules>
 
     <dependencyManagement>
         <dependencies>
@@ -530,13 +529,6 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-surefire-plugin</artifactId>
                 <version>${maven-surefire-plugin.version}</version>
-                <dependencies>
-                    <dependency>
-                        <groupId>me.fabriciorby</groupId>
-                        <artifactId>maven-surefire-junit5-tree-reporter</artifactId>
-                        <version>${maven-surefire-junit5-tree-reporter.version}</version>
-                    </dependency>
-                </dependencies>
                 <configuration>
                     <skip>${maven.surefire.skip}</skip>
                     <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
@@ -548,8 +540,7 @@
                     <consoleOutputReporter>
                         <disable>true</disable>
                     </consoleOutputReporter>
-                    <statelessTestsetInfoReporter
-                            implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoTreeReporter">
+                    <statelessTestsetInfoReporter implementation="org.apache.maven.plugin.surefire.extensions.junit5.JUnit5StatelessTestsetInfoTreeReporter">
                         <theme>UNICODE</theme>
                         <printStacktraceOnError>true</printStacktraceOnError>
                         <printStacktraceOnFailure>true</printStacktraceOnFailure>
@@ -562,9 +553,15 @@
                     </statelessTestsetInfoReporter>
                     <argLine>@{argLine}
                         -javaagent:${settings.localRepository}/org/mockito/mockito-core/${mockito.version}/mockito-core-${mockito.version}.jar
-                        -Xshare:off
-                    </argLine>
+                        -Xshare:off</argLine>
                 </configuration>
+                <dependencies>
+                    <dependency>
+                        <groupId>me.fabriciorby</groupId>
+                        <artifactId>maven-surefire-junit5-tree-reporter</artifactId>
+                        <version>${maven-surefire-junit5-tree-reporter.version}</version>
+                    </dependency>
+                </dependencies>
             </plugin>
 
             <plugin>
@@ -603,8 +600,8 @@
                                 <exclude>**/target/**</exclude>
                                 <exclude>.idea/**</exclude>
                             </excludes>
-                            <trimTrailingWhitespace/>
-                            <endWithNewline/>
+                            <trimTrailingWhitespace />
+                            <endWithNewline />
                             <encoding>${project.build.sourceEncoding}</encoding>
                             <lineEndings>UNIX</lineEndings>
                         </format>
@@ -615,8 +612,8 @@
                             <excludes>
                                 <exclude>**/target/**</exclude>
                             </excludes>
-                            <trimTrailingWhitespace/>
-                            <endWithNewline/>
+                            <trimTrailingWhitespace />
+                            <endWithNewline />
                             <encoding>${project.build.sourceEncoding}</encoding>
                             <lineEndings>UNIX</lineEndings>
                             <licenseHeader>
@@ -633,8 +630,8 @@
                                 <exclude>.idea/**</exclude>
                                 <exclude>**/pom.xml</exclude>
                             </excludes>
-                            <trimTrailingWhitespace/>
-                            <endWithNewline/>
+                            <trimTrailingWhitespace />
+                            <endWithNewline />
                             <encoding>${project.build.sourceEncoding}</encoding>
                             <lineEndings>UNIX</lineEndings>
                             <licenseHeader>
@@ -667,9 +664,9 @@
                             <indentBlankLines>false</indentBlankLines>
                             <indentAttribute>schemaLocation</indentAttribute>
                             <sortOrderFile>${maven.multiModuleProjectDirectory}/.development/coolrdf-pom-sortorder.xml</sortOrderFile>
-                            <sortDependencies/>
-                            <sortDependencyManagement/>
-                            <sortDependencyExclusions/>
+                            <sortDependencies />
+                            <sortDependencyManagement />
+                            <sortDependencyExclusions />
                             <sortProperties>false</sortProperties>
                             <sortModules>false</sortModules>
                             <sortExecutions>false</sortExecutions>
@@ -691,8 +688,8 @@
                         <licenseHeader>
                             <file>${maven.multiModuleProjectDirectory}/.development/coolrdf-license-header-java.txt</file>
                         </licenseHeader>
-                        <trimTrailingWhitespace/>
-                        <endWithNewline/>
+                        <trimTrailingWhitespace />
+                        <endWithNewline />
                         <encoding>${project.build.sourceEncoding}</encoding>
                         <lineEndings>UNIX</lineEndings>
                     </java>
@@ -704,8 +701,7 @@
                 <artifactId>maven-checkstyle-plugin</artifactId>
                 <version>${maven-checkstyle-plugin.version}</version>
                 <configuration>
-                    <configLocation>${maven.multiModuleProjectDirectory}/.development/coolrdf-checkstyle.xml
-                    </configLocation>
+                    <configLocation>${maven.multiModuleProjectDirectory}/.development/coolrdf-checkstyle.xml</configLocation>
                     <consoleOutput>true</consoleOutput>
                     <failsOnError>true</failsOnError>
                     <failOnViolation>true</failOnViolation>
@@ -759,6 +755,9 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-javadoc-plugin</artifactId>
                         <version>${maven-javadoc-plugin.version}</version>
+                        <configuration>
+                            <release>${maven.compiler.source}</release>
+                        </configuration>
                         <executions>
                             <execution>
                                 <id>attach-javadocs</id>
@@ -767,9 +766,6 @@
                                 </goals>
                             </execution>
                         </executions>
-                        <configuration>
-                            <release>${maven.compiler.source}</release>
-                        </configuration>
                     </plugin>
 
                     <plugin>
@@ -803,6 +799,12 @@
                         <groupId>org.apache.maven.plugins</groupId>
                         <artifactId>maven-gpg-plugin</artifactId>
                         <version>${maven-gpg-plugin.version}</version>
+                        <configuration>
+                            <gpgArguments>
+                                <arg>--pinentry-mode</arg>
+                                <arg>loopback</arg>
+                            </gpgArguments>
+                        </configuration>
                         <executions>
                             <execution>
                                 <id>sign-artifacts</id>
@@ -812,12 +814,6 @@
                                 </goals>
                             </execution>
                         </executions>
-                        <configuration>
-                            <gpgArguments>
-                                <arg>--pinentry-mode</arg>
-                                <arg>loopback</arg>
-                            </gpgArguments>
-                        </configuration>
                     </plugin>
 
                     <plugin>
