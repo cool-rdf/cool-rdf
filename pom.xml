@@ -607,22 +607,6 @@
                         </format>
                         <format>
                             <includes>
-                                <include>**/*.ttl</include>
-                            </includes>
-                            <excludes>
-                                <exclude>**/target/**</exclude>
-                            </excludes>
-                            <trimTrailingWhitespace />
-                            <endWithNewline />
-                            <encoding>${project.build.sourceEncoding}</encoding>
-                            <lineEndings>UNIX</lineEndings>
-                            <licenseHeader>
-                                <file>${maven.multiModuleProjectDirectory}/.development/coolrdf-license-header-ttl.txt</file>
-                                <delimiter>@</delimiter>
-                            </licenseHeader>
-                        </format>
-                        <format>
-                            <includes>
                                 <include>**/*.xml</include>
                             </includes>
                             <excludes>
@@ -694,6 +678,40 @@
                         <encoding>${project.build.sourceEncoding}</encoding>
                         <lineEndings>UNIX</lineEndings>
                     </java>
+                    <rdf>
+                        <includes>
+                            <include>**/*.ttl</include>
+                        </includes>
+                        <excludes>
+                            <exclude>**/target/**</exclude>
+                        </excludes>
+                        <format>
+                            <failOnWarning>false</failOnWarning>
+                            <verify>false</verify>
+                            <turtleFormatterVersion>1.2.13</turtleFormatterVersion>
+                            <turtle>
+                                <alignPrefixes>OFF</alignPrefixes>
+                                <alignPredicates>false</alignPredicates>
+                                <firstPredicateInNewLine>false</firstPredicateInNewLine>
+                                <prefixOrder>,rdf,rdfs,xsd,owl</prefixOrder>
+                                <alignObjects>false</alignObjects>
+                                <enableDoubleFormatting>true</enableDoubleFormatting>
+                                <endOfLine>LF</endOfLine>
+                                <indentStyle>SPACE</indentStyle>
+                                <useAForRdfType>true</useAForRdfType>
+                                <keepUnusedPrefixes>false</keepUnusedPrefixes>
+                                <useCommaByDefault>false</useCommaByDefault>
+                            </turtle>
+                        </format>
+                        <trimTrailingWhitespace />
+                        <endWithNewline />
+                        <encoding>${project.build.sourceEncoding}</encoding>
+                        <lineEndings>UNIX</lineEndings>
+                        <licenseHeader>
+                            <file>${maven.multiModuleProjectDirectory}/.development/coolrdf-license-header-ttl.txt</file>
+                            <delimiter>@</delimiter>
+                        </licenseHeader>
+                    </rdf>
                 </configuration>
             </plugin>
 
