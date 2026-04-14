@@ -97,6 +97,7 @@
         <openllet.version>2.6.5</openllet.version>
         <owlapi.version>5.5.1</owlapi.version>
         <picocli.version>4.7.7</picocli.version>
+        <record-builder.version>52</record-builder.version>
         <slf4j-api.version>2.0.17</slf4j-api.version>
         <vavr.version>1.0.1</vavr.version>
 
@@ -277,6 +278,11 @@
                 <groupId>info.picocli</groupId>
                 <artifactId>picocli-codegen</artifactId>
                 <version>${picocli.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.soabase.record-builder</groupId>
+                <artifactId>record-builder-processor</artifactId>
+                <version>${record-builder.version}</version>
             </dependency>
             <dependency>
                 <groupId>org.slf4j</groupId>
