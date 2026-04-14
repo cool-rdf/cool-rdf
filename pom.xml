@@ -670,6 +670,7 @@
                             <sortProperties>false</sortProperties>
                             <sortModules>false</sortModules>
                             <sortExecutions>false</sortExecutions>
+                            <quiet>true</quiet>
                         </sortPom>
                     </pom>
                     <java>
