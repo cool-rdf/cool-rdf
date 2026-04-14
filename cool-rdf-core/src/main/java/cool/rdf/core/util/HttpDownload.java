@@ -38,7 +38,8 @@ import cool.rdf.core.exception.DownloadFailedException;
 import io.soabase.recordbuilder.core.RecordBuilder;
 
 /**
- * Convenience class that allows download a file via HTTP/HTTPS, while following redirects, and which honors the
+ * Convenience class that allows download a file via HTTP/HTTPS, while following redirects, and
+ * which honors the
  * system proxy configuration configuration (http_proxy/https_proxy environment variables).
  */
 public class HttpDownload {
