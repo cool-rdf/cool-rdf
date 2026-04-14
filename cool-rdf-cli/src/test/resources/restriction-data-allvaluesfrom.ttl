@@ -15,13 +15,15 @@
 #
 
 @prefix : <https://rdf.cool/vocab/example#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
+
+:Dog a owl:Class ;
+  owl:equivalentClass [
+    a owl:Restriction ;
+    owl:allValuesFrom xsd:string ;
+    owl:onProperty :name ;
+  ] .
 
 :name a owl:DatatypeProperty .
-:Dog a owl:Class ;
-   owl:equivalentClass [
-      a owl:Restriction ;
-      owl:onProperty :name ;
-      owl:allValuesFrom xsd:string
-   ] .

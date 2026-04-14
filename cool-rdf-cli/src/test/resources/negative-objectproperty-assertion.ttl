@@ -15,14 +15,18 @@
 #
 
 @prefix : <https://rdf.cool/vocab/example#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 
-:foo a owl:NamedIndividual .
-:bar a owl:NamedIndividual .
 :property a owl:ObjectProperty .
+
+:bar a owl:NamedIndividual .
+
+:foo a owl:NamedIndividual .
+
 [
-   a owl:NegativeObjectPropertyAssertion ;
-   owl:sourceIndividual :foo ;
-   owl:assertionProperty :property ;
-   owl:targetIndividual :bar
+  a owl:NegativeObjectPropertyAssertion ;
+  owl:assertionProperty :property ;
+  owl:sourceIndividual :foo ;
+  owl:targetIndividual :bar ;
 ] .

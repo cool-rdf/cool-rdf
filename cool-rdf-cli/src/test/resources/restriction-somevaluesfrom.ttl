@@ -15,13 +15,16 @@
 #
 
 @prefix : <https://rdf.cool/vocab/example#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 
 :Dog a owl:Class .
-:hasDog a owl:ObjectProperty .
+
 :DogOwner a owl:Class ;
-   owl:equivalentClass [
-      a owl:Restriction ;
-      owl:onProperty :hasDog ;
-      owl:someValuesFrom :Dog
-   ] .
+  owl:equivalentClass [
+    a owl:Restriction ;
+    owl:onProperty :hasDog ;
+    owl:someValuesFrom :Dog ;
+  ] .
+
+:hasDog a owl:ObjectProperty .

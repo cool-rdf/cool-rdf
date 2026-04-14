@@ -15,12 +15,15 @@
 #
 
 @prefix : <https://rdf.cool/vocab/example#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 
-:P a owl:DatatypeProperty .
 :X a owl:Class ;
-   owl:equivalentClass [
-      a owl:Restriction ;
-      owl:onProperty :P ;
-      owl:hasValue 42
-   ] .
+  owl:equivalentClass [
+    a owl:Restriction ;
+    owl:hasValue 42 ;
+    owl:onProperty :P ;
+  ] .
+
+:P a owl:DatatypeProperty .

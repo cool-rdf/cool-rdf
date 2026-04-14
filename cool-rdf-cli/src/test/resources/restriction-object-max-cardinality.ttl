@@ -15,15 +15,18 @@
 #
 
 @prefix : <https://rdf.cool/vocab/example#> .
-@prefix owl: <http://www.w3.org/2002/07/owl#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+@prefix owl: <http://www.w3.org/2002/07/owl#> .
 
 :Dog a owl:Class .
-:hasDog a owl:ObjectProperty .
+
 :DogOwner a owl:Class ;
-   owl:equivalentClass [
-      a owl:Restriction ;
-      owl:onProperty :hasDog ;
-      owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
-      owl:onClass :Dog
-   ] .
+  owl:equivalentClass [
+    a owl:Restriction ;
+    owl:maxQualifiedCardinality "1"^^xsd:nonNegativeInteger ;
+    owl:onClass :Dog ;
+    owl:onProperty :hasDog ;
+  ] .
+
+:hasDog a owl:ObjectProperty .

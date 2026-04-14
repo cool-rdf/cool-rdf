@@ -15,8 +15,10 @@
 #
 
 @prefix : <https://rdf.cool/vocab/example#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 
-:P2 a owl:DatatypeProperty .
 :P1 a owl:DatatypeProperty ;
-   owl:equivalentProperty :P2 .
+  owl:equivalentProperty :P2 .
+
+:P2 a owl:DatatypeProperty .

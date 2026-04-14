@@ -15,9 +15,12 @@
 #
 
 @prefix : <https://rdf.cool/vocab/example#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 
-:C1 a owl:Class .
-:C2 a owl:Class .
 :C a owl:Class ;
-   owl:disjointUnionOf ( :C1 :C2 ) .
+  owl:disjointUnionOf ( :C1 :C2 ) .
+
+:C1 a owl:Class .
+
+:C2 a owl:Class .

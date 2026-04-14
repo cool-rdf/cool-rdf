@@ -15,11 +15,14 @@
 #
 
 @prefix : <https://rdf.cool/vocab/example#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 
 :C1 a owl:Class ;
-   owl:equivalentClass :C2 .
+  owl:equivalentClass :C2 .
+
 :C2 a owl:Class ;
-   owl:equivalentClass :C3 .
+  owl:equivalentClass :C3 .
+
 :C3 a owl:Class ;
-   owl:equivalentClass :C1 .
+  owl:equivalentClass :C1 .

@@ -15,8 +15,10 @@
 #
 
 @prefix : <https://rdf.cool/vocab/example#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 
-:foo a owl:DatatypeProperty .
 :bar a owl:DatatypeProperty ;
-   owl:propertyDisjointWith :foo .
+  owl:propertyDisjointWith :foo .
+
+:foo a owl:DatatypeProperty .

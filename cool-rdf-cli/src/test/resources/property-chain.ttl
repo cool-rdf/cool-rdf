@@ -15,9 +15,12 @@
 #
 
 @prefix : <https://rdf.cool/vocab/example#> .
+@prefix rdf: <http://www.w3.org/1999/02/22-rdf-syntax-ns#> .
 @prefix owl: <http://www.w3.org/2002/07/owl#> .
 
 :bar a owl:ObjectProperty .
+
 :baz a owl:ObjectProperty .
+
 :foo a owl:ObjectProperty ;
-   owl:propertyChainAxiom ( :bar :baz ) .
+  owl:propertyChainAxiom ( :bar :baz ) .
