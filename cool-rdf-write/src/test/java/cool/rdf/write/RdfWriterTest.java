@@ -31,7 +31,6 @@ import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.ModelFactory;
 import org.apache.jena.riot.Lang;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.condition.DisabledIf;
 
 import cool.rdf.core.model.RdfModel;
 import cool.rdf.formatter.TurtleFormatter;
@@ -105,8 +104,6 @@ public class RdfWriterTest {
    }
 
    @Test
-   @DisabledIf( value = "cool.rdf.core.test.shared.TestUtil#systemUsesProxy",
-      disabledReason = "Implementation currently doesn't work with a proxy" )
    public void testReadFromUrl() throws IOException {
       final URL url = new URL( "https://raw.githubusercontent.com/atextor/turtle-formatting/main/turtle-formatting.ttl" );
       final Configuration configuration = Configuration.builder()
