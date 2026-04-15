@@ -223,13 +223,12 @@
                             <!-- args[0]: the path to git.properties -->
                             <!-- args[1]: fully qualified class name to generate -->
                             <!-- args[2]: the path to the file to write -->
-                            <!-- args[3]: the copyright holder -->
+                            <!-- args[3]: the copyright header location -->
                             <arguments>
                                 <argument>${git-properties-filename}</argument>
                                 <argument>cool.rdf.core.Version</argument>
                                 <argument>${generated.sources.java}/cool/rdf/core/Version.java</argument>
-                                <!--suppress MavenModelInspection -->
-                                <argument>${developersString}</argument>
+                                <argument>${maven.multiModuleProjectDirectory}/.development/coolrdf-license-header-java.txt</argument>
                             </arguments>
                         </configuration>
                     </execution>
@@ -244,13 +243,12 @@
                             <!-- args[0]: the path to resources directory containing prefix definitions -->
                             <!-- args[1]: fully qualified class name to generate -->
                             <!-- args[2]: the path to the file to write -->
-                            <!-- args[3]: the copyright holder -->
+                            <!-- args[3]: the copyright header location -->
                             <arguments>
                                 <argument>${build.time.sources}/main/resources</argument>
                                 <argument>cool.rdf.core.Prefixes</argument>
                                 <argument>${generated.sources.java}/cool/rdf/core/Prefixes.java</argument>
-                                <!--suppress MavenModelInspection -->
-                                <argument>${developersString}</argument>
+                                <argument>${maven.multiModuleProjectDirectory}/.development/coolrdf-license-header-java.txt</argument>
                             </arguments>
                         </configuration>
                     </execution>

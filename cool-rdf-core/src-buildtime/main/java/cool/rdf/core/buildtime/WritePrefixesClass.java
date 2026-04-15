@@ -38,22 +38,7 @@ import cool.rdf.core.util.StringTemplate;
  */
 public class WritePrefixesClass {
    private static final StringTemplate PREFIXES_CLASS_TEMPLATE = new StringTemplate( """
-      /*
-       * Copyright ${year} ${copyrightHolder}
-       *
-       * Licensed under the Apache License, Version 2.0 (the "License");
-       * you may not use this file except in compliance with the License.
-       * You may obtain a copy of the License at
-       *
-       * http://www.apache.org/licenses/LICENSE-2.0
-       *
-       * Unless required by applicable law or agreed to in writing, software
-       * distributed under the License is distributed on an "AS IS" BASIS,
-       * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-       * See the License for the specific language governing permissions and
-       * limitations under the License.
-       */
-
+      ${copyrightHeader}
       package ${package};
 
       import javax.annotation.processing.Generated;
@@ -103,14 +88,14 @@ public class WritePrefixesClass {
     * args[0]: the path to resources directory containing prefix definitions
     * args[1]: fully qualified class name to generate
     * args[2]: the path to the file to write
-    * args[3]: name of the copyright holder
+    * args[3]: copyright header location
     *
     * @param args the arguments
     */
-   static void main( final String[] args ) {
+   static void main( final String[] args ) throws IOException {
       final Path resourcesDirectory = Path.of( args[0] );
       final String fullyQualifiedClassName = args[1];
-      final String copyrightHolder = args[3];
+      final String copyrightHeader = Files.readString( Path.of( args[3] ) );
       final int lastDot = fullyQualifiedClassName.lastIndexOf( "." );
       final String packageName = fullyQualifiedClassName.substring( 0, lastDot );
       final String className = fullyQualifiedClassName.substring( lastDot + 1 );
@@ -138,19 +123,15 @@ public class WritePrefixesClass {
             "year", DateFormats.YEAR_FORMAT.format( currentDate ),
             "buildDate", DateFormats.SIMPLE_DATE_FORMAT.format( currentDate ),
             "isoBuildDate", DateFormats.ISO_8601_FORMAT.format( currentDate ),
-            "copyrightHolder", copyrightHolder,
+            "copyrightHeader", copyrightHeader,
             "package", packageName,
             "className", className,
             "entries", entries
       ) );
 
-      try {
-         final BufferedWriter writer = new BufferedWriter( new FileWriter( targetFile ) );
-         writer.write( content );
-         writer.close();
-      } catch ( final IOException exception ) {
-         throw new RuntimeException( exception );
-      }
+      final BufferedWriter writer = new BufferedWriter( new FileWriter( targetFile ) );
+      writer.write( content );
+      writer.close();
    }
 
    private static Stream<PrefixEntry> entriesFromFile( final Path prefixFile, final Function<String[], PrefixEntry> lineParser ) {
