@@ -37,32 +37,32 @@ import cool.rdf.core.util.StringTemplate;
 public class WriteVersionClass {
    private static final StringTemplate VERSION_CLASS_TEMPLATE = new StringTemplate( """
       ${copyrightHeader}
-       package ${package};
+      package ${package};
 
-       import javax.annotation.processing.Generated;
+      import javax.annotation.processing.Generated;
 
-       /**
-        * Provides static build version information.
-        * Generated class, do not edit.
-        */
-       @Generated( value = "${generatorClass}", date = "${isoBuildDate}" )
-       public class ${className} {
-          /**
-           * The version of the package
-           */
-          public static final String VERSION = "${version}";
+      /**
+       * Provides static build version information.
+       * Generated class, do not edit.
+       */
+      @Generated( value = "${generatorClass}", date = "${isoBuildDate}" )
+      public class ${className} {
+         /**
+          * The version of the package
+          */
+         public static final String VERSION = "${version}";
 
-          /**
-           * The commit id of the package
-           */
-          public static final String COMMIT_ID = "${commitId}";
+         /**
+          * The commit id of the package
+          */
+         public static final String COMMIT_ID = "${commitId}";
 
-          /**
-           * The build date
-           */
-          public static final String BUILD_DATE = "${buildDate}";
-       }
-       """ );
+         /**
+          * The build date
+          */
+         public static final String BUILD_DATE = "${buildDate}";
+      }
+      """ );
 
    /**
     * args[0]: the path to git.properties
