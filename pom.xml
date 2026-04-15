@@ -119,7 +119,6 @@
         <find-and-replace-maven-plugin.version>1.0.5</find-and-replace-maven-plugin.version>
         <flatten-maven-plugin.version>1.7.3</flatten-maven-plugin.version>
         <git-commit-id-maven-plugin.version>9.0.2</git-commit-id-maven-plugin.version>
-        <groovy-maven-plugin.version>2.1.1</groovy-maven-plugin.version>
         <jacoco-maven-plugin.version>0.8.14</jacoco-maven-plugin.version>
         <maven-antrun-plugin.version>3.2.0</maven-antrun-plugin.version>
         <maven-checkstyle-plugin.version>3.6.0</maven-checkstyle-plugin.version>
@@ -388,11 +387,6 @@
                     <groupId>io.github.git-commit-id</groupId>
                     <artifactId>git-commit-id-maven-plugin</artifactId>
                     <version>${git-commit-id-maven-plugin.version}</version>
-                </plugin>
-                <plugin>
-                    <groupId>org.codehaus.gmaven</groupId>
-                    <artifactId>groovy-maven-plugin</artifactId>
-                    <version>${groovy-maven-plugin.version}</version>
                 </plugin>
                 <plugin>
                     <groupId>org.jacoco</groupId>
