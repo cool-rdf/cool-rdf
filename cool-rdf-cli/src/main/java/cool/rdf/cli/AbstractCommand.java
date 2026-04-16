@@ -147,7 +147,7 @@ public abstract class AbstractCommand {
       if ( loggingMixin.getVerbosity().length == 0 ) {
          System.err.println( "Error: " + throwable.getMessage() );
       } else if ( loggingMixin.getVerbosity().length == 1 ) {
-         logger.warn( "Error: " + throwable.getMessage() );
+         logger.warn( "Error: {}", throwable.getMessage() );
       } else {
          throwable.printStackTrace();
       }

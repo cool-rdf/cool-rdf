@@ -28,8 +28,8 @@ public class TestExecutionLogger implements BeforeTestExecutionCallback, AfterTe
    private static final Logger LOG = LoggerFactory.getLogger( TestExecutionLogger.class );
 
    @Override
-   public void beforeTestExecution( final ExtensionContext context ) throws Exception {
-      LOG.info( "Run test " + context.getDisplayName() );
+   public void beforeTestExecution( final ExtensionContext context ) {
+      LOG.info( "Run test {}", context.getDisplayName() );
    }
 
    @Override
