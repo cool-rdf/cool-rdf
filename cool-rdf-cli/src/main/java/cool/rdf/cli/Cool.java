@@ -99,7 +99,7 @@ public class Cool implements Runnable {
     *
     * @param args the arguments
     */
-   static void main( final String[] args ) {
+   public static void main( final String[] args ) {
       // Check disabling color switch before PicoCLI initialization
       boolean disableColor = false;
       for ( final String arg : args ) {
