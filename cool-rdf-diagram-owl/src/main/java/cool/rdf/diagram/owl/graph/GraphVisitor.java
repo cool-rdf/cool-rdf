@@ -18,24 +18,24 @@ package cool.rdf.diagram.owl.graph;
 
 import java.util.function.Function;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.experimental.FieldDefaults;
-
 /**
  * Visitor for elements of a graph
  *
  * @param <T> the result type of the visit operation
  */
-@AllArgsConstructor
-@FieldDefaults( makeFinal = true,
-   level = AccessLevel.PRIVATE )
 public class GraphVisitor<T> implements GraphElement.Visitor<T> {
-   Node.Visitor<T> nodeTypeVisitor;
+   private final Node.Visitor<T> nodeTypeVisitor;
 
-   Function<Edge.Plain, T> plainEdgeHandler;
+   private final Function<Edge.Plain, T> plainEdgeHandler;
 
-   Function<Edge.Decorated, T> decoratedEdgeHandler;
+   private final Function<Edge.Decorated, T> decoratedEdgeHandler;
+
+   public GraphVisitor( final Node.Visitor<T> nodeTypeVisitor, final Function<Edge.Plain, T> plainEdgeHandler,
+         final Function<Edge.Decorated, T> decoratedEdgeHandler ) {
+      this.nodeTypeVisitor = nodeTypeVisitor;
+      this.plainEdgeHandler = plainEdgeHandler;
+      this.decoratedEdgeHandler = decoratedEdgeHandler;
+   }
 
    @Override
    public T visit( final Edge.Plain edge ) {

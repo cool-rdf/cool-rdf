@@ -112,21 +112,8 @@ public class BlankNodeOrderAwareTurtleParser {
       return new ParseResult( model, bnodeMetadata );
    }
 
-   public static class ParseResult {
-      private final Model model;
-      private final BlankNodeMetadata blankNodeMetadata;
-
-      public ParseResult( final Model model, final BlankNodeMetadata blankNodeMetadata ) {
-         this.model = model;
-         this.blankNodeMetadata = blankNodeMetadata;
-      }
-
-      public Model getModel() {
-         return model;
-      }
-
-      public BlankNodeMetadata getBlankNodeMetadata() {
-         return blankNodeMetadata;
-      }
-   }
+   public record ParseResult(
+         Model model,
+         BlankNodeMetadata blankNodeMetadata
+   ) {}
 }

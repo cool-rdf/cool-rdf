@@ -79,8 +79,8 @@ public class GraphvizGeneratorTest {
       final Stream<GraphElement> elements = Stream.empty();
       final GraphvizDocument result = generator.apply( elements );
 
-      assertThat( result.getNodeStatements() ).isEmpty();
-      assertThat( result.getEdgeStatements() ).isEmpty();
+      assertThat( result.nodeStatements() ).isEmpty();
+      assertThat( result.edgeStatements() ).isEmpty();
    }
 
    @Test
@@ -89,8 +89,8 @@ public class GraphvizGeneratorTest {
          final Stream<GraphElement> elements = Stream.of( new Edge.Plain( edgeType, new Class( from1,
                "from1" ), new Class( to1, "to1" ) ) );
          final GraphvizDocument result = generator.apply( elements );
-         assertThat( result.getNodeStatements() ).isEmpty();
-         assertThat( result.getEdgeStatements() ).anyMatch( contains( needle ) );
+         assertThat( result.nodeStatements() ).isEmpty();
+         assertThat( result.edgeStatements() ).anyMatch( contains( needle ) );
       };
 
       checkType.accept( Edge.Type.DEFAULT_ARROW, "arrowhead = normal" );
@@ -102,40 +102,40 @@ public class GraphvizGeneratorTest {
    private void testNodeWithId( final Node node ) {
       final Stream<GraphElement> elements = Stream.of( node );
       final GraphvizDocument result = generator.apply( elements );
-      assertThat( result.getEdgeStatements() ).isEmpty();
+      assertThat( result.edgeStatements() ).isEmpty();
 
-      assertThat( result.getNodeStatements() ).hasSize( 1 );
-      assertThat( result.getNodeStatements() ).anyMatch( contains( from1.id() ) );
+      assertThat( result.nodeStatements() ).hasSize( 1 );
+      assertThat( result.nodeStatements() ).anyMatch( contains( from1.id() ) );
    }
 
    private void testNamedNode( final Node.NamedNode node ) {
       final Stream<GraphElement> elements = Stream.of( node );
       final GraphvizDocument result = generator.apply( elements );
-      assertThat( result.getEdgeStatements() ).isEmpty();
+      assertThat( result.edgeStatements() ).isEmpty();
 
-      assertThat( result.getNodeStatements() ).hasSize( 1 );
-      assertThat( result.getNodeStatements() ).anyMatch( contains( from1.id() ) );
-      assertThat( result.getNodeStatements() ).anyMatch( contains( name1 ) );
+      assertThat( result.nodeStatements() ).hasSize( 1 );
+      assertThat( result.nodeStatements() ).anyMatch( contains( from1.id() ) );
+      assertThat( result.nodeStatements() ).anyMatch( contains( name1 ) );
    }
 
    private void testCardinalityNode( final Node.CardinalityNode node ) {
       final Stream<GraphElement> elements = Stream.of( node );
       final GraphvizDocument result = generator.apply( elements );
-      assertThat( result.getEdgeStatements() ).isEmpty();
+      assertThat( result.edgeStatements() ).isEmpty();
 
-      assertThat( result.getNodeStatements() ).hasSize( 1 );
-      assertThat( result.getNodeStatements() ).anyMatch( contains( from1.id() ) );
-      assertThat( result.getNodeStatements() ).anyMatch( contains( "" + cardinality1 ) );
+      assertThat( result.nodeStatements() ).hasSize( 1 );
+      assertThat( result.nodeStatements() ).anyMatch( contains( from1.id() ) );
+      assertThat( result.nodeStatements() ).anyMatch( contains( "" + cardinality1 ) );
    }
 
    private void testValueNode( final Node node ) {
       final Stream<GraphElement> elements = Stream.of( node );
       final GraphvizDocument result = generator.apply( elements );
-      assertThat( result.getEdgeStatements() ).isEmpty();
+      assertThat( result.edgeStatements() ).isEmpty();
 
-      assertThat( result.getNodeStatements() ).hasSize( 1 );
-      assertThat( result.getNodeStatements() ).anyMatch( contains( from1.id() ) );
-      assertThat( result.getNodeStatements() ).anyMatch( contains( value1 ) );
+      assertThat( result.nodeStatements() ).hasSize( 1 );
+      assertThat( result.nodeStatements() ).anyMatch( contains( from1.id() ) );
+      assertThat( result.nodeStatements() ).anyMatch( contains( value1 ) );
    }
 
    @Test

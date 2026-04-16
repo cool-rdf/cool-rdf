@@ -176,8 +176,8 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
          writeByteOrderMark( outputStream );
       }
       final BlankNodeOrderAwareTurtleParser.ParseResult result = BlankNodeOrderAwareTurtleParser.parseModel( content );
-      final Model model = result.getModel();
-      final BlankNodeMetadata blankNodeMetadata = result.getBlankNodeMetadata();
+      final Model model = result.model();
+      final BlankNodeMetadata blankNodeMetadata = result.blankNodeMetadata();
       final PrefixMapping prefixMapping = buildPrefixMapping( model );
       final RDFNodeComparatorFactory rdfNodeComparatorFactory = new RDFNodeComparatorFactory( prefixMapping,
             blankNodeMetadata );
