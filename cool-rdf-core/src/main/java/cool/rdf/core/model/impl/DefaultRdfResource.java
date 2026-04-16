@@ -44,7 +44,7 @@ public class DefaultRdfResource extends DefaultRdfNode implements RdfResource {
       if ( statements.size() != 1 ) {
          throw new PropertyNotFoundException( property );
       }
-      return statements.get( 0 );
+      return statements.getFirst();
    }
 
    @Override
