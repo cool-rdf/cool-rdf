@@ -26,17 +26,15 @@ import java.util.stream.Stream;
 import com.google.common.collect.ImmutableMap;
 
 import cool.rdf.core.util.StringTemplate;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.experimental.FieldDefaults;
 
 /**
  * Simple model for a Graphviz document, consisting of sets of edges and nodes
  */
-@AllArgsConstructor
-@FieldDefaults( makeFinal = true,
-   level = AccessLevel.PRIVATE )
-public class GraphvizDocument implements Function<Configuration, String> {
+public record GraphvizDocument(
+      List<Statement> nodeStatements,
+      List<Statement> edgeStatements
+) implements Function<Configuration, String> {
+
    /**
     * A document containing no elements
     */
@@ -78,18 +76,6 @@ public class GraphvizDocument implements Function<Configuration, String> {
       }
       """ );
 
-   private List<Statement> nodeStatements;
-
-   private List<Statement> edgeStatements;
-
-   public List<Statement> getNodeStatements() {
-      return nodeStatements;
-   }
-
-   public List<Statement> getEdgeStatements() {
-      return edgeStatements;
-   }
-
    private GraphvizDocument() {
       this( Collections.emptyList(), Collections.emptyList() );
    }
@@ -112,9 +98,9 @@ public class GraphvizDocument implements Function<Configuration, String> {
 
    GraphvizDocument merge( final GraphvizDocument other ) {
       return new GraphvizDocument(
-            Stream.concat( getNodeStatements().stream(), other.getNodeStatements().stream() )
+            Stream.concat( nodeStatements().stream(), other.nodeStatements().stream() )
                   .collect( Collectors.toList() ),
-            Stream.concat( getEdgeStatements().stream(), other.getEdgeStatements().stream() )
+            Stream.concat( edgeStatements().stream(), other.edgeStatements().stream() )
                   .collect( Collectors.toList() ) );
    }
 
@@ -137,14 +123,6 @@ public class GraphvizDocument implements Function<Configuration, String> {
                   .collect( Collectors.joining( "   \n" ) ) )
             .build();
       return GRAPHVIZ_TEMPLATE.apply( templateMap );
-   }
-
-   @Override
-   public String toString() {
-      return "GraphvizDocument{"
-            + "nodeStatements=" + nodeStatements
-            + ", edgeStatements=" + edgeStatements
-            + '}';
    }
 
    public record Statement(
