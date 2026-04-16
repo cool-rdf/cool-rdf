@@ -25,7 +25,6 @@ import org.apache.jena.shared.PrefixMapping;
 import cool.rdf.formatter.blanknode.BlankNodeMetadata;
 
 public class RDFNodeComparatorFactory {
-
    private final PrefixMapping prefixMapping;
    private final BlankNodeMetadata blankNodeOrdering;
    private final RDFNodeComparator rdfNodeComparator = new RDFNodeComparator();
@@ -43,7 +42,7 @@ public class RDFNodeComparatorFactory {
       return rdfNodeComparator;
    }
 
-   private class RDFNodeComparator implements Comparator<RDFNode> {
+   public class RDFNodeComparator implements Comparator<RDFNode> {
       @Override
       public int compare( final RDFNode left, final RDFNode right ) {
          if ( left.isURIResource() ) {

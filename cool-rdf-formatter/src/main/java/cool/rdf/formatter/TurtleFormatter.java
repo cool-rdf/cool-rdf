@@ -141,8 +141,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
    }
 
    /**
-    * Serializes the specified model as TTL according to the {@link TurtleFormatter}'s
-    * {@link FormattingStyle}. <br>
+    * Serializes the specified model as TTL according to the TurtleFormatter's {@link FormattingStyle}.<br>
     * Note: Using this method, ordering of blank nodes may differ between multiple runs using identical
     * data.
     *
@@ -157,8 +156,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
    }
 
    /**
-    * Format the specified TTL content according to the {@link TurtleFormatter}'s
-    * {@link FormattingStyle}.
+    * Format the specified TTL content according to the TurtleFormatter's {@link FormattingStyle}.
     *
     * @param content RDF content in TTL format.
     * @return the formatted content
@@ -177,9 +175,9 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
       final Model model = result.getModel();
       final BlankNodeMetadata blankNodeMetadata = result.getBlankNodeMetadata();
       final PrefixMapping prefixMapping = buildPrefixMapping( model );
-      final RDFNodeComparatorFactory RDFNodeComparatorFactory = new RDFNodeComparatorFactory( prefixMapping,
+      final RDFNodeComparatorFactory rdfNodeComparatorFactory = new RDFNodeComparatorFactory( prefixMapping,
             blankNodeMetadata );
-      doFormat( model, outputStream, prefixMapping, RDFNodeComparatorFactory, blankNodeMetadata );
+      doFormat( model, outputStream, prefixMapping, rdfNodeComparatorFactory, blankNodeMetadata );
    }
 
    private void writeByteOrderMark( final OutputStream outputStream ) {
@@ -191,9 +189,8 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
    }
 
    /**
-    * Serializes the specified model as TTL according to the {@link TurtleFormatter}'s
-    * {@link FormattingStyle} and
-    * writes it to the specified outputStream. <br>
+    * Serializes the specified model as TTL according to the TurtleFormatter's {@link FormattingStyle} and
+    * writes it to the specified outputStream.<br>
     * Note: Using this method, ordering of blank nodes may differ between multiple runs using identical
     * data.
     *
@@ -207,8 +204,8 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
       }
 
       final PrefixMapping prefixMapping = buildPrefixMapping( model );
-      final RDFNodeComparatorFactory RDFNodeComparatorFactory = new RDFNodeComparatorFactory( prefixMapping );
-      doFormat( model, outputStream, prefixMapping, RDFNodeComparatorFactory, BlankNodeMetadata.gotNothing() );
+      final RDFNodeComparatorFactory rdfNodeComparatorFactory = new RDFNodeComparatorFactory( prefixMapping );
+      doFormat( model, outputStream, prefixMapping, rdfNodeComparatorFactory, BlankNodeMetadata.gotNothing() );
    }
 
    private void doFormat( final Model model, final OutputStream outputStream, final PrefixMapping prefixMapping,
@@ -602,7 +599,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
    static class CustomPrefixMap extends PrefixMapBase implements PrefixMap {
       private final PrefixMapping mapping;
 
-      public CustomPrefixMap( final PrefixMapping mapping ) {
+      CustomPrefixMap( final PrefixMapping mapping ) {
          this.mapping = mapping;
       }
 
@@ -944,9 +941,9 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
 
       String lastCharacter;
 
-      public State( final OutputStream outputStream, final Model model, final Comparator<Property> predicateOrder,
-            final PrefixMapping prefixMapping, final RDFNodeComparatorFactory rdfNodeComparatorFactory,
-            final BlankNodeMetadata blankNodeMetadata ) {
+      private State( final OutputStream outputStream, final Model model, final Comparator<Property> predicateOrder,
+         final PrefixMapping prefixMapping, final RDFNodeComparatorFactory rdfNodeComparatorFactory,
+         final BlankNodeMetadata blankNodeMetadata ) {
          this( outputStream, model, Set.of(), Map.of(), predicateOrder, prefixMapping, rdfNodeComparatorFactory,
                blankNodeMetadata, 0, 0, "" );
       }
@@ -976,7 +973,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
       }
 
       public State write( final String content ) {
-         final String end = content.length() > 0 ? content.substring( content.length() - 1 ) : "";
+         final String end = !content.isEmpty() ? content.substring( content.length() - 1 ) : "";
          try {
             outputStream.write( content.getBytes( encoding ) );
          } catch ( final IOException e ) {
