@@ -85,7 +85,6 @@ public class GraphvizGenerator implements Function<Stream<GraphElement>, Graphvi
     *
     * @param configuration the given configuration
     */
-   @SuppressWarnings( "SpellCheckingInspection" )
    GraphvizGenerator( final Configuration configuration ) {
       final Node.Visitor<GraphvizDocument> nodeTypeToGraphviz = new GraphvizNodeVisitor( configuration );
 
@@ -135,7 +134,6 @@ public class GraphvizGenerator implements Function<Stream<GraphElement>, Graphvi
       return id.id().replace( "-", "_" );
    }
 
-   @SuppressWarnings( "SpellCheckingInspection" )
    private Optional<String> edgeTypeToGraphviz( final Edge.Type type ) {
       return switch ( type ) {
          case DEFAULT_ARROW -> Optional.of( "arrowhead = normal" );

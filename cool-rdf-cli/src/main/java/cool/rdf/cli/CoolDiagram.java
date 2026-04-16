@@ -109,17 +109,17 @@ public class CoolDiagram extends AbstractCommand implements Runnable {
       description = "Diagram layout direction, one of ${COMPLETION-CANDIDATES} (Default: ${DEFAULT-VALUE})" )
    private Configuration.LayoutDirection layoutDirection = CONFIG.layoutDirection;
 
-   @SuppressWarnings( { "SpellCheckingInspection", "FieldMayBeFinal", "CanBeFinal" } )
+   @SuppressWarnings( { "FieldMayBeFinal", "CanBeFinal" } )
    @CommandLine.Option( names = { "--dotbinary" },
       description = "Path to dot binary (Default: ${DEFAULT-VALUE})" )
    private String dotBinary = CONFIG.dotBinary;
 
-   @SuppressWarnings( { "SpellCheckingInspection", "FieldMayBeFinal", "CanBeFinal" } )
+   @SuppressWarnings( { "FieldMayBeFinal", "CanBeFinal" } )
    @CommandLine.Option( names = { "--fgcolor" },
       description = "Foreground color (Default: ${DEFAULT-VALUE})" )
    private String fgColor = CONFIG.fgColor;
 
-   @SuppressWarnings( { "SpellCheckingInspection", "FieldMayBeFinal", "CanBeFinal" } )
+   @SuppressWarnings( { "FieldMayBeFinal", "CanBeFinal" } )
    @CommandLine.Option( names = { "--bgcolor" },
       description = "Background color (Default: ${DEFAULT-VALUE})" )
    private String bgColor = CONFIG.bgColor;
