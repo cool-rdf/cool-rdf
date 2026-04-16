@@ -44,25 +44,25 @@ public class WriteStaticCliInfoClass {
        * limitations under the License.
        */
 
-       package ${package};
+      package ${package};
 
-       /**
-        * Provides static information for the command line interface.
-        * Generated class, do not edit.
-        * Generated on ${buildDate}.
-        */
-       public class ${className} {
-          /**
-           * The name of the CLI command
-           */
-          public static final String COMMAND_NAME = "${commandName}";
+      /**
+       * Provides static information for the command line interface.
+       * Generated class, do not edit.
+       * Generated on ${buildDate}.
+       */
+      public class ${className} {
+         /**
+          * The name of the CLI command
+          */
+         public static final String COMMAND_NAME = "${commandName}";
 
-          /**
-           * The project URL
-           */
-          public static final String PROJECT_URL = "${projectUrl}";
-       }
-       """ );
+         /**
+          * The project URL
+          */
+         public static final String PROJECT_URL = "${projectUrl}";
+      }
+      """ );
 
    /**
     * args[0]: the name of the CLI command
