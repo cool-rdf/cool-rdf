@@ -55,25 +55,17 @@ import cool.rdf.diagram.owl.graph.node.Self;
 import cool.rdf.diagram.owl.graph.node.Union;
 import cool.rdf.diagram.owl.graph.node.UniversalRestriction;
 import cool.rdf.diagram.owl.graph.node.ValueRestriction;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.FieldDefaults;
 
 /**
  * Sealed class that contains the different types of nodes of the ontology graph.
  */
-@ToString
-@EqualsAndHashCode
-@FieldDefaults( makeFinal = true,
-   level = AccessLevel.PRIVATE )
-public abstract class Node implements GraphElement {
+public interface Node extends GraphElement {
    /**
     * Visitor for the nodes
     *
     * @param <T> the resulting type of the visit operation
     */
-   public interface Visitor<T> {
+   interface Visitor<T> {
       /**
        * Visit a class object
        *
@@ -360,7 +352,7 @@ public abstract class Node implements GraphElement {
     * the ontology
     * element that is represented by the node having this ID.
     */
-   public record Id(
+   record Id(
          String id,
          Optional<IRI> iri
    ) {
@@ -388,35 +380,35 @@ public abstract class Node implements GraphElement {
    /**
     * A node with a name
     */
-   public abstract static class NamedNode extends Node {
+   interface NamedNode extends Node {
       /**
        * The name of this node
        *
        * @return the name
        */
-      public abstract String getName();
+      String name();
    }
 
    /**
     * A node representing a cardinality
     */
-   public abstract static class CardinalityNode extends Node {
+   interface CardinalityNode extends Node {
       /**
        * The cardinality
        *
        * @return the cardinality
        */
-      public abstract int getCardinality();
+      int cardinality();
    }
 
    /**
     * An invisible node (without label or border)
     */
-   public abstract static class InvisibleNode extends Node {
+   interface InvisibleNode extends Node {
    }
 
    @Override
-   public <T> T accept( final GraphElement.Visitor<T> visitor ) {
+   default <T> T accept( final GraphElement.Visitor<T> visitor ) {
       return visitor.visit( this );
    }
 
@@ -425,7 +417,7 @@ public abstract class Node implements GraphElement {
     *
     * @return the ID
     */
-   public abstract Id getId();
+   Id id();
 
    /**
     * Accepts visitors following the visitor pattern
@@ -434,7 +426,7 @@ public abstract class Node implements GraphElement {
     * @param <T> the visitor's return type
     * @return the value returned by the visitor
     */
-   public abstract <T> T accept( final Visitor<T> visitor );
+   <T> T accept( final Visitor<T> visitor );
 
    /**
     * Constructs a copy of this node with a changed ID
@@ -442,15 +434,15 @@ public abstract class Node implements GraphElement {
     * @param newId the new id
     * @return the new node
     */
-   public abstract Node withId( Id newId );
+   Node withId( Id newId );
 
    @Override
-   public boolean isNode() {
+   default boolean isNode() {
       return true;
    }
 
    @Override
-   public Node asNode() {
+   default Node asNode() {
       return this;
    }
 }

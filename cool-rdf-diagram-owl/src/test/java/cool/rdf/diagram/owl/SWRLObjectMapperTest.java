@@ -91,9 +91,9 @@ public class SWRLObjectMapperTest extends MapperTestBase {
 
       final List<Edge> edges = edges( result );
       assertThat( edges ).hasSize( 3 );
-      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.getId().id(), "hasParent" ) );
-      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.getId().id(), "hasBrother" ) );
-      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.getId().id(), "hasUncle" ) );
+      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.id().id(), "hasParent" ) );
+      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.id().id(), "hasBrother" ) );
+      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.id().id(), "hasUncle" ) );
    }
 
    @Test
@@ -137,8 +137,8 @@ public class SWRLObjectMapperTest extends MapperTestBase {
 
       final List<Edge> edges = edges( result );
       assertThat( edges ).hasSize( 2 );
-      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.getId().id(), "Student" ) );
-      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.getId().id(), "Person" ) );
+      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.id().id(), "Student" ) );
+      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.id().id(), "Person" ) );
    }
 
    @Test
@@ -200,9 +200,9 @@ public class SWRLObjectMapperTest extends MapperTestBase {
 
       final List<Edge> edges = edges( result );
       assertThat( edges ).hasSize( 3 );
-      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.getId().id(), "Adult" ) );
-      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.getId().id(), "Person" ) );
-      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.getId().id(), "age" ) );
+      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.id().id(), "Adult" ) );
+      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.id().id(), "Person" ) );
+      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.id().id(), "age" ) );
    }
 
    @Test
@@ -262,11 +262,11 @@ public class SWRLObjectMapperTest extends MapperTestBase {
       final Node cardinality =
             nodes.stream().filter( node -> node.is( ObjectQualifiedMinimalCardinality.class ) ).findFirst().get();
       assertThat( edges ).hasSize( 5 );
-      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.getId().id(), "Person" ) );
-      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.getId().id(), "Parent" ) );
-      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.getId().id(), cardinality.getId().id() ) );
-      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( cardinality.getId().id(), "hasChild" ) );
-      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( cardinality.getId().id(), "Person" ) );
+      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.id().id(), "Person" ) );
+      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.id().id(), "Parent" ) );
+      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.id().id(), cardinality.id().id() ) );
+      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( cardinality.id().id(), "hasChild" ) );
+      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( cardinality.id().id(), "Person" ) );
    }
 
    @Test
@@ -324,8 +324,8 @@ public class SWRLObjectMapperTest extends MapperTestBase {
 
       final List<Edge> edges = edges( result );
       assertThat( edges ).hasSize( 3 );
-      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.getId().id(), "Person" ) );
-      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.getId().id(), "Adult" ) );
-      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.getId().id(), "age" ) );
+      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.id().id(), "Person" ) );
+      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.id().id(), "Adult" ) );
+      assertThat( edges ).anyMatch( isEdgeWithFromAndTo( ruleNode.id().id(), "age" ) );
    }
 }

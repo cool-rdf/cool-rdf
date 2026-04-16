@@ -47,7 +47,7 @@ public class OWLIndividualMapperTest extends MapperTestBase {
       final Graph graph = mapper.visit( individual.asOWLAnonymousIndividual() );
       assertThat( graph.getNode().getClass() ).isEqualTo( Individual.class );
 
-      assertThat( ( (Individual) graph.getNode() ).getName() ).isEqualTo( "[]" );
+      assertThat( ( (Individual) graph.getNode() ).name() ).isEqualTo( "[]" );
       assertThat( graph.getOtherElements() ).isEmpty();
    }
 

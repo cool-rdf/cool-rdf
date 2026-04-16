@@ -230,7 +230,7 @@ public class OWLDataMapperTest extends MapperTestBase {
 
       final Node node = nodes.getFirst();
       assertThat( node.getClass() ).isEqualTo( Datatype.class );
-      assertThat( node.as( Datatype.class ).getName() ).matches( ".*\\[> 4, <= 10]" );
+      assertThat( node.as( Datatype.class ).name() ).matches( ".*\\[> 4, <= 10]" );
    }
 
    @Test

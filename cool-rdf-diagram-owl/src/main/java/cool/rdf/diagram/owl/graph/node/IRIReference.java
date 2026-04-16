@@ -20,12 +20,6 @@ import org.semanticweb.owlapi.model.IRI;
 
 import cool.rdf.diagram.owl.graph.Node;
 import cool.rdf.diagram.owl.graph.transformer.IriReferenceResolver;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.With;
-import lombok.experimental.FieldDefaults;
 
 /**
  * Represents a reference to some yet unknown other graph that has a {@link Node.Id} with a given
@@ -33,29 +27,24 @@ import lombok.experimental.FieldDefaults;
  * of node should never end up in the final graph, as it is resolved by the
  * {@link IriReferenceResolver} after the Axiom
  * -> Graph Elements mapping is done.
+ *
+ * @param id the id of the node
+ * @param iri the IRI of the referenced node
  */
-@FieldDefaults( makeFinal = true,
-   level = AccessLevel.PRIVATE )
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode( callSuper = true )
-@With
-public class IRIReference extends Node.InvisibleNode {
-   Id id;
-
-   IRI iri;
-
-   @Override
-   public Id getId() {
-      return id;
-   }
-
-   public IRI getIri() {
-      return iri;
-   }
-
+public record IRIReference(
+      Id id, IRI iri
+) implements Node.InvisibleNode {
    @Override
    public <T> T accept( final Visitor<T> visitor ) {
       return visitor.visit( this );
+   }
+
+   @Override
+   public IRIReference withId( final Id id ) {
+      return this.id == id ? this : new IRIReference( id, iri );
+   }
+
+   public IRIReference withIri( final IRI iri ) {
+      return this.iri == iri ? this : new IRIReference( id, iri );
    }
 }

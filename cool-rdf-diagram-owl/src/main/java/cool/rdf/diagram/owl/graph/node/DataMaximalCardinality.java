@@ -17,39 +17,27 @@
 package cool.rdf.diagram.owl.graph.node;
 
 import cool.rdf.diagram.owl.graph.Node;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.With;
-import lombok.experimental.FieldDefaults;
 
 /**
  * Represents an OWL data maximal cardinality node in the graph.
+ *
+ * @param id the id of the node
+ * @param cardinality the cardinality of the node
  */
-@FieldDefaults( makeFinal = true,
-   level = AccessLevel.PRIVATE )
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode( callSuper = true )
-@With
-public class DataMaximalCardinality extends Node.CardinalityNode {
-   Id id;
-
-   int cardinality;
-
-   @Override
-   public Id getId() {
-      return id;
-   }
-
-   @Override
-   public int getCardinality() {
-      return cardinality;
-   }
-
+public record DataMaximalCardinality(
+      Id id, int cardinality
+) implements Node.CardinalityNode {
    @Override
    public <T> T accept( final Visitor<T> visitor ) {
       return visitor.visit( this );
+   }
+
+   @Override
+   public DataMaximalCardinality withId( final Id id ) {
+      return this.id == id ? this : new DataMaximalCardinality( id, cardinality );
+   }
+
+   public DataMaximalCardinality withCardinality( final int cardinality ) {
+      return this.cardinality == cardinality ? this : new DataMaximalCardinality( id, cardinality );
    }
 }

@@ -17,39 +17,27 @@
 package cool.rdf.diagram.owl.graph.node;
 
 import cool.rdf.diagram.owl.graph.Node;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.With;
-import lombok.experimental.FieldDefaults;
 
 /**
  * Represents an OWL Datatype node in the graph.
+ *
+ * @param id the id of the node
+ * @param name the name of the node
  */
-@FieldDefaults( makeFinal = true,
-   level = AccessLevel.PRIVATE )
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode( callSuper = true )
-@With
-public class Datatype extends Node.NamedNode {
-   Id id;
-
-   String name;
-
-   @Override
-   public Id getId() {
-      return id;
-   }
-
-   @Override
-   public String getName() {
-      return name;
-   }
-
+public record Datatype(
+      Id id, String name
+) implements Node.NamedNode {
    @Override
    public <T> T accept( final Visitor<T> visitor ) {
       return visitor.visit( this );
+   }
+
+   @Override
+   public Datatype withId( final Id id ) {
+      return this.id == id ? this : new Datatype( id, name );
+   }
+
+   public Datatype withName( final String name ) {
+      return this.name == name ? this : new Datatype( id, name );
    }
 }

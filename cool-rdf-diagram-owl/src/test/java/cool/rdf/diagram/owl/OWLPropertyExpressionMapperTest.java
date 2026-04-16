@@ -68,7 +68,7 @@ public class OWLPropertyExpressionMapperTest extends MapperTestBase {
 
       assertThat( graph.getNode().getClass() ).isEqualTo( ObjectProperty.class );
 
-      assertThat( ( (ObjectProperty) graph.getNode() ).getName() ).isEqualTo( "foo" );
+      assertThat( ( (ObjectProperty) graph.getNode() ).name() ).isEqualTo( "foo" );
       assertThat( graph.getOtherElements() ).isEmpty();
    }
 
@@ -84,7 +84,7 @@ public class OWLPropertyExpressionMapperTest extends MapperTestBase {
 
       assertThat( graph.getNode().getClass() ).isEqualTo( DataProperty.class );
 
-      assertThat( ( (DataProperty) graph.getNode() ).getName() ).isEqualTo( "foo" );
+      assertThat( ( (DataProperty) graph.getNode() ).name() ).isEqualTo( "foo" );
       assertThat( graph.getOtherElements() ).isEmpty();
    }
 
@@ -100,7 +100,7 @@ public class OWLPropertyExpressionMapperTest extends MapperTestBase {
 
       assertThat( graph.getNode().getClass() ).isEqualTo( AnnotationProperty.class );
 
-      assertThat( ( (AnnotationProperty) graph.getNode() ).getName() ).isEqualTo( "foo" );
+      assertThat( ( (AnnotationProperty) graph.getNode() ).name() ).isEqualTo( "foo" );
       assertThat( graph.getOtherElements() ).isEmpty();
    }
 }

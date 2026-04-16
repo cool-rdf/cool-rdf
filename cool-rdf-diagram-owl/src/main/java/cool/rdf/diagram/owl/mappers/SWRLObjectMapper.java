@@ -70,7 +70,7 @@ public class SWRLObjectMapper implements SWRLObjectVisitorEx<Graph> {
     * The concatenation is done in {@link OWLAxiomMapper#visit(SWRLRule)}.
     */
    public static final Predicate<GraphElement> IS_RULE_SYNTAX_PART = graphElement -> graphElement.is( Literal.class )
-         && graphElement.as( Literal.class ).getId().iri().map( iri -> iri.equals( LITERAL_ID ) ).orElse( false );
+         && graphElement.as( Literal.class ).id().iri().map( iri -> iri.equals( LITERAL_ID ) ).orElse( false );
 
    private final MappingConfiguration mappingConfig;
 
@@ -119,7 +119,7 @@ public class SWRLObjectMapper implements SWRLObjectVisitorEx<Graph> {
       return argumentElements.stream()
             .flatMap( element -> element.view( Literal.class ) )
             .filter( IS_RULE_SYNTAX_PART )
-            .map( Literal::getValue )
+            .map( Literal::value )
             .collect( Collectors.joining( ", " ) );
    }
 

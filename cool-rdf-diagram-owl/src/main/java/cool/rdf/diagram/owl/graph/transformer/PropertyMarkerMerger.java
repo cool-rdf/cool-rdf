@@ -54,18 +54,18 @@ public class PropertyMarkerMerger extends GraphTransformer {
       return graph.stream()
             .filter( GraphElement::isNode )
             .map( GraphElement::asNode )
-            .filter( node -> node.getId().equals( id ) )
+            .filter( node -> node.id().equals( id ) )
             .findFirst();
    }
 
    private Optional<PropertyMarker> markerByEdge( final Set<GraphElement> graph, final Edge edge ) {
-      return getNode( graph, edge.getTo().getId() ).stream()
+      return getNode( graph, edge.getTo().id() ).stream()
             .flatMap( node -> node.view( PropertyMarker.class ) )
             .findFirst();
    }
 
    private ChangeSet mergePropertyMarkers( final Set<Tuple2<Edge, PropertyMarker>> propertyMarkers ) {
-      final Set<PropertyMarker.Kind> mergedKindSet = propertyMarkers.stream().flatMap( marker -> marker._2().getKind().stream() ).collect(
+      final Set<PropertyMarker.Kind> mergedKindSet = propertyMarkers.stream().flatMap( marker -> marker._2().kind().stream() ).collect(
             Collectors.toSet() );
       final PropertyMarker newMarker = new PropertyMarker( mappingConfiguration.getIdentifierMapper().getSyntheticId(), mergedKindSet );
 

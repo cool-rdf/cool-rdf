@@ -17,39 +17,27 @@
 package cool.rdf.diagram.owl.graph.node;
 
 import cool.rdf.diagram.owl.graph.Node;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.With;
-import lombok.experimental.FieldDefaults;
 
 /**
  * Represents an OWL Object Property node in the graph.
+ *
+ * @param id the id of the node
+ * @param name the name of the property
  */
-@FieldDefaults( makeFinal = true,
-   level = AccessLevel.PRIVATE )
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode( callSuper = true )
-@With
-public class ObjectProperty extends Node.NamedNode {
-   Id id;
-
-   String name;
-
-   @Override
-   public Id getId() {
-      return id;
-   }
-
-   @Override
-   public String getName() {
-      return name;
-   }
-
+public record ObjectProperty(
+      Id id, String name
+) implements Node.NamedNode {
    @Override
    public <T> T accept( final Visitor<T> visitor ) {
       return visitor.visit( this );
+   }
+
+   @Override
+   public ObjectProperty withId( final Id id ) {
+      return this.id == id ? this : new ObjectProperty( id, name );
+   }
+
+   public ObjectProperty withName( final String name ) {
+      return this.name == name ? this : new ObjectProperty( id, name );
    }
 }

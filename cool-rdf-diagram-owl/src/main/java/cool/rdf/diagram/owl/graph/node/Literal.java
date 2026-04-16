@@ -17,38 +17,27 @@
 package cool.rdf.diagram.owl.graph.node;
 
 import cool.rdf.diagram.owl.graph.Node;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.With;
-import lombok.experimental.FieldDefaults;
 
 /**
  * Represents a literal value node in the graph.
+ *
+ * @param id the id of the node
+ * @param value the represented value
  */
-@FieldDefaults( makeFinal = true,
-   level = AccessLevel.PRIVATE )
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode( callSuper = true )
-@With
-public class Literal extends Node {
-   Id id;
-
-   String value;
-
-   @Override
-   public Id getId() {
-      return id;
-   }
-
-   public String getValue() {
-      return value;
-   }
-
+public record Literal(
+      Id id, String value
+) implements Node {
    @Override
    public <T> T accept( final Visitor<T> visitor ) {
       return visitor.visit( this );
+   }
+
+   @Override
+   public Literal withId( final Id id ) {
+      return this.id == id ? this : new Literal( id, value );
+   }
+
+   public Literal withValue( final String value ) {
+      return this.value == value ? this : new Literal( id, value );
    }
 }

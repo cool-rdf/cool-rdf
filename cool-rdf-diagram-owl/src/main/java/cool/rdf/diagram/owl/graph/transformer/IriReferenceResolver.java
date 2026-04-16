@@ -76,7 +76,7 @@ public class IriReferenceResolver extends GraphTransformer {
 
    private ChangeSet resolveReferences( final Set<GraphElement> graph, final Set<IRIReference> references ) {
       return references.stream().flatMap( reference -> {
-         final Set<Node> referencedNodes = findNodesWithIri( graph, reference.getIri() )
+         final Set<Node> referencedNodes = findNodesWithIri( graph, reference.iri() )
                .collect( Collectors.toSet() );
 
          if ( referencedNodes.isEmpty() ) {
@@ -97,6 +97,6 @@ public class IriReferenceResolver extends GraphTransformer {
    private Literal turnReferenceIntoLiteral( final IRIReference reference ) {
       return new Literal(
             mappingConfiguration.getIdentifierMapper().getSyntheticId(),
-            mappingConfiguration.getNameMapper().getName( reference.getIri() ) );
+            mappingConfiguration.getNameMapper().getName( reference.iri() ) );
    }
 }

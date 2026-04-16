@@ -17,34 +17,22 @@
 package cool.rdf.diagram.owl.graph.node;
 
 import cool.rdf.diagram.owl.graph.Node;
-import lombok.AccessLevel;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.With;
-import lombok.experimental.FieldDefaults;
 
 /**
  * Represents an inequality symbol ("≠") node in the graph.
+ *
+ * @param id the id of the node
  */
-@FieldDefaults( makeFinal = true,
-   level = AccessLevel.PRIVATE )
-@ToString
-@EqualsAndHashCode( callSuper = true )
-@With
-public class Inequality extends Node {
-   Id id;
-
-   @Override
-   public Id getId() {
-      return id;
-   }
-
-   public Inequality( final Id id ) {
-      this.id = id;
-   }
-
+public record Inequality(
+      Id id
+) implements Node {
    @Override
    public <T> T accept( final Visitor<T> visitor ) {
       return visitor.visit( this );
+   }
+
+   @Override
+   public Inequality withId( final Id id ) {
+      return this.id == id ? this : new Inequality( id );
    }
 }

@@ -17,32 +17,22 @@
 package cool.rdf.diagram.owl.graph.node;
 
 import cool.rdf.diagram.owl.graph.Node;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.With;
-import lombok.experimental.FieldDefaults;
 
 /**
  * Represents a value restriction ("value") node in the graph.
+ *
+ * @param id the id of the node
  */
-@FieldDefaults( makeFinal = true,
-   level = AccessLevel.PRIVATE )
-@AllArgsConstructor
-@ToString
-@EqualsAndHashCode( callSuper = true )
-@With
-public class ValueRestriction extends Node {
-   Id id;
-
-   @Override
-   public Id getId() {
-      return id;
-   }
-
+public record ValueRestriction(
+      Id id
+) implements Node {
    @Override
    public <T> T accept( final Visitor<T> visitor ) {
       return visitor.visit( this );
+   }
+
+   @Override
+   public ValueRestriction withId( final Id id ) {
+      return this.id == id ? this : new ValueRestriction( id );
    }
 }

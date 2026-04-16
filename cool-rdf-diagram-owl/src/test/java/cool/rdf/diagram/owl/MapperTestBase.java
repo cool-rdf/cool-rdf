@@ -66,7 +66,7 @@ public class MapperTestBase {
          .findFirst()
          .orElse( false );
 
-   final Predicate<Edge> hasFromBar = edge -> edge.getFrom().getId().id().equals( "bar" );
+   final Predicate<Edge> hasFromBar = edge -> edge.getFrom().id().id().equals( "bar" );
 
    protected MappingConfiguration createTestMappingConfiguration() {
       return DefaultMappingConfiguration.builder()
@@ -153,7 +153,7 @@ public class MapperTestBase {
    }
 
    protected Predicate<Node> isNodeWithId( final String targetId ) {
-      return node -> node.getId().id().equals( targetId );
+      return node -> node.id().id().equals( targetId );
    }
 
    protected final Predicate<Node> isInvisible = node -> node.is( Invisible.class );
@@ -165,14 +165,14 @@ public class MapperTestBase {
    }
 
    protected Predicate<Edge> isEdgeWithFromAndTo( final String fromId, final String toId ) {
-      return edge -> edge.getFrom().getId().id().equals( fromId )
-            && edge.getTo().getId().id().equals( toId );
+      return edge -> edge.getFrom().id().id().equals( fromId )
+            && edge.getTo().id().id().equals( toId );
    }
 
    protected Predicate<Edge> isEdgeWithFromAndToAndLabel( final String fromId, final String toId,
          final Edge.Decorated.Label label ) {
-      return edge -> edge.getFrom().getId().id().equals( fromId )
-            && edge.getTo().getId().id().equals( toId )
+      return edge -> edge.getFrom().id().id().equals( fromId )
+            && edge.getTo().id().id().equals( toId )
             && ( (Edge.Decorated) edge ).getLabel().equals( label );
    }
 
@@ -181,10 +181,10 @@ public class MapperTestBase {
    }
 
    protected Predicate<Edge> isEdgeWithFrom( final String iri ) {
-      return edge -> edge.getFrom().getId().iri().map( theIri -> theIri.equals( iri( iri ) ) ).orElse( false );
+      return edge -> edge.getFrom().id().iri().map( theIri -> theIri.equals( iri( iri ) ) ).orElse( false );
    }
 
    protected Predicate<Edge> isEdgeWithTo( final String iri ) {
-      return edge -> edge.getTo().getId().iri().map( theIri -> theIri.equals( iri( iri ) ) ).orElse( false );
+      return edge -> edge.getTo().id().iri().map( theIri -> theIri.equals( iri( iri ) ) ).orElse( false );
    }
 }

@@ -305,7 +305,7 @@ public class OWLClassExpressionMapperTest extends MapperTestBase {
       assertThat( nodes ).hasSize( 1 );
       assertThat( nodes ).anyMatch( isNodeWithId( "hasDog" ) );
 
-      assertThat( ( (ObjectMinimalCardinality) restrictionNode ).getCardinality() ).isEqualTo( 1 );
+      assertThat( ( (ObjectMinimalCardinality) restrictionNode ).cardinality() ).isEqualTo( 1 );
 
       final List<Edge> edges = edges( remainingElements );
       assertThat( edges ).hasSize( 1 );
@@ -344,7 +344,7 @@ public class OWLClassExpressionMapperTest extends MapperTestBase {
       assertThat( nodes ).anyMatch( isNodeWithId( "hasDog" ) );
       assertThat( nodes ).anyMatch( isNodeWithId( "Dog" ) );
 
-      assertThat( ( (ObjectQualifiedMinimalCardinality) restrictionNode ).getCardinality() )
+      assertThat( ( (ObjectQualifiedMinimalCardinality) restrictionNode ).cardinality() )
             .isEqualTo( 1 );
 
       final List<Edge> edges = edges( remainingElements );
@@ -386,7 +386,7 @@ public class OWLClassExpressionMapperTest extends MapperTestBase {
       assertThat( nodes ).anyMatch( isNodeWithId( "hasDog" ) );
       assertThat( nodes ).anyMatch( isNodeWithId( "Dog" ) );
 
-      assertThat( ( (ObjectQualifiedExactCardinality) restrictionNode ).getCardinality() ).isEqualTo( 1 );
+      assertThat( ( (ObjectQualifiedExactCardinality) restrictionNode ).cardinality() ).isEqualTo( 1 );
 
       final List<Edge> edges = edges( remainingElements );
       assertThat( edges ).hasSize( 2 );
@@ -427,7 +427,7 @@ public class OWLClassExpressionMapperTest extends MapperTestBase {
       assertThat( nodes ).anyMatch( isNodeWithId( "hasDog" ) );
       assertThat( nodes ).anyMatch( isNodeWithId( "Dog" ) );
 
-      assertThat( ( (ObjectQualifiedMaximalCardinality) restrictionNode ).getCardinality() )
+      assertThat( ( (ObjectQualifiedMaximalCardinality) restrictionNode ).cardinality() )
             .isEqualTo( 1 );
 
       final List<Edge> edges = edges( remainingElements );
@@ -639,7 +639,7 @@ public class OWLClassExpressionMapperTest extends MapperTestBase {
       assertThat( nodes ).hasSize( 1 );
       assertThat( nodes ).anyMatch( isNodeWithId( "hasName" ) );
 
-      assertThat( ( (DataMinimalCardinality) restrictionNode ).getCardinality() ).isEqualTo( 1 );
+      assertThat( ( (DataMinimalCardinality) restrictionNode ).cardinality() ).isEqualTo( 1 );
 
       final List<Edge> edges = edges( remainingElements );
       assertThat( edges ).hasSize( 1 );
@@ -676,7 +676,7 @@ public class OWLClassExpressionMapperTest extends MapperTestBase {
       assertThat( nodes ).hasSize( 1 );
       assertThat( nodes ).anyMatch( isNodeWithId( "hasName" ) );
 
-      assertThat( ( (DataExactCardinality) restrictionNode ).getCardinality() ).isEqualTo( 1 );
+      assertThat( ( (DataExactCardinality) restrictionNode ).cardinality() ).isEqualTo( 1 );
 
       final List<Edge> edges = edges( remainingElements );
       assertThat( edges ).hasSize( 1 );
@@ -711,7 +711,7 @@ public class OWLClassExpressionMapperTest extends MapperTestBase {
       assertThat( nodes ).hasSize( 1 );
       assertThat( nodes ).anyMatch( isNodeWithId( "hasName" ) );
 
-      assertThat( ( (DataMaximalCardinality) restrictionNode ).getCardinality() ).isEqualTo( 1 );
+      assertThat( ( (DataMaximalCardinality) restrictionNode ).cardinality() ).isEqualTo( 1 );
 
       final List<Edge> edges = edges( remainingElements );
       assertThat( edges ).hasSize( 1 );

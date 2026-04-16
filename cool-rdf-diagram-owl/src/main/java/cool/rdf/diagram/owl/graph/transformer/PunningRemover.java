@@ -63,8 +63,8 @@ public class PunningRemover extends GraphTransformer {
       final Set<GraphElement> result = graph.stream()
             .filter( GraphElement::isNode )
             .map( GraphElement::asNode )
-            .filter( node -> node.getId().iri().isPresent() )
-            .collect( Collectors.groupingBy( node -> node.getId().iri().get(), Collectors.counting() ) )
+            .filter( node -> node.id().iri().isPresent() )
+            .collect( Collectors.groupingBy( node -> node.id().iri().get(), Collectors.counting() ) )
             .entrySet().stream()
             .filter( entry -> entry.getValue() > 1 )
             .map( Map.Entry::getKey )
@@ -76,7 +76,7 @@ public class PunningRemover extends GraphTransformer {
    }
 
    private Stream<ChangeSet> updateNode( final Set<GraphElement> graph, final Node node ) {
-      final Node newNode = node.withId( buildNewNodeId( node.getId() ) );
+      final Node newNode = node.withId( buildNewNodeId( node.id() ) );
       final ChangeSet updatedToEdges = updateEdgesTo( graph, node, newNode );
       final ChangeSet updatedNode = new ChangeSet( Set.of( newNode ), Set.of( node ) );
       return Stream.of( updatedNode, updatedToEdges );

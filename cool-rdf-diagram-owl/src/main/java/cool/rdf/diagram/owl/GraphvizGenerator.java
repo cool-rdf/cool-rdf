@@ -97,8 +97,8 @@ public class GraphvizGenerator implements Function<Stream<GraphElement>, Graphvi
                      configuration.fgColor ) )
                .orElse( "" );
          return GraphvizDocument.withEdge( new GraphvizDocument.Statement(
-               String.format( "%s -> %s [label=\"%s\", %s]", escapeNodeId( edge.getFrom().getId() ),
-                     escapeNodeId( edge.getTo().getId() ), label, edgeStyle ) ) );
+               String.format( "%s -> %s [label=\"%s\", %s]", escapeNodeId( edge.getFrom().id() ),
+                     escapeNodeId( edge.getTo().id() ), label, edgeStyle ) ) );
       };
 
       final Function<Edge.Plain, GraphvizDocument> plainEdgeToGraphviz = edge -> {
@@ -108,8 +108,8 @@ public class GraphvizGenerator implements Function<Stream<GraphElement>, Graphvi
                      configuration.fgColor ) )
                .orElse( "" );
          return GraphvizDocument.withEdge( new GraphvizDocument.Statement(
-               String.format( "%s -> %s [%s]", escapeNodeId( edge.getFrom().getId() ),
-                     escapeNodeId( edge.getTo().getId() ), edgeStyle ) ) );
+               String.format( "%s -> %s [%s]", escapeNodeId( edge.getFrom().id() ),
+                     escapeNodeId( edge.getTo().id() ), edgeStyle ) ) );
       };
 
       graphVisitor = new GraphVisitor<>( nodeTypeToGraphviz, plainEdgeToGraphviz, decoratedEdgeToGraphviz );
@@ -222,83 +222,83 @@ public class GraphvizGenerator implements Function<Stream<GraphElement>, Graphvi
 
       @Override
       public GraphvizDocument visit( final Class clazz ) {
-         return generateHtmlLabelNode( clazz.getId(), Symbol.CLASS
-               .getNodeValue( clazz.getName(), configuration ) );
+         return generateHtmlLabelNode( clazz.id(), Symbol.CLASS
+               .getNodeValue( clazz.name(), configuration ) );
       }
 
       @Override
       public GraphvizDocument visit( final DataProperty dataProperty ) {
-         return generateHtmlLabelNode( dataProperty.getId(), Symbol.DATA_PROPERTY
-               .getNodeValue( dataProperty.getName(), configuration ) );
+         return generateHtmlLabelNode( dataProperty.id(), Symbol.DATA_PROPERTY
+               .getNodeValue( dataProperty.name(), configuration ) );
       }
 
       @Override
       public GraphvizDocument visit( final ObjectProperty objectProperty ) {
-         return generateHtmlLabelNode( objectProperty.getId(), Symbol.OBJECT_PROPERTY
-               .getNodeValue( objectProperty.getName(), configuration ) );
+         return generateHtmlLabelNode( objectProperty.id(), Symbol.OBJECT_PROPERTY
+               .getNodeValue( objectProperty.name(), configuration ) );
       }
 
       @Override
       public GraphvizDocument visit( final AnnotationProperty annotationProperty ) {
-         return generateHtmlLabelNode( annotationProperty.getId(), Symbol.ANNOTATION_PROPERTY
-               .getNodeValue( annotationProperty.getName(), configuration ) );
+         return generateHtmlLabelNode( annotationProperty.id(), Symbol.ANNOTATION_PROPERTY
+               .getNodeValue( annotationProperty.name(), configuration ) );
       }
 
       @Override
       public GraphvizDocument visit( final Individual individual ) {
-         return generateHtmlLabelNode( individual.getId(), Symbol.INDIVIDUAL
-               .getNodeValue( individual.getName(), configuration ) );
+         return generateHtmlLabelNode( individual.id(), Symbol.INDIVIDUAL
+               .getNodeValue( individual.name(), configuration ) );
       }
 
       @Override
       public GraphvizDocument visit( final Literal literal ) {
-         return generateLiteralNode( literal.getId(), literal.getValue() );
+         return generateLiteralNode( literal.id(), literal.value() );
       }
 
       @Override
       public GraphvizDocument visit( final PropertyChain propertyChain ) {
          final String operator = String
                .format( " <FONT COLOR=\"#0A5EA8\"><B>%s</B></FONT> ", PropertyChain.OPERATOR_SYMBOL );
-         final String[] parts = propertyChain.getValue().split( " " + PropertyChain.OPERATOR_SYMBOL + " " );
+         final String[] parts = propertyChain.value().split( " " + PropertyChain.OPERATOR_SYMBOL + " " );
          final String label = Arrays.stream( parts )
                .filter( part -> !part.isEmpty() )
                .map( part -> String.format( "<FONT COLOR=\"%s\">%s</FONT>", configuration.fgColor, part ) )
                .collect( Collectors.joining( operator ) );
-         return generateHtmlLabelNode( propertyChain.getId(), label );
+         return generateHtmlLabelNode( propertyChain.id(), label );
       }
 
       @Override
       public GraphvizDocument visit( final Datatype datatype ) {
-         return generateHtmlLabelNode( datatype.getId(), Symbol.DATA_TYPE
-               .getNodeValue( escape( datatype.getName() ), configuration ) );
+         return generateHtmlLabelNode( datatype.id(), Symbol.DATA_TYPE
+               .getNodeValue( escape( datatype.name() ), configuration ) );
       }
 
       @Override
       public GraphvizDocument visit( final ExistentialRestriction existentialRestriction ) {
-         return generateHtmlLabelNode( existentialRestriction.getId(),
+         return generateHtmlLabelNode( existentialRestriction.id(),
                "P <FONT COLOR=\"#B200B2\"><B>some</B></FONT> C" );
       }
 
       @Override
       public GraphvizDocument visit( final ValueRestriction valueRestriction ) {
-         return generateHtmlLabelNode( valueRestriction.getId(),
+         return generateHtmlLabelNode( valueRestriction.id(),
                "P <FONT COLOR=\"#B200B2\"><B>value</B></FONT> v" );
       }
 
       @Override
       public GraphvizDocument visit( final UniversalRestriction universalRestriction ) {
-         return generateHtmlLabelNode( universalRestriction.getId(),
+         return generateHtmlLabelNode( universalRestriction.id(),
                "P <FONT COLOR=\"#B200B2\"><B>only</B></FONT>  C" );
       }
 
       @Override
       public GraphvizDocument visit( final Intersection intersection ) {
-         return generateHtmlLabelNode( intersection.getId(), "<FONT COLOR=\"#00B2B2\"><B>and</B></FONT>" );
+         return generateHtmlLabelNode( intersection.id(), "<FONT COLOR=\"#00B2B2\"><B>and</B></FONT>" );
       }
 
       @Override
       public GraphvizDocument visit( final Union union ) {
-         return generateHtmlLabelNode( union.getId(), "<FONT COLOR=\"#00B2B2\"><B>or</B></FONT>" );
+         return generateHtmlLabelNode( union.id(), "<FONT COLOR=\"#00B2B2\"><B>or</B></FONT>" );
       }
 
       @SuppressWarnings( "SpellCheckingInspection" )
@@ -310,7 +310,7 @@ public class GraphvizGenerator implements Function<Stream<GraphElement>, Graphvi
                  <td border="0" fixedsize="true" width="30" height="24" align="center"><FONT POINT-SIZE="26" face="owlcli">  ⚬⚬</FONT></td>
                </tr>
              </table>""";
-         return generateHtmlLabelNode( disjointness.getId(), label );
+         return generateHtmlLabelNode( disjointness.id(), label );
       }
 
       @SuppressWarnings( "SpellCheckingInspection" )
@@ -322,110 +322,110 @@ public class GraphvizGenerator implements Function<Stream<GraphElement>, Graphvi
                  <td border="0" fixedsize="true" width="24" height="24" align="center"><FONT POINT-SIZE="30" face="owlcli">⚭</FONT></td>
                </tr>
              </table>""";
-         return generateHtmlLabelNode( disjointUnion.getId(), " " + label );
+         return generateHtmlLabelNode( disjointUnion.id(), " " + label );
       }
 
       @Override
       public GraphvizDocument visit( final Equality equality ) {
-         return generateHtmlLabelNode( equality.getId(), "<FONT POINT-SIZE=\"16\">=</FONT>" );
+         return generateHtmlLabelNode( equality.id(), "<FONT POINT-SIZE=\"16\">=</FONT>" );
       }
 
       @Override
       public GraphvizDocument visit( final Inverse inverse ) {
-         return generateHtmlLabelNode( inverse.getId(), "<FONT COLOR=\"#B200B2\"><B>inverse</B></FONT>" );
+         return generateHtmlLabelNode( inverse.id(), "<FONT COLOR=\"#B200B2\"><B>inverse</B></FONT>" );
       }
 
       @Override
       public GraphvizDocument visit( final Inequality inequality ) {
-         return generateHtmlLabelNode( inequality.getId(), "<FONT POINT-SIZE=\"16\">≠</FONT>" );
+         return generateHtmlLabelNode( inequality.id(), "<FONT POINT-SIZE=\"16\">≠</FONT>" );
       }
 
       @Override
       public GraphvizDocument visit( final ClosedClass closedClass ) {
-         return generateHtmlLabelNode( closedClass.getId(), "<FONT POINT-SIZE=\"16\">{}</FONT>" );
+         return generateHtmlLabelNode( closedClass.id(), "<FONT POINT-SIZE=\"16\">{}</FONT>" );
       }
 
       @Override
       public GraphvizDocument visit( final Complement complement ) {
-         return generateHtmlLabelNode( complement.getId(), "<FONT COLOR=\"#00B2B2\"><B>not</B></FONT>" );
+         return generateHtmlLabelNode( complement.id(), "<FONT COLOR=\"#00B2B2\"><B>not</B></FONT>" );
       }
 
       @Override
       public GraphvizDocument visit( final Self self ) {
-         return generateHtmlLabelNode( self.getId(), "P <FONT COLOR=\"#B200B2\"><B>self</B></FONT>" );
+         return generateHtmlLabelNode( self.id(), "P <FONT COLOR=\"#B200B2\"><B>self</B></FONT>" );
       }
 
       @Override
       public GraphvizDocument visit( final ObjectMinimalCardinality objectMinimalCardinality ) {
-         return generateHtmlLabelNode( objectMinimalCardinality.getId(),
+         return generateHtmlLabelNode( objectMinimalCardinality.id(),
                String.format( "P <FONT COLOR=\"#B200B2\"><B>min</B></FONT>  %d",
-                     objectMinimalCardinality.getCardinality() ) );
+                     objectMinimalCardinality.cardinality() ) );
       }
 
       @Override
       public GraphvizDocument visit( final ObjectQualifiedMinimalCardinality objectQualifiedMinimalCardinality ) {
-         return generateHtmlLabelNode( objectQualifiedMinimalCardinality.getId(),
+         return generateHtmlLabelNode( objectQualifiedMinimalCardinality.id(),
                String.format( "P <FONT COLOR=\"#B200B2\"><B>min</B></FONT>  %d C",
-                     objectQualifiedMinimalCardinality.getCardinality() ) );
+                     objectQualifiedMinimalCardinality.cardinality() ) );
       }
 
       @Override
       public GraphvizDocument visit( final ObjectMaximalCardinality objectMaximalCardinality ) {
-         return generateHtmlLabelNode( objectMaximalCardinality.getId(),
+         return generateHtmlLabelNode( objectMaximalCardinality.id(),
                String.format( "P <FONT COLOR=\"#B200B2\"><B>max</B></FONT>  %d",
-                     objectMaximalCardinality.getCardinality() ) );
+                     objectMaximalCardinality.cardinality() ) );
       }
 
       @Override
       public GraphvizDocument visit( final ObjectQualifiedMaximalCardinality objectQualifiedMaximalCardinality ) {
-         return generateHtmlLabelNode( objectQualifiedMaximalCardinality.getId(),
+         return generateHtmlLabelNode( objectQualifiedMaximalCardinality.id(),
                String.format( "P <FONT COLOR=\"#B200B2\"><B>max</B></FONT>  %d C",
-                     objectQualifiedMaximalCardinality.getCardinality() ) );
+                     objectQualifiedMaximalCardinality.cardinality() ) );
       }
 
       @Override
       public GraphvizDocument visit( final ObjectExactCardinality objectExactCardinality ) {
-         return generateHtmlLabelNode( objectExactCardinality.getId(),
+         return generateHtmlLabelNode( objectExactCardinality.id(),
                String.format( "P <FONT COLOR=\"#B200B2\"><B>exactly</B></FONT>  %d",
-                     objectExactCardinality.getCardinality() ) );
+                     objectExactCardinality.cardinality() ) );
       }
 
       @Override
       public GraphvizDocument visit( final ObjectQualifiedExactCardinality objectQualifiedExactCardinality ) {
-         return generateHtmlLabelNode( objectQualifiedExactCardinality.getId(),
+         return generateHtmlLabelNode( objectQualifiedExactCardinality.id(),
                String.format( "P <FONT COLOR=\"#B200B2\"><B>exactly</B></FONT>  %d C",
-                     objectQualifiedExactCardinality.getCardinality() ) );
+                     objectQualifiedExactCardinality.cardinality() ) );
       }
 
       @Override
       public GraphvizDocument visit( final DataMinimalCardinality dataMinimalCardinality ) {
-         return generateHtmlLabelNode( dataMinimalCardinality.getId(),
+         return generateHtmlLabelNode( dataMinimalCardinality.id(),
                String.format( "P <FONT COLOR=\"#B200B2\"><B>min</B></FONT>  %d",
-                     dataMinimalCardinality.getCardinality() ) );
+                     dataMinimalCardinality.cardinality() ) );
       }
 
       @Override
       public GraphvizDocument visit( final DataMaximalCardinality dataMaximalCardinality ) {
-         return generateHtmlLabelNode( dataMaximalCardinality.getId(),
+         return generateHtmlLabelNode( dataMaximalCardinality.id(),
                String.format( "P <FONT COLOR=\"#B200B2\"><B>max</B></FONT>  %d",
-                     dataMaximalCardinality.getCardinality() ) );
+                     dataMaximalCardinality.cardinality() ) );
       }
 
       @Override
       public GraphvizDocument visit( final DataExactCardinality dataExactCardinality ) {
-         return generateHtmlLabelNode( dataExactCardinality.getId(),
+         return generateHtmlLabelNode( dataExactCardinality.id(),
                String.format( "P <FONT COLOR=\"#B200B2\"><B>exactly</B></FONT>  %d",
-                     dataExactCardinality.getCardinality() ) );
+                     dataExactCardinality.cardinality() ) );
       }
 
       @Override
       public GraphvizDocument visit( final Invisible invisible ) {
-         return generateInvisibleNode( invisible.getId() );
+         return generateInvisibleNode( invisible.id() );
       }
 
       @Override
       public GraphvizDocument visit( final IRIReference iriReference ) {
-         return generateLiteralNode( iriReference.getId(), iriReference.getIri().toString() );
+         return generateLiteralNode( iriReference.id(), iriReference.iri().toString() );
       }
 
       @Override
@@ -439,28 +439,28 @@ public class GraphvizGenerator implements Function<Stream<GraphElement>, Graphvi
                PropertyMarker.Kind.REFLEXIVE,
                PropertyMarker.Kind.IRREFLEXIVE ) );
 
-         final String value = propertyMarker.getKind().stream()
+         final String value = propertyMarker.kind().stream()
                .sorted( markerOrder )
                .map( kind -> kind.toString().toLowerCase().replace( "_", " " ) )
                .collect( Collectors.joining( "\\n" ) );
-         return generateLiteralNode( propertyMarker.getId(), value );
+         return generateLiteralNode( propertyMarker.id(), value );
       }
 
       @Override
       public GraphvizDocument visit( final Key key ) {
-         return generateHtmlLabelNode( key.getId(), "<FONT COLOR=\"#B200B2\"><B>key</B></FONT>" );
+         return generateHtmlLabelNode( key.id(), "<FONT COLOR=\"#B200B2\"><B>key</B></FONT>" );
       }
 
       @Override
       public GraphvizDocument visit( final Rule rule ) {
          final String operator = String
                .format( " <FONT COLOR=\"#B2B2B2\"><B>%s</B></FONT> ", Rule.IMPLICATION_SYMBOL );
-         final String[] parts = rule.getValue().split( " " + Rule.IMPLICATION_SYMBOL + " " );
+         final String[] parts = rule.value().split( " " + Rule.IMPLICATION_SYMBOL + " " );
          final String label = Arrays.stream( parts )
                .map( GraphvizGenerator::escape )
                .map( part -> String.format( "<FONT COLOR=\"%s\">%s</FONT>", configuration.fgColor, part ) )
                .collect( Collectors.joining( operator ) );
-         return generateHtmlLabelNode( rule.getId(), label );
+         return generateHtmlLabelNode( rule.id(), label );
       }
 
       private GraphvizDocument generateInvisibleNode( final Node.Id nodeId ) {
