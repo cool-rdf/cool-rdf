@@ -25,7 +25,7 @@ import cool.rdf.diagram.owl.graph.Node;
  */
 public record Complement(
       Id id
-) implements Node<Complement> {
+) implements Node {
    @Override
    public <T> T accept( final Visitor<T> visitor ) {
       return visitor.visit( this );

@@ -25,7 +25,7 @@ import cool.rdf.diagram.owl.graph.Node;
  */
 public record ClosedClass(
       Id id
-) implements Node<ClosedClass> {
+) implements Node {
    @Override
    public <T> T accept( final Visitor<T> visitor ) {
       return visitor.visit( this );

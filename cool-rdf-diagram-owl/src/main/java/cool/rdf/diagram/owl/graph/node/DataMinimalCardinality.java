@@ -26,7 +26,7 @@ import cool.rdf.diagram.owl.graph.Node;
  */
 public record DataMinimalCardinality(
       Id id, int cardinality
-) implements Node.CardinalityNode<DataMinimalCardinality> {
+) implements Node.CardinalityNode {
    @Override
    public <T> T accept( final Visitor<T> visitor ) {
       return visitor.visit( this );
@@ -35,5 +35,9 @@ public record DataMinimalCardinality(
    @Override
    public DataMinimalCardinality withId( final Id id ) {
       return this.id == id ? this : new DataMinimalCardinality( id, cardinality );
+   }
+
+   public DataMinimalCardinality withCardinality( final int cardinality ) {
+      return this.cardinality == cardinality ? this : new DataMinimalCardinality( id, cardinality );
    }
 }

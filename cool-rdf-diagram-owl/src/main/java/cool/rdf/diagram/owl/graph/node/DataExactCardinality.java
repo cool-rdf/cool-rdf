@@ -26,7 +26,7 @@ import cool.rdf.diagram.owl.graph.Node;
  */
 public record DataExactCardinality(
       Id id, int cardinality
-) implements Node.CardinalityNode<DataExactCardinality> {
+) implements Node.CardinalityNode {
    @Override
    public <T> T accept( final Visitor<T> visitor ) {
       return visitor.visit( this );
@@ -35,5 +35,9 @@ public record DataExactCardinality(
    @Override
    public DataExactCardinality withId( final Id id ) {
       return this.id == id ? this : new DataExactCardinality( id, cardinality );
+   }
+
+   public DataExactCardinality withCardinality( final int cardinality ) {
+      return this.cardinality == cardinality ? this : new DataExactCardinality( id, cardinality );
    }
 }

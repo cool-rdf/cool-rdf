@@ -48,7 +48,7 @@ public class GraphVisitor<T> implements GraphElement.Visitor<T> {
    }
 
    @Override
-   public T visit( final Node<?> node ) {
+   public T visit( final Node node ) {
       return node.accept( nodeTypeVisitor );
    }
 }

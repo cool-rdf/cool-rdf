@@ -26,7 +26,7 @@ import cool.rdf.diagram.owl.graph.Node;
  */
 public record Rule(
       Id id, String value
-) implements Node<Rule> {
+) implements Node {
    /**
     * The symbol that represents conjunctions in rules when they are rendered to strings
     */
@@ -45,5 +45,9 @@ public record Rule(
    @Override
    public Rule withId( final Id id ) {
       return this.id == id ? this : new Rule( id, value );
+   }
+
+   public Rule withValue( final String value ) {
+      return this.value == value ? this : new Rule( id, value );
    }
 }

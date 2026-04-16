@@ -26,7 +26,7 @@ import cool.rdf.diagram.owl.graph.Node;
  */
 public record ObjectMaximalCardinality(
       Id id, int cardinality
-) implements Node.CardinalityNode<ObjectMaximalCardinality> {
+) implements Node.CardinalityNode {
    @Override
    public <T> T accept( final Visitor<T> visitor ) {
       return visitor.visit( this );
@@ -35,5 +35,9 @@ public record ObjectMaximalCardinality(
    @Override
    public ObjectMaximalCardinality withId( final Id id ) {
       return this.id == id ? this : new ObjectMaximalCardinality( id, cardinality );
+   }
+
+   public ObjectMaximalCardinality withCardinality( final int cardinality ) {
+      return this.cardinality == cardinality ? this : new ObjectMaximalCardinality( id, cardinality );
    }
 }

@@ -26,7 +26,7 @@ import cool.rdf.diagram.owl.graph.Node;
  */
 public record PropertyChain(
       Id id, String value
-) implements Node<PropertyChain> {
+) implements Node {
    /**
     * The symbol that represents property chains when they are rendered to strings
     */
@@ -40,5 +40,9 @@ public record PropertyChain(
    @Override
    public PropertyChain withId( final Id id ) {
       return this.id == id ? this : new PropertyChain( id, value );
+   }
+
+   public PropertyChain withValue( final String value ) {
+      return this.value == value ? this : new PropertyChain( id, value );
    }
 }

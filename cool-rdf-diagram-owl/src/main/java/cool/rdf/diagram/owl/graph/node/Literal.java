@@ -26,7 +26,7 @@ import cool.rdf.diagram.owl.graph.Node;
  */
 public record Literal(
       Id id, String value
-) implements Node<Literal> {
+) implements Node {
    @Override
    public <T> T accept( final Visitor<T> visitor ) {
       return visitor.visit( this );
@@ -35,5 +35,9 @@ public record Literal(
    @Override
    public Literal withId( final Id id ) {
       return this.id == id ? this : new Literal( id, value );
+   }
+
+   public Literal withValue( final String value ) {
+      return this.value == value ? this : new Literal( id, value );
    }
 }
