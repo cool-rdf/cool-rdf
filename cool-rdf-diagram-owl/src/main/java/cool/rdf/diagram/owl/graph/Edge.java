@@ -16,8 +16,11 @@
 
 package cool.rdf.diagram.owl.graph;
 
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.ToString;
+import lombok.experimental.FieldDefaults;
 
 /**
  * Sealed class that represents the types of edges in the graph
@@ -105,7 +108,10 @@ public abstract class Edge implements GraphElement {
    /**
     * A plain edge (i.e., which does not have a label)
     */
-   @Value
+   @FieldDefaults( makeFinal = true,
+      level = AccessLevel.PRIVATE )
+   @AllArgsConstructor
+   @ToString
    @EqualsAndHashCode( callSuper = true )
    public static class Plain extends Edge {
       Type type;
@@ -113,6 +119,21 @@ public abstract class Edge implements GraphElement {
       Node from;
 
       Node to;
+
+      @Override
+      public Type getType() {
+         return type;
+      }
+
+      @Override
+      public Node getFrom() {
+         return from;
+      }
+
+      @Override
+      public Node getTo() {
+         return to;
+      }
 
       @Override
       public Edge setFrom( final Node newFrom ) {
@@ -133,7 +154,10 @@ public abstract class Edge implements GraphElement {
    /**
     * An Edge with an attached label
     */
-   @Value
+   @FieldDefaults( makeFinal = true,
+      level = AccessLevel.PRIVATE )
+   @AllArgsConstructor
+   @ToString
    @EqualsAndHashCode( callSuper = true )
    public static class Decorated extends Edge {
       /**
@@ -203,6 +227,25 @@ public abstract class Edge implements GraphElement {
       Node to;
 
       Label label;
+
+      @Override
+      public Type getType() {
+         return type;
+      }
+
+      @Override
+      public Node getFrom() {
+         return from;
+      }
+
+      @Override
+      public Node getTo() {
+         return to;
+      }
+
+      public Label getLabel() {
+         return label;
+      }
 
       @Override
       public Edge setFrom( final Node newFrom ) {

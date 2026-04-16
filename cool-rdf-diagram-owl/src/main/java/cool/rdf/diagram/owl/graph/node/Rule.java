@@ -17,14 +17,20 @@
 package cool.rdf.diagram.owl.graph.node;
 
 import cool.rdf.diagram.owl.graph.Node;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.ToString;
 import lombok.With;
+import lombok.experimental.FieldDefaults;
 
 /**
  * Represents a rule node in the graph.
  */
-@Value
+@FieldDefaults( makeFinal = true,
+   level = AccessLevel.PRIVATE )
+@AllArgsConstructor
+@ToString
 @EqualsAndHashCode( callSuper = true )
 @With
 public class Rule extends Node {
@@ -41,6 +47,15 @@ public class Rule extends Node {
    Id id;
 
    String value;
+
+   @Override
+   public Id getId() {
+      return id;
+   }
+
+   public String getValue() {
+      return value;
+   }
 
    @Override
    public <T> T accept( final Visitor<T> visitor ) {

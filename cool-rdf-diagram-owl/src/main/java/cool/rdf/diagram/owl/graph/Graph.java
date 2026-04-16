@@ -20,17 +20,22 @@ import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import lombok.Getter;
-
 /**
  * A graph that consists of one node that can be separately retrieved and any number of additional
  * {@link GraphElement}s
  */
-@Getter
 public class Graph {
    final Node node;
 
    final Stream<GraphElement> otherElements;
+
+   public Node getNode() {
+      return node;
+   }
+
+   public Stream<GraphElement> getOtherElements() {
+      return otherElements;
+   }
 
    /**
     * Builds a new graph from a given focus node and a number of other graph elements

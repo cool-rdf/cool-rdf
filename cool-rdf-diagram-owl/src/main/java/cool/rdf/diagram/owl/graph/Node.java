@@ -57,7 +57,6 @@ import cool.rdf.diagram.owl.graph.node.UniversalRestriction;
 import cool.rdf.diagram.owl.graph.node.ValueRestriction;
 import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
 import lombok.ToString;
 import lombok.experimental.FieldDefaults;
 
@@ -68,7 +67,6 @@ import lombok.experimental.FieldDefaults;
 @EqualsAndHashCode
 @FieldDefaults( makeFinal = true,
    level = AccessLevel.PRIVATE )
-@Getter
 public abstract class Node implements GraphElement {
    /**
     * Visitor for the nodes
@@ -362,13 +360,10 @@ public abstract class Node implements GraphElement {
     * the ontology
     * element that is represented by the node having this ID.
     */
-   @Getter
-   @EqualsAndHashCode
-   public static class Id {
-      final String id;
-
-      final Optional<IRI> iri;
-
+   public record Id(
+         String id,
+         Optional<IRI> iri
+   ) {
       /**
        * Constructs an ID from an internal identifier (id) and stores the IRI of the element identified by
        * the Id
@@ -377,8 +372,7 @@ public abstract class Node implements GraphElement {
        * @param iri the IRI of the identified element
        */
       public Id( final String id, final IRI iri ) {
-         this.id = id;
-         this.iri = Optional.of( iri );
+         this( id, Optional.of( iri ) );
       }
 
       /**
@@ -387,13 +381,7 @@ public abstract class Node implements GraphElement {
        * @param id the id
        */
       public Id( final String id ) {
-         this.id = id;
-         iri = Optional.empty();
-      }
-
-      @Override
-      public String toString() {
-         return "Id{" + "id='" + id + '\'' + ", iri=" + iri.map( IRI::toString ).orElse( "" ) + '}';
+         this( id, Optional.empty() );
       }
    }
 

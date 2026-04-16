@@ -28,14 +28,12 @@ import com.google.common.collect.ImmutableMap;
 import cool.rdf.core.util.StringTemplate;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
 import lombok.experimental.FieldDefaults;
 
 /**
  * Simple model for a Graphviz document, consisting of sets of edges and nodes
  */
 @AllArgsConstructor
-@Getter
 @FieldDefaults( makeFinal = true,
    level = AccessLevel.PRIVATE )
 public class GraphvizDocument implements Function<Configuration, String> {
@@ -83,6 +81,14 @@ public class GraphvizDocument implements Function<Configuration, String> {
    private List<Statement> nodeStatements;
 
    private List<Statement> edgeStatements;
+
+   public List<Statement> getNodeStatements() {
+      return nodeStatements;
+   }
+
+   public List<Statement> getEdgeStatements() {
+      return edgeStatements;
+   }
 
    private GraphvizDocument() {
       this( Collections.emptyList(), Collections.emptyList() );
@@ -141,7 +147,7 @@ public class GraphvizDocument implements Function<Configuration, String> {
             + '}';
    }
 
-   record Statement(
+   public record Statement(
          String content
    ) {
       String toFragment() {

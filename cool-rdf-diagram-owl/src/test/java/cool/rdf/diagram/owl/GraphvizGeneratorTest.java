@@ -105,7 +105,7 @@ public class GraphvizGeneratorTest {
       assertThat( result.getEdgeStatements() ).isEmpty();
 
       assertThat( result.getNodeStatements() ).hasSize( 1 );
-      assertThat( result.getNodeStatements() ).anyMatch( contains( from1.getId() ) );
+      assertThat( result.getNodeStatements() ).anyMatch( contains( from1.id() ) );
    }
 
    private void testNamedNode( final Node.NamedNode node ) {
@@ -114,7 +114,7 @@ public class GraphvizGeneratorTest {
       assertThat( result.getEdgeStatements() ).isEmpty();
 
       assertThat( result.getNodeStatements() ).hasSize( 1 );
-      assertThat( result.getNodeStatements() ).anyMatch( contains( from1.getId() ) );
+      assertThat( result.getNodeStatements() ).anyMatch( contains( from1.id() ) );
       assertThat( result.getNodeStatements() ).anyMatch( contains( name1 ) );
    }
 
@@ -124,7 +124,7 @@ public class GraphvizGeneratorTest {
       assertThat( result.getEdgeStatements() ).isEmpty();
 
       assertThat( result.getNodeStatements() ).hasSize( 1 );
-      assertThat( result.getNodeStatements() ).anyMatch( contains( from1.getId() ) );
+      assertThat( result.getNodeStatements() ).anyMatch( contains( from1.id() ) );
       assertThat( result.getNodeStatements() ).anyMatch( contains( "" + cardinality1 ) );
    }
 
@@ -134,7 +134,7 @@ public class GraphvizGeneratorTest {
       assertThat( result.getEdgeStatements() ).isEmpty();
 
       assertThat( result.getNodeStatements() ).hasSize( 1 );
-      assertThat( result.getNodeStatements() ).anyMatch( contains( from1.getId() ) );
+      assertThat( result.getNodeStatements() ).anyMatch( contains( from1.id() ) );
       assertThat( result.getNodeStatements() ).anyMatch( contains( value1 ) );
    }
 

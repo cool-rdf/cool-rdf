@@ -17,18 +17,31 @@
 package cool.rdf.diagram.owl.graph.node;
 
 import cool.rdf.diagram.owl.graph.Node;
+import lombok.AccessLevel;
 import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.ToString;
 import lombok.With;
+import lombok.experimental.FieldDefaults;
 
 /**
  * Represents a disjoint union symbol ("⚭") node in the graph.
  */
-@Value
+@FieldDefaults( makeFinal = true,
+   level = AccessLevel.PRIVATE )
+@ToString
 @EqualsAndHashCode( callSuper = true )
 @With
 public class DisjointUnion extends Node {
    Id id;
+
+   @Override
+   public Id getId() {
+      return id;
+   }
+
+   public DisjointUnion( final Id id ) {
+      this.id = id;
+   }
 
    @Override
    public <T> T accept( final Visitor<T> visitor ) {

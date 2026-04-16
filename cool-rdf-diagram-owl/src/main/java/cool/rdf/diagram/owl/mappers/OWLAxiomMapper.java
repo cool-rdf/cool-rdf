@@ -322,7 +322,7 @@ public class OWLAxiomMapper implements OWLAxiomVisitorEx<Graph> {
       final Set<List<O>> combinations = Sets.cartesianProduct( Arrays.asList( operands.keySet(),
             operands.keySet() ) ).stream().map( expressionsList -> {
                final List<O> newList = new ArrayList<>( expressionsList );
-               newList.sort( Comparator.comparing( o -> operands.get( o ).getNode().getId().getId() ) );
+               newList.sort( Comparator.comparing( o -> operands.get( o ).getNode().getId().id() ) );
                return newList;
             } ).filter( expressionsList -> {
                final Iterator<O> iterator = expressionsList.iterator();
@@ -412,7 +412,7 @@ public class OWLAxiomMapper implements OWLAxiomVisitorEx<Graph> {
       final List<Node> chainLinks = axiom.getPropertyChain().stream()
             .map( expression -> expression.accept( mapper ).getNode() ).toList();
       final String value = chainLinks.stream()
-            .flatMap( node -> node.getId().getIri().stream() )
+            .flatMap( node -> node.getId().iri().stream() )
             .map( iri -> mappingConfig.getNameMapper().getName( iri ) )
             .collect( Collectors.joining( " " + PropertyChain.OPERATOR_SYMBOL + " " ) );
       final Node propertyChain = new PropertyChain( mappingConfig.getIdentifierMapper()

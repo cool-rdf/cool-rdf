@@ -17,20 +17,36 @@
 package cool.rdf.diagram.owl.graph.node;
 
 import cool.rdf.diagram.owl.graph.Node;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.ToString;
 import lombok.With;
+import lombok.experimental.FieldDefaults;
 
 /**
  * Represents an OWL data exact cardinality node in the graph.
  */
-@Value
+@FieldDefaults( makeFinal = true,
+   level = AccessLevel.PRIVATE )
+@AllArgsConstructor
+@ToString
 @EqualsAndHashCode( callSuper = true )
 @With
 public class DataExactCardinality extends Node.CardinalityNode {
    Id id;
 
    int cardinality;
+
+   @Override
+   public Id getId() {
+      return id;
+   }
+
+   @Override
+   public int getCardinality() {
+      return cardinality;
+   }
 
    @Override
    public <T> T accept( final Visitor<T> visitor ) {

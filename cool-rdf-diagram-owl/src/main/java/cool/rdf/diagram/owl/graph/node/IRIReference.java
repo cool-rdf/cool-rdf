@@ -20,9 +20,12 @@ import org.semanticweb.owlapi.model.IRI;
 
 import cool.rdf.diagram.owl.graph.Node;
 import cool.rdf.diagram.owl.graph.transformer.IriReferenceResolver;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.ToString;
 import lombok.With;
+import lombok.experimental.FieldDefaults;
 
 /**
  * Represents a reference to some yet unknown other graph that has a {@link Node.Id} with a given
@@ -31,13 +34,25 @@ import lombok.With;
  * {@link IriReferenceResolver} after the Axiom
  * -> Graph Elements mapping is done.
  */
-@Value
+@FieldDefaults( makeFinal = true,
+   level = AccessLevel.PRIVATE )
+@AllArgsConstructor
+@ToString
 @EqualsAndHashCode( callSuper = true )
 @With
 public class IRIReference extends Node.InvisibleNode {
    Id id;
 
    IRI iri;
+
+   @Override
+   public Id getId() {
+      return id;
+   }
+
+   public IRI getIri() {
+      return iri;
+   }
 
    @Override
    public <T> T accept( final Visitor<T> visitor ) {

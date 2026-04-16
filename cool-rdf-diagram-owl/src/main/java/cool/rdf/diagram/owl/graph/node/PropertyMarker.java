@@ -19,16 +19,22 @@ package cool.rdf.diagram.owl.graph.node;
 import java.util.Set;
 
 import cool.rdf.diagram.owl.graph.Node;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.ToString;
 import lombok.With;
+import lombok.experimental.FieldDefaults;
 
 /**
  * Represents a property marker node in the graph, i.e. a node that contains the list of attributes
  * that a given OWL
  * Object Property or OWL Data Property has.
  */
-@Value
+@FieldDefaults( makeFinal = true,
+   level = AccessLevel.PRIVATE )
+@AllArgsConstructor
+@ToString
 @EqualsAndHashCode( callSuper = true )
 @With
 public class PropertyMarker extends Node {
@@ -75,6 +81,15 @@ public class PropertyMarker extends Node {
    Id id;
 
    Set<Kind> kind;
+
+   @Override
+   public Id getId() {
+      return id;
+   }
+
+   public Set<Kind> getKind() {
+      return kind;
+   }
 
    @Override
    public <T> T accept( final Visitor<T> visitor ) {

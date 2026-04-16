@@ -61,9 +61,12 @@ import org.slf4j.LoggerFactory;
 import cool.rdf.core.model.RdfPrefix;
 import cool.rdf.formatter.blanknode.BlankNodeMetadata;
 import cool.rdf.formatter.blanknode.BlankNodeOrderAwareTurtleParser;
+import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
-import lombok.Value;
+import lombok.EqualsAndHashCode;
+import lombok.ToString;
 import lombok.With;
+import lombok.experimental.FieldDefaults;
 
 public class TurtleFormatter implements Function<Model, String>, BiConsumer<Model, OutputStream> {
 
@@ -141,7 +144,8 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
    }
 
    /**
-    * Serializes the specified model as TTL according to the TurtleFormatter's {@link FormattingStyle}.<br>
+    * Serializes the specified model as TTL according to the TurtleFormatter's
+    * {@link FormattingStyle}.<br>
     * Note: Using this method, ordering of blank nodes may differ between multiple runs using identical
     * data.
     *
@@ -189,7 +193,8 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
    }
 
    /**
-    * Serializes the specified model as TTL according to the TurtleFormatter's {@link FormattingStyle} and
+    * Serializes the specified model as TTL according to the TurtleFormatter's {@link FormattingStyle}
+    * and
     * writes it to the specified outputStream.<br>
     * Note: Using this method, ordering of blank nodes may differ between multiple runs using identical
     * data.
@@ -915,7 +920,10 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
       public void close() {}
    }
 
-   @Value
+   @FieldDefaults( makeFinal = true,
+      level = AccessLevel.PRIVATE )
+   @ToString
+   @EqualsAndHashCode
    @With
    @AllArgsConstructor
    private class State {
@@ -941,9 +949,53 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
 
       String lastCharacter;
 
+      public OutputStream getOutputStream() {
+         return outputStream;
+      }
+
+      public Model getModel() {
+         return model;
+      }
+
+      public Set<Resource> getVisitedResources() {
+         return visitedResources;
+      }
+
+      public Map<Resource, String> getIdentifiedAnonymousResources() {
+         return identifiedAnonymousResources;
+      }
+
+      public Comparator<Property> getPredicateOrder() {
+         return predicateOrder;
+      }
+
+      public PrefixMapping getPrefixMapping() {
+         return prefixMapping;
+      }
+
+      public RDFNodeComparatorFactory getRdfNodeComparatorFactory() {
+         return rdfNodeComparatorFactory;
+      }
+
+      public BlankNodeMetadata getBlankNodeMetadata() {
+         return blankNodeMetadata;
+      }
+
+      public int getIndentationLevel() {
+         return indentationLevel;
+      }
+
+      public int getAlignment() {
+         return alignment;
+      }
+
+      public String getLastCharacter() {
+         return lastCharacter;
+      }
+
       private State( final OutputStream outputStream, final Model model, final Comparator<Property> predicateOrder,
-         final PrefixMapping prefixMapping, final RDFNodeComparatorFactory rdfNodeComparatorFactory,
-         final BlankNodeMetadata blankNodeMetadata ) {
+            final PrefixMapping prefixMapping, final RDFNodeComparatorFactory rdfNodeComparatorFactory,
+            final BlankNodeMetadata blankNodeMetadata ) {
          this( outputStream, model, Set.of(), Map.of(), predicateOrder, prefixMapping, rdfNodeComparatorFactory,
                blankNodeMetadata, 0, 0, "" );
       }

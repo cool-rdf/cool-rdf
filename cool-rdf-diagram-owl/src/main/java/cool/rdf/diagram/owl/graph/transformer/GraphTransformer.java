@@ -43,7 +43,7 @@ public abstract class GraphTransformer implements UnaryOperator<Set<GraphElement
       return graph.stream()
             .filter( GraphElement::isNode )
             .map( GraphElement::asNode )
-            .filter( node -> node.getId().getIri().map( nodeIri -> nodeIri.equals( iri ) ).orElse( false ) );
+            .filter( node -> node.getId().iri().map( nodeIri -> nodeIri.equals( iri ) ).orElse( false ) );
    }
 
    /**

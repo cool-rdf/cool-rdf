@@ -17,20 +17,36 @@
 package cool.rdf.diagram.owl.graph.node;
 
 import cool.rdf.diagram.owl.graph.Node;
+import lombok.AccessLevel;
+import lombok.AllArgsConstructor;
 import lombok.EqualsAndHashCode;
-import lombok.Value;
+import lombok.ToString;
 import lombok.With;
+import lombok.experimental.FieldDefaults;
 
 /**
  * Represents an OWL Datatype node in the graph.
  */
-@Value
+@FieldDefaults( makeFinal = true,
+   level = AccessLevel.PRIVATE )
+@AllArgsConstructor
+@ToString
 @EqualsAndHashCode( callSuper = true )
 @With
 public class Datatype extends Node.NamedNode {
    Id id;
 
    String name;
+
+   @Override
+   public Id getId() {
+      return id;
+   }
+
+   @Override
+   public String getName() {
+      return name;
+   }
 
    @Override
    public <T> T accept( final Visitor<T> visitor ) {
