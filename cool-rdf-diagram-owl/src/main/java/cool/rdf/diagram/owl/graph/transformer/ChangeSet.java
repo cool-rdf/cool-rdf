@@ -25,7 +25,7 @@ import cool.rdf.diagram.owl.graph.GraphElement;
 /**
  * Represents additions and deletions to perform on a set of {@link GraphElement}s
  */
-record ChangeSet(
+public record ChangeSet(
       Set<GraphElement> additions, Set<GraphElement> deletions
 ) {
    public static final ChangeSet EMPTY = new ChangeSet( Set.of(), Set.of() );
