@@ -26,7 +26,7 @@ import cool.rdf.diagram.owl.graph.Node;
  */
 public record DataProperty(
       Id id, String name
-) implements Node.NamedNode {
+) implements Node.NamedNode<DataProperty> {
    @Override
    public <T> T accept( final Visitor<T> visitor ) {
       return visitor.visit( this );
@@ -35,9 +35,5 @@ public record DataProperty(
    @Override
    public DataProperty withId( final Id id ) {
       return this.id == id ? this : new DataProperty( id, name );
-   }
-
-   public DataProperty withName( final String name ) {
-      return this.name == name ? this : new DataProperty( id, name );
    }
 }

@@ -26,7 +26,7 @@ import cool.rdf.diagram.owl.graph.Node;
  */
 public record AnnotationProperty(
       Id id, String name
-) implements Node.NamedNode {
+) implements Node.NamedNode<AnnotationProperty> {
    @Override
    public <T> T accept( final Visitor<T> visitor ) {
       return visitor.visit( this );
@@ -35,9 +35,5 @@ public record AnnotationProperty(
    @Override
    public AnnotationProperty withId( final Id id ) {
       return this.id == id ? this : new AnnotationProperty( id, name );
-   }
-
-   public AnnotationProperty withName( final String name ) {
-      return this.name == name ? this : new AnnotationProperty( id, name );
    }
 }

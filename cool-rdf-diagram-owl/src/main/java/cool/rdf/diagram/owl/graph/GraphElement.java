@@ -50,7 +50,7 @@ public interface GraphElement {
        * @param node the node
        * @return the visitor's return value
        */
-      T visit( Node node );
+      T visit( Node<?> node );
    }
 
    /**

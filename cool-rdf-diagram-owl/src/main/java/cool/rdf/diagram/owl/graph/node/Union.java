@@ -25,7 +25,7 @@ import cool.rdf.diagram.owl.graph.Node;
  */
 public record Union(
       Id id
-) implements Node {
+) implements Node<Union> {
    @Override
    public <T> T accept( final Visitor<T> visitor ) {
       return visitor.visit( this );

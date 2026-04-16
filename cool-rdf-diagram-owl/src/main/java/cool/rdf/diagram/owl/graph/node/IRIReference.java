@@ -33,7 +33,7 @@ import cool.rdf.diagram.owl.graph.transformer.IriReferenceResolver;
  */
 public record IRIReference(
       Id id, IRI iri
-) implements Node.InvisibleNode {
+) implements Node.InvisibleNode<IRIReference> {
    @Override
    public <T> T accept( final Visitor<T> visitor ) {
       return visitor.visit( this );
@@ -42,9 +42,5 @@ public record IRIReference(
    @Override
    public IRIReference withId( final Id id ) {
       return this.id == id ? this : new IRIReference( id, iri );
-   }
-
-   public IRIReference withIri( final IRI iri ) {
-      return this.iri == iri ? this : new IRIReference( id, iri );
    }
 }

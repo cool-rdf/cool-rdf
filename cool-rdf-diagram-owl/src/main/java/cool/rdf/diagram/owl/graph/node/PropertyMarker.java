@@ -29,7 +29,7 @@ import cool.rdf.diagram.owl.graph.Node;
  */
 public record PropertyMarker(
       Id id, Set<Kind> kind
-) implements Node {
+) implements Node<PropertyMarker> {
    /**
     * The various kinds of markers
     */
@@ -78,9 +78,5 @@ public record PropertyMarker(
    @Override
    public PropertyMarker withId( final Id id ) {
       return this.id == id ? this : new PropertyMarker( id, kind );
-   }
-
-   public PropertyMarker withKind( final Set<Kind> kind ) {
-      return this.kind == kind ? this : new PropertyMarker( id, kind );
    }
 }

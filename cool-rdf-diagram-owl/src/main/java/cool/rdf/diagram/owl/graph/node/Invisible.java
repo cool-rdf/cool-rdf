@@ -25,7 +25,7 @@ import cool.rdf.diagram.owl.graph.Node;
  */
 public record Invisible(
       Id id
-) implements Node.InvisibleNode {
+) implements Node.InvisibleNode<Invisible> {
    @Override
    public <T> T accept( final Visitor<T> visitor ) {
       return visitor.visit( this );

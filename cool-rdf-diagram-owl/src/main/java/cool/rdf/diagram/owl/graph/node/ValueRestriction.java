@@ -25,7 +25,7 @@ import cool.rdf.diagram.owl.graph.Node;
  */
 public record ValueRestriction(
       Id id
-) implements Node {
+) implements Node<ValueRestriction> {
    @Override
    public <T> T accept( final Visitor<T> visitor ) {
       return visitor.visit( this );

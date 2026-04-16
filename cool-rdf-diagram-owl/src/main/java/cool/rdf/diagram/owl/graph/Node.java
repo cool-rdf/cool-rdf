@@ -59,7 +59,7 @@ import cool.rdf.diagram.owl.graph.node.ValueRestriction;
 /**
  * Sealed class that contains the different types of nodes of the ontology graph.
  */
-public interface Node extends GraphElement {
+public interface Node<SELF extends Node<SELF>> extends GraphElement {
    /**
     * Visitor for the nodes
     *
@@ -380,7 +380,7 @@ public interface Node extends GraphElement {
    /**
     * A node with a name
     */
-   interface NamedNode extends Node {
+   interface NamedNode<SELF extends NamedNode<SELF>> extends Node<SELF> {
       /**
        * The name of this node
        *
@@ -392,7 +392,7 @@ public interface Node extends GraphElement {
    /**
     * A node representing a cardinality
     */
-   interface CardinalityNode extends Node {
+   interface CardinalityNode<SELF extends CardinalityNode<SELF>> extends Node<SELF> {
       /**
        * The cardinality
        *
@@ -404,7 +404,7 @@ public interface Node extends GraphElement {
    /**
     * An invisible node (without label or border)
     */
-   interface InvisibleNode extends Node {
+   interface InvisibleNode<SELF extends InvisibleNode<SELF>> extends Node<SELF> {
    }
 
    @Override
@@ -434,7 +434,7 @@ public interface Node extends GraphElement {
     * @param newId the new id
     * @return the new node
     */
-   Node withId( Id newId );
+   SELF withId( Id newId );
 
    @Override
    default boolean isNode() {
@@ -442,7 +442,7 @@ public interface Node extends GraphElement {
    }
 
    @Override
-   default Node asNode() {
+   default Node<SELF> asNode() {
       return this;
    }
 }
