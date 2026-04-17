@@ -397,7 +397,7 @@ public class DefaultRdfModel implements RdfModel {
 
    @Override
    public Model write( final Writer writer ) {
-      return model.write( writer );
+      return model.write( writer, "turtle" );
    }
 
    @Override
