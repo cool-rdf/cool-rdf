@@ -86,7 +86,7 @@ public class RdfWriter {
    public Try<Void> write( final InputStream input, final OutputStream output, final Configuration configuration ) {
       LOG.debug( "Load model" );
       final Model model = RdfModel.fromDocument( input, configurationFormatToJenaSyntax( configuration.inputFormat ),
-            configuration.formattingStyle.emptyRdfBase );
+            configuration.formattingStyle.emptyRdfBase() );
       try {
          if ( configuration.outputFormat == Configuration.Format.TURTLE ) {
             return writeTurtle( model, output, configuration.formattingStyle );

@@ -56,6 +56,7 @@ public class TurtleFormatterTest {
             .insertFinalNewline( false )
             .keepUnusedPrefixes( true )
             .build();
+
       final TurtleFormatter formatter = new TurtleFormatter( style );
       final String result = formatter.apply( model );
       final String expected = """
