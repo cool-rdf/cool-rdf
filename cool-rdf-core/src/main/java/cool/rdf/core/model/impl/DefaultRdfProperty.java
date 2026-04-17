@@ -16,16 +16,31 @@
 
 package cool.rdf.core.model.impl;
 
+import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 
 import cool.rdf.core.model.RdfProperty;
-import lombok.experimental.Delegate;
 
 public class DefaultRdfProperty extends DefaultRdfResource implements RdfProperty {
-   private final @Delegate Property property;
+   private final Property property;
 
    public DefaultRdfProperty( final Property property ) {
       super( property );
       this.property = property;
+   }
+
+   @Override
+   public boolean isProperty() {
+      return property.isProperty();
+   }
+
+   @Override
+   public int getOrdinal() {
+      return property.getOrdinal();
+   }
+
+   @Override
+   public Property inModel( final Model m ) {
+      return property.inModel( m );
    }
 }
