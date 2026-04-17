@@ -28,7 +28,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -62,6 +61,7 @@ import org.slf4j.LoggerFactory;
 import cool.rdf.core.model.RdfPrefix;
 import cool.rdf.formatter.blanknode.BlankNodeMetadata;
 import cool.rdf.formatter.blanknode.BlankNodeOrderAwareTurtleParser;
+import io.soabase.recordbuilder.core.RecordBuilder;
 
 /**
  * Allows to serialize RDF models to RDF/Turtle syntax using a given formatting style.
@@ -215,8 +215,15 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
       final Comparator<Property> predicateOrder = Comparator.<Property>comparingInt( property -> style.predicateOrder.contains( property )
             ? style.predicateOrder.indexOf( property )
             : Integer.MAX_VALUE ).thenComparing( property -> prefixMapping.shortForm( property.getURI() ) );
-      final Context context =
-            new Context( encoding, endOfLine, model, predicateOrder, prefixMapping, rdfNodeComparatorFactory, blankNodeMetadata );
+      final Context context = TurtleFormatterContextBuilder.builder()
+            .encoding( encoding )
+            .endOfLine( endOfLine )
+            .model( model )
+            .predicateOrder( predicateOrder )
+            .prefixMapping( prefixMapping )
+            .rdfNodeComparatorFactory( rdfNodeComparatorFactory )
+            .blankNodeMetadata( blankNodeMetadata )
+            .build();
       final State initialState = buildInitialState( context, outputStream );
       final State prefixesWritten = writePrefixes( initialState );
       final List<Statement> statements = determineStatements( model, rdfNodeComparatorFactory );
@@ -914,7 +921,8 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
       public void close() {}
    }
 
-   private record Context(
+   @RecordBuilder
+   public record Context(
          Charset encoding,
          String endOfLine,
          Model model,
@@ -924,7 +932,8 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
          BlankNodeMetadata blankNodeMetadata
    ) {}
 
-   private record State(
+   @RecordBuilder
+   public record State(
          Context context,
          OutputStream outputStream,
          Set<Resource> visitedResources,
@@ -932,7 +941,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
          int indentationLevel,
          int alignment,
          String lastCharacter
-   ) {
+   ) implements TurtleFormatterStateBuilder.With {
       private State( final Context context, final OutputStream outputStream ) {
          this( context, outputStream, Set.of(), Map.of(), 0, 0, "" );
       }
@@ -969,48 +978,6 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
             LOG.error( OUTPUT_ERROR_MESSAGE, e );
          }
          return withLastCharacter( end ).withAlignment( alignment + content.length() );
-      }
-
-      public State withOutputStream( final OutputStream outputStream ) {
-         return this.outputStream == outputStream
-               ? this
-               : new State( context, outputStream, visitedResources, identifiedAnonymousResources, indentationLevel,
-                     alignment, lastCharacter );
-      }
-
-      public State withVisitedResources( final Set<Resource> visitedResources ) {
-         return this.visitedResources == visitedResources
-               ? this
-               : new State( context, outputStream, visitedResources, identifiedAnonymousResources, indentationLevel,
-                     alignment, lastCharacter );
-      }
-
-      public State withIdentifiedAnonymousResources( final Map<Resource, String> identifiedAnonymousResources ) {
-         return this.identifiedAnonymousResources == identifiedAnonymousResources
-               ? this
-               : new State( context, outputStream, visitedResources, identifiedAnonymousResources, indentationLevel,
-                     alignment, lastCharacter );
-      }
-
-      public State withIndentationLevel( final int indentationLevel ) {
-         return this.indentationLevel == indentationLevel
-               ? this
-               : new State( context, outputStream, visitedResources, identifiedAnonymousResources, indentationLevel,
-                     alignment, lastCharacter );
-      }
-
-      public State withAlignment( final int alignment ) {
-         return this.alignment == alignment
-               ? this
-               : new State( context, outputStream, visitedResources, identifiedAnonymousResources, indentationLevel,
-                     alignment, lastCharacter );
-      }
-
-      public State withLastCharacter( final String lastCharacter ) {
-         return Objects.equals( this.lastCharacter, lastCharacter )
-               ? this
-               : new State( context, outputStream, visitedResources, identifiedAnonymousResources, indentationLevel,
-                     alignment, lastCharacter );
       }
    }
 }
