@@ -20,10 +20,7 @@ import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.net.HttpURLConnection;
 import java.net.URL;
-import java.net.http.HttpClient;
-import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 
 import org.apache.jena.ontology.OntModel;
@@ -32,6 +29,7 @@ import org.apache.jena.rdf.model.ModelFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import cool.rdf.core.util.HttpDownload;
 import cool.rdf.formatter.FormattingStyle;
 import cool.rdf.formatter.TurtleFormatter;
 import io.vavr.control.Try;
@@ -59,20 +57,10 @@ public class Inferrer {
     * @return {@link io.vavr.control.Try.Success} if writing succeeded
     */
    public Try<Void> infer( final URL inputUrl, final OutputStream output, final Configuration configuration ) {
-      if ( inputUrl.getProtocol().equals( "http" ) || inputUrl.getProtocol().equals( "https" ) ) {
+      if ( inputUrl.getProtocol().equalsIgnoreCase( "http" ) || inputUrl.getProtocol().equalsIgnoreCase( "https" ) ) {
          try {
-            final HttpClient client = HttpClient.newBuilder()
-                  .followRedirects( HttpClient.Redirect.ALWAYS )
-                  .build();
-            final HttpRequest request = HttpRequest.newBuilder()
-                  .uri( inputUrl.toURI() )
-                  .build();
-            final HttpResponse<String> response = client.send( request, HttpResponse.BodyHandlers.ofString() );
-            if ( response.statusCode() == HttpURLConnection.HTTP_OK ) {
-               final ByteArrayInputStream inputStream = new ByteArrayInputStream( response.body().getBytes() );
-               return infer( inputStream, output, configuration );
-            }
-            return Try.failure( new RuntimeException( "Got unexpected HTTP response: " + response.statusCode() ) );
+            final String document = new HttpDownload().retrieve( inputUrl, HttpResponse.BodyHandlers.ofString() );
+            return infer( new ByteArrayInputStream( document.getBytes() ), output, configuration );
          } catch ( final Exception exception ) {
             LOG.debug( "Failure during reading from URL: {}", inputUrl );
             return Try.failure( exception );
