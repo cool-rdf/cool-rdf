@@ -19,6 +19,7 @@ package cool.rdf.cli;
 import static cool.rdf.cli.CoolInfer.COMMAND_NAME;
 
 import java.net.MalformedURLException;
+import java.net.URI;
 import java.net.URL;
 import java.util.Optional;
 
@@ -87,7 +88,7 @@ public class CoolInfer extends AbstractCommand implements Runnable {
       if ( input.toLowerCase().startsWith( "http:" ) || input.toLowerCase().startsWith( "https:" ) ) {
          final Configuration configuration = configurationBuilder.build();
          try {
-            final URL inputUrl = new URL( input );
+            final URL inputUrl = URI.create( input ).toURL();
             openOutput( input, output != null ? Optional.of( output ) : Optional.of( "-" ), "ttl" )
                   .map( outputStream -> inferrer.infer( inputUrl, outputStream, configuration ) )
                   .onFailure( throwable -> exitWithErrorMessage( LOG, loggingMixin, throwable ) );

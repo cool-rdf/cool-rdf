@@ -288,7 +288,7 @@ public class CoolWrite extends AbstractCommand implements Runnable {
       if ( input.toLowerCase().startsWith( "http:" ) || input.toLowerCase().startsWith( "https:" ) ) {
          final Configuration configuration = configurationBuilder.build();
          try {
-            final URL inputUrl = new URL( input );
+            final URL inputUrl = URI.create( input ).toURL();
             openOutput( input, output != null ? Optional.of( output ) : Optional.of( "-" ), "ttl" )
                   .map( outputStream -> writer.write( inputUrl, outputStream, configuration ) )
                   .onFailure( throwable -> exitWithErrorMessage( LOG, loggingMixin, throwable ) );

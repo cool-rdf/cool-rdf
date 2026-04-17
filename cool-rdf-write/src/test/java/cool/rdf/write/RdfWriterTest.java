@@ -24,6 +24,7 @@ import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.net.URL;
 import java.nio.charset.StandardCharsets;
 
@@ -36,6 +37,7 @@ import cool.rdf.core.model.RdfModel;
 import cool.rdf.formatter.TurtleFormatter;
 import io.vavr.control.Try;
 
+@SuppressWarnings( "HttpUrlsUsage" )
 public class RdfWriterTest {
    private final RdfWriter writer = new RdfWriter();
 
@@ -105,7 +107,7 @@ public class RdfWriterTest {
 
    @Test
    public void testReadFromUrl() throws IOException {
-      final URL url = new URL( "https://raw.githubusercontent.com/atextor/turtle-formatting/main/turtle-formatting.ttl" );
+      final URL url = URI.create( "https://raw.githubusercontent.com/atextor/turtle-formatting/main/turtle-formatting.ttl" ).toURL();
       final Configuration configuration = Configuration.builder()
             .inputFormat( Configuration.Format.TURTLE )
             .outputFormat( Configuration.Format.TURTLE ).build();

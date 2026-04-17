@@ -18,9 +18,11 @@ package cool.rdf.cli;
 
 import java.util.stream.Stream;
 
+import org.jspecify.annotations.NullMarked;
 import org.junit.jupiter.api.extension.ExtensionContext;
 import org.junit.jupiter.params.provider.Arguments;
 import org.junit.jupiter.params.provider.ArgumentsProvider;
+import org.junit.jupiter.params.support.ParameterDeclarations;
 
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ScanResult;
@@ -30,7 +32,9 @@ import io.github.classgraph.ScanResult;
  */
 public class ResourceArgumentsProvider implements ArgumentsProvider {
    @Override
-   public Stream<? extends Arguments> provideArguments( final ExtensionContext context ) {
+   @NullMarked
+   public Stream<? extends Arguments> provideArguments( final ParameterDeclarations parameterDeclarations,
+         final ExtensionContext context ) {
       try ( final ScanResult scanResult = new ClassGraph().scan() ) {
          return scanResult.getResourcesWithExtension( ".ttl" ).getPaths().stream()
                .map( filename -> filename.replace( ".ttl", "" ) )
@@ -48,6 +52,7 @@ public class ResourceArgumentsProvider implements ArgumentsProvider {
       }
 
       @Override
+      @NullMarked
       public Object[] get() {
          return new Object[] { filename };
       }

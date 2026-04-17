@@ -74,10 +74,10 @@ public class DiagramGenerator {
 
    Try<Void> executeDot( final ThrowingConsumer<OutputStream, IOException> contentProvider, final OutputStream output,
          final File workingDir, final Configuration configuration ) {
-      final String command = configuration.dotBinary() + " -T" + configuration.format().getExtension();
+      final String[] command = new String[] { configuration.dotBinary(), "-T" + configuration.format().getExtension() };
       final Process process;
       try {
-         LOG.info( "Running dot: {}", command );
+         LOG.info( "Running dot: {}", (Object) command );
          process = Runtime.getRuntime().exec( command, null, workingDir );
 
          final OutputStream processStdIn = process.getOutputStream();
