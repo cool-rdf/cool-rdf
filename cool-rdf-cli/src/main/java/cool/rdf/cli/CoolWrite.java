@@ -36,6 +36,7 @@ import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
 import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.rdf.model.ResourceFactory;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -71,7 +72,7 @@ public class CoolWrite extends AbstractCommand implements Runnable {
 
    private final String fallbackUri = "urn:cool-rdf:empty";
 
-   @SuppressWarnings( "unused" )
+   @SuppressWarnings( { "unused", "NotNullFieldNotInitialized" } )
    @CommandLine.Mixin
    LoggingMixin loggingMixin;
 
@@ -227,7 +228,7 @@ public class CoolWrite extends AbstractCommand implements Runnable {
       description = "Name pattern for blank node IDs (Default: ${DEFAULT-VALUE})" )
    private String anonymousNodeIdPattern = FormattingStyle.DEFAULT.anonymousNodeIdGenerator().apply( ResourceFactory.createResource(), 0 );
 
-   @SuppressWarnings( "unused" )
+   @SuppressWarnings( { "unused", "NotNullFieldNotInitialized" } )
    @CommandLine.Parameters(
       paramLabel = "INPUT",
       description = "File name, URL, or - for stdin",
@@ -241,6 +242,7 @@ public class CoolWrite extends AbstractCommand implements Runnable {
       description = "File name or - for stdout. If left out, output is written to stdout.",
       arity = "0..1",
       index = "1" )
+   @Nullable
    private String output;
 
    protected CoolWrite( final Runtime runtime ) {

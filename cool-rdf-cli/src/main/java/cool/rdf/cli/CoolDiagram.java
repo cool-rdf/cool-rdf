@@ -26,6 +26,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import org.apache.commons.io.IOUtils;
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -59,7 +60,7 @@ public class CoolDiagram extends AbstractCommand implements Runnable {
 
    private static final Configuration CONFIG = GraphvizDocument.DEFAULT_CONFIGURATION;
 
-   @SuppressWarnings( "unused" )
+   @SuppressWarnings( { "unused", "NotNullFieldNotInitialized" } )
    @CommandLine.Mixin
    LoggingMixin loggingMixin;
 
@@ -131,6 +132,7 @@ public class CoolDiagram extends AbstractCommand implements Runnable {
       description = "File name or - for stdin",
       arity = "1",
       index = "0" )
+   @Nullable
    private String input;
 
    @SuppressWarnings( "unused" )
@@ -140,6 +142,7 @@ public class CoolDiagram extends AbstractCommand implements Runnable {
             + "foo.svg or stdout if INPUT is -.",
       arity = "0..1",
       index = "1" )
+   @Nullable
    private String output;
 
    protected CoolDiagram( final Runtime runtime ) {

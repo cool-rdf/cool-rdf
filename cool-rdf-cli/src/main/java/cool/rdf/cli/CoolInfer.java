@@ -22,10 +22,12 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Optional;
 
+import org.jspecify.annotations.Nullable;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cool.rdf.infer.Configuration;
+import cool.rdf.infer.ConfigurationBuilder;
 import cool.rdf.infer.Inferrer;
 import picocli.CommandLine;
 
@@ -51,11 +53,11 @@ public class CoolInfer extends AbstractCommand implements Runnable {
    @SuppressWarnings( "unused" )
    private static final Configuration CONFIG = Inferrer.DEFAULT_CONFIGURATION;
 
-   @SuppressWarnings( "unused" )
+   @SuppressWarnings( { "unused", "NotNullFieldNotInitialized" } )
    @CommandLine.Mixin
    LoggingMixin loggingMixin;
 
-   @SuppressWarnings( "unused" )
+   @SuppressWarnings( { "unused", "NotNullFieldNotInitialized" } )
    @CommandLine.Parameters(
       paramLabel = "INPUT",
       description = "File name, URL, or - for stdin",
@@ -69,6 +71,7 @@ public class CoolInfer extends AbstractCommand implements Runnable {
       description = "File name or - for stdout. If left out, output is written to stdout.",
       arity = "0..1",
       index = "1" )
+   @Nullable
    private String output;
 
    protected CoolInfer( final Runtime runtime ) {
