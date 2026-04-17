@@ -46,6 +46,7 @@ import cool.rdf.core.model.RdfPrefix;
 import cool.rdf.core.model.impl.DefaultRdfPrefix;
 import cool.rdf.formatter.FormattingStyle;
 import cool.rdf.write.Configuration;
+import cool.rdf.write.ConfigurationBuilder;
 import cool.rdf.write.RdfWriter;
 import picocli.CommandLine;
 
@@ -80,13 +81,13 @@ public class CoolWrite extends AbstractCommand implements Runnable {
    @CommandLine.Option(
       names = { "-o", "--output" },
       description = "Output file format, one of ${COMPLETION-CANDIDATES} (Default: ${DEFAULT-VALUE})" )
-   private Configuration.Format outputFormat = CONFIG.outputFormat;
+   private Configuration.Format outputFormat = CONFIG.outputFormat();
 
    @SuppressWarnings( { "FieldMayBeFinal", "CanBeFinal" } )
    @CommandLine.Option(
       names = { "-i", "--input" },
       description = "Input file format, one of ${COMPLETION-CANDIDATES} (Default: ${DEFAULT-VALUE})" )
-   private Configuration.Format inputFormat = CONFIG.inputFormat;
+   private Configuration.Format inputFormat = CONFIG.inputFormat();
 
    @SuppressWarnings( { "FieldMayBeFinal", "CanBeFinal" } )
    @CommandLine.Option(
@@ -278,7 +279,7 @@ public class CoolWrite extends AbstractCommand implements Runnable {
             .emptyRdfBase( RdfModel.DEFAULT_EMPTY_PREFIX )
             .build();
 
-      final Configuration.ConfigurationBuilder configurationBuilder = Configuration.builder()
+      final ConfigurationBuilder configurationBuilder = Configuration.builder()
             .outputFormat( outputFormat )
             .inputFormat( inputFormat )
             .formattingStyle( style );

@@ -85,14 +85,14 @@ public class RdfWriter {
     */
    public Try<Void> write( final InputStream input, final OutputStream output, final Configuration configuration ) {
       LOG.debug( "Load model" );
-      final Model model = RdfModel.fromDocument( input, configurationFormatToJenaSyntax( configuration.inputFormat ),
-            configuration.formattingStyle.emptyRdfBase() );
+      final Model model = RdfModel.fromDocument( input, configurationFormatToJenaSyntax( configuration.inputFormat() ),
+            configuration.formattingStyle().emptyRdfBase() );
       try {
-         if ( configuration.outputFormat == Configuration.Format.TURTLE ) {
-            return writeTurtle( model, output, configuration.formattingStyle );
+         if ( configuration.outputFormat() == Configuration.Format.TURTLE ) {
+            return writeTurtle( model, output, configuration.formattingStyle() );
          }
          LOG.debug( "Writing model using Jena" );
-         model.write( output, configurationFormatToJenaFormat( configuration.outputFormat ) );
+         model.write( output, configurationFormatToJenaFormat( configuration.outputFormat() ) );
       } catch ( final Exception exception ) {
          LOG.debug( "Failure during RDF I/O", exception );
          return Try.failure( exception );

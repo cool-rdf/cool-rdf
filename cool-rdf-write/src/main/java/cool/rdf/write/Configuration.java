@@ -17,40 +17,33 @@
 package cool.rdf.write;
 
 import cool.rdf.formatter.FormattingStyle;
-import lombok.Builder;
+import io.soabase.recordbuilder.core.RecordBuilder;
 
 /**
  * The configuration for writing RDF document
+ *
+ * @param formattingStyle the format used to write the document
+ * @param inputFormat the format used to parse the input
+ * @param outputFormat the formatting style to use
  */
-@Builder
-public class Configuration {
-   /**
-    * The format used to write the document
-    */
-   @SuppressWarnings( "CanBeFinal" )
-   @Builder.Default
-   public Format outputFormat = Format.TURTLE;
+@RecordBuilder
+public record Configuration(
+      @RecordBuilder.Initializer( "DEFAULT_OUTPUT_FORMAT" ) Format outputFormat,
+      @RecordBuilder.Initializer( "DEFAULT_INPUT_FORMAT" ) Format inputFormat,
+      @RecordBuilder.Initializer( "DEFAULT_FORMATTING_STYLE" ) FormattingStyle formattingStyle
+) {
+
+   public static final Format DEFAULT_OUTPUT_FORMAT = Format.TURTLE;
+   public static final Format DEFAULT_INPUT_FORMAT = Format.TURTLE;
+   public static final FormattingStyle DEFAULT_FORMATTING_STYLE = FormattingStyle.DEFAULT;
 
    /**
-    * The format used to parse the input
+    * For backwards compatibility
+    *
+    * @return the builder
     */
-   @SuppressWarnings( "CanBeFinal" )
-   @Builder.Default
-   public Format inputFormat = Format.TURTLE;
-
-   /**
-    * The formatting style to use
-    */
-   @Builder.Default
-   public FormattingStyle formattingStyle = FormattingStyle.DEFAULT;
-
-   @Override
-   public String toString() {
-      return "Configuration{"
-            + "outputFormat=" + outputFormat
-            + ", inputFormat=" + inputFormat
-            + ", formattingStyle=" + formattingStyle
-            + '}';
+   public static ConfigurationBuilder builder() {
+      return ConfigurationBuilder.builder();
    }
 
    /**
