@@ -75,15 +75,10 @@ import net.jqwik.api.Provide;
 
 public class DiagramGeneratorTest {
    final File workingDir = new File( System.getProperty( "user.dir" ) );
-
-   final Configuration configuration = ConfigurationBuilder.builder().build();
-
+   final Configuration configuration = Configuration.builder().build();
    final MappingConfiguration mappingConfiguration = DefaultMappingConfiguration.builder().build();
-
    final DiagramGenerator diagramGenerator = new DiagramGenerator( configuration, mappingConfiguration );
-
    final GraphvizGenerator graphvizGenerator = new GraphvizGenerator( configuration );
-
    final IdentifierMapper identifierMapper = new DefaultIdentifierMapper();
 
    @SuppressWarnings( "HttpUrlsUsage" )

@@ -35,6 +35,15 @@ public record Configuration(
    public static final String DEFAULT_BASE = TurtleFormatter.DEFAULT_EMPTY_BASE;
 
    /**
+    * For backwards compatibility
+    *
+    * @return the builder
+    */
+   public static ConfigurationBuilder builder() {
+      return ConfigurationBuilder.builder();
+   }
+
+   /**
     * The possible input formats
     */
    public enum Format {

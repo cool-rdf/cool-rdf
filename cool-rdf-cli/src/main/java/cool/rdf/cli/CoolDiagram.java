@@ -178,7 +178,7 @@ public class CoolDiagram extends AbstractCommand implements Runnable {
                configuredInput = inputStream;
             }
 
-            final Configuration configuration = ConfigurationBuilder.builder()
+            final Configuration configuration = Configuration.builder()
                   .fontname( fontname )
                   .fontsize( fontsize )
                   .nodeFontname( nodeFontName )

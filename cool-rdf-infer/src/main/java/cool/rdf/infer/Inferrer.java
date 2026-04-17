@@ -42,7 +42,7 @@ public class Inferrer {
    /**
     * The default configuration
     */
-   public static final Configuration DEFAULT_CONFIGURATION = ConfigurationBuilder.builder().build();
+   public static final Configuration DEFAULT_CONFIGURATION = Configuration.builder().build();
 
    private static final Logger LOG = LoggerFactory.getLogger( Inferrer.class );
 

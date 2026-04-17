@@ -43,7 +43,7 @@ public record GraphvizDocument(
    /**
     * The default configuration for rendering the document
     */
-   public static final Configuration DEFAULT_CONFIGURATION = ConfigurationBuilder.builder().build();
+   public static final Configuration DEFAULT_CONFIGURATION = Configuration.builder().build();
 
    @SuppressWarnings( "SpellCheckingInspection" )
    private static final StringTemplate GRAPHVIZ_TEMPLATE = new StringTemplate( """

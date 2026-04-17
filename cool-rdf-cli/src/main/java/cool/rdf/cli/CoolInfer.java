@@ -81,8 +81,7 @@ public class CoolInfer extends AbstractCommand implements Runnable {
 
    @Override
    public void run() {
-      final ConfigurationBuilder configurationBuilder = ConfigurationBuilder.builder();
-
+      final ConfigurationBuilder configurationBuilder = Configuration.builder();
       final Inferrer inferrer = new Inferrer();
 
       if ( input.toLowerCase().startsWith( "http:" ) || input.toLowerCase().startsWith( "https:" ) ) {

@@ -53,6 +53,7 @@ public record Configuration(
       @RecordBuilder.Initializer( "DEFAULT_FORMAT" ) Format format,
       @RecordBuilder.Initializer( "DEFAULT_LAYOUT_DIRECTION" ) LayoutDirection layoutDirection
 ) {
+
    public static final String DEFAULT_DOT_BINARY = "dot";
    public static final String DEFAULT_FONT_NAME = "Verdana";
    public static final int DEFAULT_FONT_SIZE = 12;
@@ -63,6 +64,15 @@ public record Configuration(
    public static final String DEFAULT_FG_COLOR = "black";
    public static final Format DEFAULT_FORMAT = Format.SVG;
    public static final LayoutDirection DEFAULT_LAYOUT_DIRECTION = LayoutDirection.LEFT_TO_RIGHT;
+
+   /**
+    * For backwards compatibility
+    *
+    * @return the builder
+    */
+   public static ConfigurationBuilder builder() {
+      return ConfigurationBuilder.builder();
+   }
 
    /**
     * The possible formats for diagram generation
