@@ -43,7 +43,7 @@ public record GraphvizDocument(
    /**
     * The default configuration for rendering the document
     */
-   public static final Configuration DEFAULT_CONFIGURATION = Configuration.builder().build();
+   public static final Configuration DEFAULT_CONFIGURATION = ConfigurationBuilder.builder().build();
 
    @SuppressWarnings( "SpellCheckingInspection" )
    private static final StringTemplate GRAPHVIZ_TEMPLATE = new StringTemplate( """
@@ -108,16 +108,16 @@ public record GraphvizDocument(
    @Override
    public String apply( final Configuration configuration ) {
       final Map<String, Object> templateMap = new ImmutableMap.Builder<String, Object>()
-            .put( "rankdir", configuration.layoutDirection == Configuration.LayoutDirection.TOP_TO_BOTTOM ? "TB" : "LR" )
-            .put( "fontname", configuration.fontname )
-            .put( "fontsize", configuration.fontsize )
-            .put( "nodeFontname", configuration.nodeFontname )
-            .put( "nodeFontsize", configuration.nodeFontsize )
-            .put( "nodeShape", configuration.nodeShape )
-            .put( "nodeMargin", configuration.nodeMargin )
-            .put( "nodeStyle", configuration.nodeStyle )
-            .put( "bgcolor", configuration.bgColor )
-            .put( "fgcolor", configuration.fgColor )
+            .put( "rankdir", configuration.layoutDirection() == Configuration.LayoutDirection.TOP_TO_BOTTOM ? "TB" : "LR" )
+            .put( "fontname", configuration.fontname() )
+            .put( "fontsize", configuration.fontsize() )
+            .put( "nodeFontname", configuration.nodeFontname() )
+            .put( "nodeFontsize", configuration.nodeFontsize() )
+            .put( "nodeShape", configuration.nodeShape() )
+            .put( "nodeMargin", configuration.nodeMargin() )
+            .put( "nodeStyle", configuration.nodeStyle() )
+            .put( "bgcolor", configuration.bgColor() )
+            .put( "fgcolor", configuration.fgColor() )
             .put( "statements", Stream.concat( nodeStatements.stream(), edgeStatements.stream() )
                   .map( Statement::toFragment )
                   .collect( Collectors.joining( "   \n" ) ) )

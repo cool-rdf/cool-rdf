@@ -58,7 +58,7 @@ import cool.rdf.diagram.owl.graph.node.UniversalRestriction;
 import cool.rdf.diagram.owl.graph.node.ValueRestriction;
 
 public class GraphvizGeneratorTest {
-   final GraphvizGenerator generator = new GraphvizGenerator( Configuration.builder().build() );
+   final GraphvizGenerator generator = new GraphvizGenerator( ConfigurationBuilder.builder().build() );
 
    final Node.Id from1 = new Node.Id( "foo" );
 

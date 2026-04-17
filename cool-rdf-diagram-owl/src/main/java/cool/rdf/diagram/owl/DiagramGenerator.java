@@ -74,7 +74,7 @@ public class DiagramGenerator {
 
    Try<Void> executeDot( final ThrowingConsumer<OutputStream, IOException> contentProvider, final OutputStream output,
          final File workingDir, final Configuration configuration ) {
-      final String command = configuration.dotBinary + " -T" + configuration.format.getExtension();
+      final String command = configuration.dotBinary() + " -T" + configuration.format().getExtension();
       final Process process;
       try {
          LOG.info( "Running dot: {}", command );
@@ -96,7 +96,7 @@ public class DiagramGenerator {
                   + "Captured message was: " + graphvizStderr ) );
          }
 
-         if ( configuration.format == Configuration.Format.PNG ) {
+         if ( configuration.format() == Configuration.Format.PNG ) {
             output.write( graphvizStdout );
             output.flush();
             if ( output != System.out ) {

@@ -16,97 +16,53 @@
 
 package cool.rdf.diagram.owl;
 
-import lombok.Builder;
+import io.soabase.recordbuilder.core.RecordBuilder;
 
 /**
  * The configuration that controls the visual output
+ *
+ * @param dotBinary the name (and possibly path) to the GraphViz dot binary
+ * @param fontname the default font name
+ * @param fontsize the default font size
+ * @param nodeFontname the name of the font for nodes
+ * @param nodeFontsize the size of the font for nodes
+ * @param nodeShape the default node shape, see
+ *        <a href="https://graphviz.org/doc/info/shapes.html">Node Shapes</a> for the possible
+ *        options
+ * @param nodeMargin the margin values to be used for shapes, see
+ *        <a href="https://graphviz.org/docs/attrs/margin/">margin</a> for syntax
+ * @param nodeStyle the style to use for nodes, see
+ *        <a href="https://graphviz.org/docs/attr-types/style/">style</a> for details
+ * @param bgColor the background color for nodes
+ * @param fgColor the foreground color (lines and text)
+ * @param format the output format
+ * @param layoutDirection the diagram layout direction
  */
-@Builder
-public class Configuration {
-   /**
-    * The name (and possibly path) to the GraphViz dot binary
-    */
-   @SuppressWarnings( "CanBeFinal" )
-   @Builder.Default
-   public String dotBinary = "dot";
-
-   /**
-    * The default font name
-    */
-   @SuppressWarnings( "CanBeFinal" )
-   @Builder.Default
-   public String fontname = "Verdana";
-
-   /**
-    * The default font size
-    */
-   @Builder.Default
-   public int fontsize = 12;
-
-   /**
-    * The name of the font for nodes
-    */
-   @SuppressWarnings( "CanBeFinal" )
-   @Builder.Default
-   public String nodeFontname = "Verdana";
-
-   /**
-    * The size of the font for nodes
-    */
-   @SuppressWarnings( "CanBeFinal" )
-   @Builder.Default
-   public int nodeFontsize = 12;
-
-   /**
-    * The default node shape, see <a href="https://graphviz.org/doc/info/shapes.html">Node Shapes</a>
-    * for the possible
-    * options
-    */
-   @Builder.Default
-   public String nodeShape = "box";
-
-   /**
-    * The margin values to be used for shapes, see
-    * <a href="https://graphviz.org/docs/attrs/margin/">margin</a> for
-    * syntax
-    */
-   @SuppressWarnings( "CanBeFinal" )
-   @Builder.Default
-   public String nodeMargin = "0.05,0.0";
-
-   /**
-    * The style to use for nodes, see <a href="https://graphviz.org/docs/attr-types/style/">style</a>
-    * for details
-    */
-   @Builder.Default
-   public String nodeStyle = "rounded";
-
-   /**
-    * The background color for nodes
-    */
-   @SuppressWarnings( "CanBeFinal" )
-   @Builder.Default
-   public String bgColor = "white";
-
-   /**
-    * The foreground color (lines and text)
-    */
-   @SuppressWarnings( "CanBeFinal" )
-   @Builder.Default
-   public String fgColor = "black";
-
-   /**
-    * The output format
-    */
-   @Builder.Default
-   public Format format = Format.SVG;
-
-   /**
-    * The diagram layout direction
-    */
-   @SuppressWarnings( "CanBeFinal" )
-   @Builder.Default
-   public LayoutDirection layoutDirection = LayoutDirection.LEFT_TO_RIGHT;
+@RecordBuilder
+public record Configuration(
+      @RecordBuilder.Initializer( "DEFAULT_DOT_BINARY" ) String dotBinary,
+      @RecordBuilder.Initializer( "DEFAULT_FONT_NAME" ) String fontname,
+      @RecordBuilder.Initializer( "DEFAULT_FONT_SIZE" ) int fontsize,
+      @RecordBuilder.Initializer( "DEFAULT_FONT_NAME" ) String nodeFontname,
+      @RecordBuilder.Initializer( "DEFAULT_FONT_SIZE" ) int nodeFontsize,
+      @RecordBuilder.Initializer( "DEFAULT_NODE_SHAPE" ) String nodeShape,
+      @RecordBuilder.Initializer( "DEFAULT_NODE_MARGIN" ) String nodeMargin,
+      @RecordBuilder.Initializer( "DEFAULT_NODE_STYLE" ) String nodeStyle,
+      @RecordBuilder.Initializer( "DEFAULT_BG_COLOR" ) String bgColor,
+      @RecordBuilder.Initializer( "DEFAULT_FG_COLOR" ) String fgColor,
+      @RecordBuilder.Initializer( "DEFAULT_FORMAT" ) Format format,
+      @RecordBuilder.Initializer( "DEFAULT_LAYOUT_DIRECTION" ) LayoutDirection layoutDirection
+) {
+   public static final String DEFAULT_DOT_BINARY = "dot";
+   public static final String DEFAULT_FONT_NAME = "Verdana";
+   public static final int DEFAULT_FONT_SIZE = 12;
+   public static final String DEFAULT_NODE_SHAPE = "box";
+   public static final String DEFAULT_NODE_MARGIN = "0.05,0.0";
+   public static final String DEFAULT_NODE_STYLE = "rounded";
+   public static final String DEFAULT_BG_COLOR = "white";
+   public static final String DEFAULT_FG_COLOR = "black";
+   public static final Format DEFAULT_FORMAT = Format.SVG;
+   public static final LayoutDirection DEFAULT_LAYOUT_DIRECTION = LayoutDirection.LEFT_TO_RIGHT;
 
    /**
     * The possible formats for diagram generation

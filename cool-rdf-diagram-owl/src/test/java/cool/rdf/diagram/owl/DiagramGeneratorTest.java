@@ -76,7 +76,7 @@ import net.jqwik.api.Provide;
 public class DiagramGeneratorTest {
    final File workingDir = new File( System.getProperty( "user.dir" ) );
 
-   final Configuration configuration = Configuration.builder().build();
+   final Configuration configuration = ConfigurationBuilder.builder().build();
 
    final MappingConfiguration mappingConfiguration = DefaultMappingConfiguration.builder().build();
 

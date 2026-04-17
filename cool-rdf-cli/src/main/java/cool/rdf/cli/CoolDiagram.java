@@ -30,6 +30,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cool.rdf.diagram.owl.Configuration;
+import cool.rdf.diagram.owl.ConfigurationBuilder;
 import cool.rdf.diagram.owl.DiagramGenerator;
 import cool.rdf.diagram.owl.GraphvizDocument;
 import cool.rdf.diagram.owl.mappers.DefaultMappingConfiguration;
@@ -65,64 +66,64 @@ public class CoolDiagram extends AbstractCommand implements Runnable {
    @SuppressWarnings( { "FieldMayBeFinal", "CanBeFinal" } )
    @CommandLine.Option( names = { "--fontname" },
       description = "The font to use (Default: ${DEFAULT-VALUE})" )
-   private String fontname = CONFIG.fontname;
+   private String fontname = CONFIG.fontname();
 
    @SuppressWarnings( { "FieldMayBeFinal", "CanBeFinal" } )
    @CommandLine.Option( names = { "--fontsize" },
       description = "Default font size (Default: ${DEFAULT-VALUE})" )
-   private int fontsize = CONFIG.fontsize;
+   private int fontsize = CONFIG.fontsize();
 
    @SuppressWarnings( { "FieldMayBeFinal", "CanBeFinal" } )
    @CommandLine.Option( names = { "--nodefontname" },
       description = "Font for nodes (Default: ${DEFAULT-VALUE})" )
-   private String nodeFontName = CONFIG.nodeFontname;
+   private String nodeFontName = CONFIG.nodeFontname();
 
    @SuppressWarnings( { "FieldMayBeFinal", "CanBeFinal" } )
    @CommandLine.Option( names = { "--nodefontsize" },
       description = "Font size for nodes (Default: ${DEFAULT-VALUE})" )
-   private int nodeFontsize = CONFIG.nodeFontsize;
+   private int nodeFontsize = CONFIG.nodeFontsize();
 
    @SuppressWarnings( { "FieldMayBeFinal", "CanBeFinal" } )
    @CommandLine.Option( names = { "--nodeshape" },
       description = "Node shape (Default: ${DEFAULT-VALUE})" )
-   private String nodeShape = CONFIG.nodeShape;
+   private String nodeShape = CONFIG.nodeShape();
 
    @SuppressWarnings( { "FieldMayBeFinal", "CanBeFinal" } )
    @CommandLine.Option( names = { "--nodemargin" },
       description = "Node margin (Default: ${DEFAULT-VALUE})" )
-   private String nodeMargin = CONFIG.nodeMargin;
+   private String nodeMargin = CONFIG.nodeMargin();
 
    @SuppressWarnings( { "FieldMayBeFinal", "CanBeFinal" } )
    @CommandLine.Option( names = { "--nodestyle" },
       description = "Node style (Default: ${DEFAULT-VALUE})" )
-   private String nodeStyle = CONFIG.nodeStyle;
+   private String nodeStyle = CONFIG.nodeStyle();
 
    @SuppressWarnings( { "FieldMayBeFinal", "CanBeFinal" } )
    @CommandLine.Option(
       names = { "--format" },
       description = "Output file format, one of ${COMPLETION-CANDIDATES} (Default: ${DEFAULT-VALUE})" )
-   private Configuration.Format format = CONFIG.format;
+   private Configuration.Format format = CONFIG.format();
 
    @SuppressWarnings( { "FieldMayBeFinal", "CanBeFinal" } )
    @CommandLine.Option(
       names = { "--direction" },
       description = "Diagram layout direction, one of ${COMPLETION-CANDIDATES} (Default: ${DEFAULT-VALUE})" )
-   private Configuration.LayoutDirection layoutDirection = CONFIG.layoutDirection;
+   private Configuration.LayoutDirection layoutDirection = CONFIG.layoutDirection();
 
    @SuppressWarnings( { "FieldMayBeFinal", "CanBeFinal" } )
    @CommandLine.Option( names = { "--dotbinary" },
       description = "Path to dot binary (Default: ${DEFAULT-VALUE})" )
-   private String dotBinary = CONFIG.dotBinary;
+   private String dotBinary = CONFIG.dotBinary();
 
    @SuppressWarnings( { "FieldMayBeFinal", "CanBeFinal" } )
    @CommandLine.Option( names = { "--fgcolor" },
       description = "Foreground color (Default: ${DEFAULT-VALUE})" )
-   private String fgColor = CONFIG.fgColor;
+   private String fgColor = CONFIG.fgColor();
 
    @SuppressWarnings( { "FieldMayBeFinal", "CanBeFinal" } )
    @CommandLine.Option( names = { "--bgcolor" },
       description = "Background color (Default: ${DEFAULT-VALUE})" )
-   private String bgColor = CONFIG.bgColor;
+   private String bgColor = CONFIG.bgColor();
 
    @SuppressWarnings( "unused" )
    @CommandLine.Parameters(
@@ -174,7 +175,7 @@ public class CoolDiagram extends AbstractCommand implements Runnable {
                configuredInput = inputStream;
             }
 
-            final Configuration configuration = Configuration.builder()
+            final Configuration configuration = ConfigurationBuilder.builder()
                   .fontname( fontname )
                   .fontsize( fontsize )
                   .nodeFontname( nodeFontName )
