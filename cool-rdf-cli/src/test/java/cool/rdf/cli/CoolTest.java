@@ -186,7 +186,7 @@ public class CoolTest {
    @Test
    void testWriteTurtle() {
       final String turtleDocument = """
-         @prefix : <http://test.de#> .
+         @prefix : <https://rdf.cool/vocab/example#> .
          @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
 
          :Person a rdfs:Class .
@@ -212,26 +212,26 @@ public class CoolTest {
       final String rdfXmlDocument = """
          <rdf:RDF
              xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
-             xmlns="http://test.de#"
+             xmlns="https://rdf.cool/vocab/example#"
              xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#" >
-           <rdf:Description rdf:about="http://test.de#city">
+           <rdf:Description rdf:about="https://rdf.cool/vocab/example#city">
              <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Property"/>
            </rdf:Description>
-           <rdf:Description rdf:about="http://test.de#Max">
+           <rdf:Description rdf:about="https://rdf.cool/vocab/example#Max">
              <address rdf:nodeID="A0"/>
              <name>Max</name>
-             <rdf:type rdf:resource="http://test.de#Person"/>
+             <rdf:type rdf:resource="https://rdf.cool/vocab/example#Person"/>
            </rdf:Description>
            <rdf:Description rdf:nodeID="A0">
              <city>City Z</city>
            </rdf:Description>
-           <rdf:Description rdf:about="http://test.de#Person">
+           <rdf:Description rdf:about="https://rdf.cool/vocab/example#Person">
              <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Class"/>
            </rdf:Description>
-           <rdf:Description rdf:about="http://test.de#name">
+           <rdf:Description rdf:about="https://rdf.cool/vocab/example#name">
              <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Property"/>
            </rdf:Description>
-           <rdf:Description rdf:about="http://test.de#address">
+           <rdf:Description rdf:about="https://rdf.cool/vocab/example#address">
              <rdf:type rdf:resource="http://www.w3.org/2000/01/rdf-schema#Property"/>
            </rdf:Description>
          </rdf:RDF>
@@ -246,16 +246,17 @@ public class CoolTest {
 
    @Test
    void testWriteNTriple() {
-      final String ntripleDocument = """
-         <http://test.de#Person> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> .
-         <http://test.de#name> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Property> .
-         <http://test.de#address> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Property> .
-         _:gen0 <http://test.de#city> "City Z"^^<http://www.w3.org/2001/XMLSchema#string> .
-         <http://test.de#Max> <http://test.de#address> _:gen0 .
-         <http://test.de#Max> <http://test.de#name> "Max"^^<http://www.w3.org/2001/XMLSchema#string> .
-         <http://test.de#Max> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://test.de#Person> .
-         <http://test.de#city> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Property> .
-         """;
+      final String ntripleDocument =
+            """
+               <https://rdf.cool/vocab/example#Person> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Class> .
+               <https://rdf.cool/vocab/example#name> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Property> .
+               <https://rdf.cool/vocab/example#address> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Property> .
+               _:gen0 <https://rdf.cool/vocab/example#city> "City Z"^^<http://www.w3.org/2001/XMLSchema#string> .
+               <https://rdf.cool/vocab/example#Max> <https://rdf.cool/vocab/example#address> _:gen0 .
+               <https://rdf.cool/vocab/example#Max> <https://rdf.cool/vocab/example#name> "Max"^^<http://www.w3.org/2001/XMLSchema#string> .
+               <https://rdf.cool/vocab/example#Max> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <https://rdf.cool/vocab/example#Person> .
+               <https://rdf.cool/vocab/example#city> <http://www.w3.org/1999/02/22-rdf-syntax-ns#type> <http://www.w3.org/2000/01/rdf-schema#Property> .
+               """;
       final List<String> arguments = List.of( "--disable-color", CoolWrite.COMMAND_NAME, "-i", "ntriple", "-o", "ntriple", "-" );
       final CliRunner.StreamContent stdin = new CliRunner.StreamContent( ntripleDocument.getBytes() );
       final CliRunner.Result result = runCli( new CliRunner.ExecArguments( arguments, stdin ) );
@@ -268,7 +269,7 @@ public class CoolTest {
    void testWriteTurtleWithEmptyBase() {
       final String turtleDocument = """
          @prefix rdfs: <http://www.w3.org/2000/01/rdf-schema#> .
-         @prefix : <http://test.de#> .
+         @prefix : <https://rdf.cool/vocab/example#> .
 
          :Person a rdfs:Class ;
              :foo <> .

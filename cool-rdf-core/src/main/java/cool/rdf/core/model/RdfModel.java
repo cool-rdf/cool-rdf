@@ -22,6 +22,7 @@ import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.stream.Stream;
 
+import org.apache.jena.rdf.model.AnonId;
 import org.apache.jena.rdf.model.Model;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.RDFNode;
@@ -30,6 +31,7 @@ import org.apache.jena.riot.Lang;
 import org.apache.jena.riot.RDFParser;
 
 import cool.rdf.core.model.impl.DefaultRdfModel;
+import cool.rdf.core.model.impl.DefaultRdfResource;
 
 public interface RdfModel extends Model {
    String DEFAULT_EMPTY_PREFIX = "urn:cool-rdf:empty";
@@ -386,4 +388,16 @@ public interface RdfModel extends Model {
     * @return a stream of matching resources
     */
    Stream<RdfResource> resourcesWithProperty( Property p, String o, String l );
+
+   default RdfResource createRdfResource() {
+      return new DefaultRdfResource( createResource() );
+   }
+
+   default RdfResource createRdfResource( final AnonId id ) {
+      return new DefaultRdfResource( createResource( id ) );
+   }
+
+   default RdfResource createRdfResource( final String uri ) {
+      return new DefaultRdfResource( createResource( uri ) );
+   }
 }

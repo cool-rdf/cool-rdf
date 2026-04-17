@@ -93,7 +93,6 @@
         <jackson-databind.version>2.21.2</jackson-databind.version>
         <jspecify.version>1.0.0</jspecify.version>
         <logback.version>1.5.32</logback.version>
-        <openllet.version>2.6.5</openllet.version>
         <owlapi.version>5.5.1</owlapi.version>
         <picocli.version>4.7.7</picocli.version>
         <record-builder.version>52</record-builder.version>
@@ -242,6 +241,11 @@
                 <type>pom</type>
             </dependency>
             <dependency>
+                <groupId>org.apache.jena</groupId>
+                <artifactId>jena-ontapi</artifactId>
+                <version>${jena.version}</version>
+            </dependency>
+            <dependency>
                 <groupId>org.jspecify</groupId>
                 <artifactId>jspecify</artifactId>
                 <version>${jspecify.version}</version>
@@ -250,11 +254,6 @@
                 <groupId>ch.qos.logback</groupId>
                 <artifactId>logback-classic</artifactId>
                 <version>${logback.version}</version>
-            </dependency>
-            <dependency>
-                <groupId>com.github.galigator.openllet</groupId>
-                <artifactId>openllet-jena</artifactId>
-                <version>${openllet.version}</version>
             </dependency>
             <dependency>
                 <groupId>net.sourceforge.owlapi</groupId>

@@ -23,9 +23,10 @@ import java.io.OutputStream;
 import java.net.URL;
 import java.net.http.HttpResponse;
 
-import org.apache.jena.ontology.OntModel;
+import org.apache.jena.ontapi.OntModelFactory;
+import org.apache.jena.ontapi.OntSpecification;
+import org.apache.jena.ontapi.model.OntModel;
 import org.apache.jena.rdf.model.Model;
-import org.apache.jena.rdf.model.ModelFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -33,7 +34,6 @@ import cool.rdf.core.util.HttpDownload;
 import cool.rdf.formatter.FormattingStyle;
 import cool.rdf.formatter.TurtleFormatter;
 import io.vavr.control.Try;
-import openllet.jena.PelletReasonerFactory;
 
 /**
  *
@@ -76,8 +76,7 @@ public class Inferrer {
 
    /**
     * Writes an inferred OWL document given by an input stream, to an output stream using a
-    * writing/formatting
-    * configuration
+    * writing/formatting configuration
     *
     * @param input the input stream
     * @param output the output stream
@@ -85,10 +84,12 @@ public class Inferrer {
     * @return {@link io.vavr.control.Try.Success} if writing succeeded
     */
    public Try<Void> infer( final InputStream input, final OutputStream output, final Configuration configuration ) {
-      final OntModel model = ModelFactory.createOntologyModel( PelletReasonerFactory.THE_SPEC );
+      final OntModel base = OntModelFactory.createModel( OntSpecification.OWL2_DL_MEM );
+
       try {
-         model.read( input, configuration.base(), configurationFormatToJenaFormat( configuration.inputFormat() ) );
-         return writeTurtle( model, output );
+         base.read( input, configuration.base(), configurationFormatToJenaFormat( configuration.inputFormat() ) );
+         final OntModel inf = OntModelFactory.createModel( base.getGraph(), OntSpecification.OWL2_DL_MEM_RDFS_INF );
+         return writeTurtle( inf, output );
       } catch ( final Exception exception ) {
          LOG.debug( "Failure during RDF I/O", exception );
          return Try.failure( exception );

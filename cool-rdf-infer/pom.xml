@@ -45,16 +45,16 @@
             <artifactId>jena-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-ontapi</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.slf4j</groupId>
             <artifactId>slf4j-api</artifactId>
         </dependency>
         <dependency>
             <groupId>io.vavr</groupId>
             <artifactId>vavr</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.github.galigator.openllet</groupId>
-            <artifactId>openllet-jena</artifactId>
         </dependency>
 
         <!-- Test dependencies -->

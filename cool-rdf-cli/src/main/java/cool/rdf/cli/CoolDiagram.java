@@ -31,7 +31,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import cool.rdf.diagram.owl.Configuration;
-import cool.rdf.diagram.owl.ConfigurationBuilder;
 import cool.rdf.diagram.owl.DiagramGenerator;
 import cool.rdf.diagram.owl.GraphvizDocument;
 import cool.rdf.diagram.owl.mappers.DefaultMappingConfiguration;
