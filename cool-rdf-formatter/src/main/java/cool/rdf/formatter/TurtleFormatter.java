@@ -28,6 +28,7 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.Set;
 import java.util.function.BiConsumer;
@@ -61,13 +62,10 @@ import org.slf4j.LoggerFactory;
 import cool.rdf.core.model.RdfPrefix;
 import cool.rdf.formatter.blanknode.BlankNodeMetadata;
 import cool.rdf.formatter.blanknode.BlankNodeOrderAwareTurtleParser;
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.With;
-import lombok.experimental.FieldDefaults;
 
+/**
+ * Allows to serialize RDF models to RDF/Turtle syntax using a given formatting style.
+ */
 public class TurtleFormatter implements Function<Model, String>, BiConsumer<Model, OutputStream> {
 
    public static final String OUTPUT_ERROR_MESSAGE = "Could not write to stream";
@@ -86,8 +84,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
     * <a href="https://www.w3.org/TR/turtle/#sec-escapes">Escape Sequences</a>.
     * <p>
     * ' (single quote) is not in the pattern, because we never write single quoted strings and
-    * therefore don't need to
-    * escape single quotes.
+    * therefore don't need to escape single quotes.
     * </p>
     */
    private static final Pattern STRING_ESCAPE_SEQUENCES = Pattern.compile( "(\r\n)|[\t\b\n\r\f\"\\\\]" );
@@ -181,7 +178,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
       final PrefixMapping prefixMapping = buildPrefixMapping( model );
       final RDFNodeComparatorFactory rdfNodeComparatorFactory = new RDFNodeComparatorFactory( prefixMapping,
             blankNodeMetadata );
-      doFormat( model, outputStream, prefixMapping, rdfNodeComparatorFactory, blankNodeMetadata );
+      doFormat( model, prefixMapping, rdfNodeComparatorFactory, blankNodeMetadata, outputStream );
    }
 
    private void writeByteOrderMark( final OutputStream outputStream ) {
@@ -210,16 +207,17 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
 
       final PrefixMapping prefixMapping = buildPrefixMapping( model );
       final RDFNodeComparatorFactory rdfNodeComparatorFactory = new RDFNodeComparatorFactory( prefixMapping );
-      doFormat( model, outputStream, prefixMapping, rdfNodeComparatorFactory, BlankNodeMetadata.gotNothing() );
+      doFormat( model, prefixMapping, rdfNodeComparatorFactory, BlankNodeMetadata.gotNothing(), outputStream );
    }
 
-   private void doFormat( final Model model, final OutputStream outputStream, final PrefixMapping prefixMapping,
-         final RDFNodeComparatorFactory rdfNodeComparatorFactory, final BlankNodeMetadata blankNodeMetadata ) {
+   private void doFormat( final Model model, final PrefixMapping prefixMapping, final RDFNodeComparatorFactory rdfNodeComparatorFactory,
+         final BlankNodeMetadata blankNodeMetadata, final OutputStream outputStream ) {
       final Comparator<Property> predicateOrder = Comparator.<Property>comparingInt( property -> style.predicateOrder.contains( property )
             ? style.predicateOrder.indexOf( property )
             : Integer.MAX_VALUE ).thenComparing( property -> prefixMapping.shortForm( property.getURI() ) );
-      final State initialState = buildInitialState( model, outputStream, prefixMapping, predicateOrder,
-            rdfNodeComparatorFactory, blankNodeMetadata );
+      final Context context =
+            new Context( encoding, endOfLine, model, predicateOrder, prefixMapping, rdfNodeComparatorFactory, blankNodeMetadata );
+      final State initialState = buildInitialState( context, outputStream );
       final State prefixesWritten = writePrefixes( initialState );
       final List<Statement> statements = determineStatements( model, rdfNodeComparatorFactory );
       final State namedResourcesWritten = writeNamedResources( prefixesWritten, statements );
@@ -234,7 +232,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
       final List<Resource> sortedAnonymousIdentifiedResources = state.identifiedAnonymousResources
             .keySet()
             .stream()
-            .sorted( state.getRdfNodeComparatorFactory().comparator() )
+            .sorted( state.context().rdfNodeComparatorFactory().comparator() )
             .toList();
       for ( final Resource resource : sortedAnonymousIdentifiedResources ) {
          if ( !resource.listProperties().hasNext() ) {
@@ -282,16 +280,13 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
             .toList();
    }
 
-   private State buildInitialState( final Model model, final OutputStream outputStream,
-         final PrefixMapping prefixMapping, final Comparator<Property> predicateOrder,
-         final RDFNodeComparatorFactory rdfNodeComparatorFactory, final BlankNodeMetadata blankNodeMetadata ) {
-      State currentState = new State( outputStream, model, predicateOrder, prefixMapping, rdfNodeComparatorFactory,
-            blankNodeMetadata );
+   private State buildInitialState( final Context context, final OutputStream outputStream ) {
+      State currentState = new State( context, outputStream );
       int i = 0;
-      final Set<String> blankNodeLabelsInInput = blankNodeMetadata.getAllBlankNodeLabels();
-      for ( final Resource r : anonymousResourcesThatNeedAnId( model, currentState ) ) {
+      final Set<String> blankNodeLabelsInInput = context.blankNodeMetadata().getAllBlankNodeLabels();
+      for ( final Resource r : anonymousResourcesThatNeedAnId( context.model(), currentState ) ) {
          // use original label if present
-         String s = blankNodeMetadata.getLabel( r.asNode() );
+         String s = context.blankNodeMetadata().getLabel( r.asNode() );
          if ( s == null ) {
             // not a labeled blank node in the input: generate (and avoid collisions)
             do {
@@ -319,14 +314,14 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
             .filter( RDFNode::isResource )
             .map( RDFNode::asResource )
             .filter( RDFNode::isAnon ).collect( Collectors.toSet() );
-      candidates.removeAll( currentState.getBlankNodeMetadata().getLabeledBlankNodes() );
+      candidates.removeAll( currentState.context().blankNodeMetadata().getLabeledBlankNodes() );
       final List<Resource> candidatesInOrder = Stream.concat(
-            currentState.getBlankNodeMetadata().getLabeledBlankNodes()
+            currentState.context().blankNodeMetadata().getLabeledBlankNodes()
                   .stream()
-                  .sorted( currentState.getRdfNodeComparatorFactory().comparator() ),
+                  .sorted( currentState.context().rdfNodeComparatorFactory().comparator() ),
             candidates
                   .stream()
-                  .sorted( currentState.getRdfNodeComparatorFactory().comparator() ) )
+                  .sorted( currentState.context().rdfNodeComparatorFactory().comparator() ) )
             .toList();
       for ( final Resource candidate : candidatesInOrder ) {
          if ( identifiedResources.contains( candidate ) ) {
@@ -373,7 +368,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
    }
 
    private State writePrefixes( final State state ) {
-      final Map<String, String> prefixes = state.prefixMapping.getNsPrefixMap();
+      final Map<String, String> prefixes = state.context().prefixMapping().getNsPrefixMap();
       final int maxPrefixLength = prefixes.keySet().stream().map( String::length ).max( Integer::compareTo ).orElse( 0 );
       final String prefixFormat = switch ( style.alignPrefixes ) {
          case OFF -> "@prefix %s: <%s>" + beforeDot + "." + endOfLine;
@@ -381,7 +376,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
          case RIGHT -> "@prefix %" + maxPrefixLength + "s: <%s>" + beforeDot + "." + endOfLine;
       };
 
-      final List<String> urisInModel = allUsedUris( state.model );
+      final List<String> urisInModel = allUsedUris( state.context().model() );
 
       final List<Map.Entry<String, String>> entries = prefixes.entrySet().stream().sorted( prefixOrder )
             .filter( entry -> style.keepUnusedPrefixes
@@ -488,7 +483,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
       if ( node.equals( RDF.nil ) ) {
          return true;
       }
-      final boolean listNodeHasAdditionalTriples = state.model.listStatements( node.asResource(), null, (RDFNode) null )
+      final boolean listNodeHasAdditionalTriples = state.context().model().listStatements( node.asResource(), null, (RDFNode) null )
             .toList()
             .stream()
             .map( Statement::getPredicate )
@@ -497,8 +492,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
       if ( listNodeHasAdditionalTriples ) {
          return false;
       }
-      return ( node.isAnon()
-            && state.model.contains( node.asResource(), RDF.rest, (RDFNode) null ) );
+      return ( node.isAnon() && state.context().model().contains( node.asResource(), RDF.rest, (RDFNode) null ) );
    }
 
    private State writeResource( final Resource resource, final State state ) {
@@ -548,7 +542,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
             final boolean wouldElementExceedLineLength = ( alignmentAfterElementIsWritten + 1 ) > style.maxLineLength;
             yield writeRdfNode( element, wouldElementExceedLineLength
                   ? state.newLine().write( continuationIndent( state.indentationLevel ) )
-                  : ( firstElement || state.getLastCharacter().equals( " " ) ? state : state.write( " " ) ) );
+                  : ( firstElement || state.lastCharacter().equals( " " ) ? state : state.write( " " ) ) );
       };
    }
 
@@ -557,7 +551,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
          return state.write( "_:" + state.identifiedAnonymousResources.getOrDefault( resource, "" ) );
       }
 
-      if ( !state.model.contains( resource, null, (RDFNode) null ) ) {
+      if ( !state.context().model().contains( resource, null, (RDFNode) null ) ) {
          return state.write( " []" );
 
       }
@@ -578,12 +572,12 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
       final String uriWithoutEmptyBase = uri.startsWith( style.emptyRdfBase )
             ? uri.substring( style.emptyRdfBase.length() )
             : uri;
-      final String shortForm = state.prefixMapping.shortForm( uriWithoutEmptyBase );
+      final String shortForm = state.context().prefixMapping().shortForm( uriWithoutEmptyBase );
       if ( shortForm.equals( uriWithoutEmptyBase ) ) {
          return "<" + uriWithoutEmptyBase + ">";
       }
       // All other cases are delegated to Jena RIOT
-      final NodeFormatterTTL formatter = new NodeFormatterTTL( "", new CustomPrefixMap( state.prefixMapping ) );
+      final NodeFormatterTTL formatter = new NodeFormatterTTL( "", new CustomPrefixMap( state.context().prefixMapping() ) );
       final NodeFormatterSink sink = new NodeFormatterSink();
       try {
          formatter.formatURI( sink, uri );
@@ -764,7 +758,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
 
       int index = 0;
       State currentState = gapAfterSubject.addIndentationLevel();
-      for ( final Property property : properties.stream().sorted( state.predicateOrder ).toList() ) {
+      for ( final Property property : properties.stream().sorted( state.context().predicateOrder() ).toList() ) {
          final boolean firstProperty = index == 0;
          final boolean lastProperty = index == properties.size() - 1;
          final int propertyWidth = uriResource( property, currentState ).length();
@@ -821,7 +815,7 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
       int index = 0;
       State currentState = predicateWrittenOnce;
       for ( final RDFNode object : objects.stream().sorted( objectOrder.thenComparing(
-            state.getRdfNodeComparatorFactory().comparator() ) ).toList() ) {
+            state.context().rdfNodeComparatorFactory().comparator() ) ).toList() ) {
          final boolean lastObject = index == objects.size() - 1;
          final State predicateWritten = useComma ? currentState : writeProperty( predicate, currentState );
 
@@ -920,84 +914,27 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
       public void close() {}
    }
 
-   @FieldDefaults( makeFinal = true,
-      level = AccessLevel.PRIVATE )
-   @ToString
-   @EqualsAndHashCode
-   @With
-   @AllArgsConstructor
-   private class State {
-      OutputStream outputStream;
+   private record Context(
+         Charset encoding,
+         String endOfLine,
+         Model model,
+         Comparator<Property> predicateOrder,
+         PrefixMapping prefixMapping,
+         RDFNodeComparatorFactory rdfNodeComparatorFactory,
+         BlankNodeMetadata blankNodeMetadata
+   ) {}
 
-      Model model;
-
-      Set<Resource> visitedResources;
-
-      Map<Resource, String> identifiedAnonymousResources;
-
-      Comparator<Property> predicateOrder;
-
-      PrefixMapping prefixMapping;
-
-      RDFNodeComparatorFactory rdfNodeComparatorFactory;
-
-      BlankNodeMetadata blankNodeMetadata;
-
-      int indentationLevel;
-
-      int alignment;
-
-      String lastCharacter;
-
-      public OutputStream getOutputStream() {
-         return outputStream;
-      }
-
-      public Model getModel() {
-         return model;
-      }
-
-      public Set<Resource> getVisitedResources() {
-         return visitedResources;
-      }
-
-      public Map<Resource, String> getIdentifiedAnonymousResources() {
-         return identifiedAnonymousResources;
-      }
-
-      public Comparator<Property> getPredicateOrder() {
-         return predicateOrder;
-      }
-
-      public PrefixMapping getPrefixMapping() {
-         return prefixMapping;
-      }
-
-      public RDFNodeComparatorFactory getRdfNodeComparatorFactory() {
-         return rdfNodeComparatorFactory;
-      }
-
-      public BlankNodeMetadata getBlankNodeMetadata() {
-         return blankNodeMetadata;
-      }
-
-      public int getIndentationLevel() {
-         return indentationLevel;
-      }
-
-      public int getAlignment() {
-         return alignment;
-      }
-
-      public String getLastCharacter() {
-         return lastCharacter;
-      }
-
-      private State( final OutputStream outputStream, final Model model, final Comparator<Property> predicateOrder,
-            final PrefixMapping prefixMapping, final RDFNodeComparatorFactory rdfNodeComparatorFactory,
-            final BlankNodeMetadata blankNodeMetadata ) {
-         this( outputStream, model, Set.of(), Map.of(), predicateOrder, prefixMapping, rdfNodeComparatorFactory,
-               blankNodeMetadata, 0, 0, "" );
+   private record State(
+         Context context,
+         OutputStream outputStream,
+         Set<Resource> visitedResources,
+         Map<Resource, String> identifiedAnonymousResources,
+         int indentationLevel,
+         int alignment,
+         String lastCharacter
+   ) {
+      private State( final Context context, final OutputStream outputStream ) {
+         this( context, outputStream, Set.of(), Map.of(), 0, 0, "" );
       }
 
       public State withIdentifiedAnonymousResource( final Resource anonymousResource, final String id ) {
@@ -1021,17 +958,59 @@ public class TurtleFormatter implements Function<Model, String>, BiConsumer<Mode
       }
 
       public State newLine() {
-         return write( endOfLine ).withAlignment( 0 );
+         return write( context.endOfLine ).withAlignment( 0 );
       }
 
       public State write( final String content ) {
          final String end = !content.isEmpty() ? content.substring( content.length() - 1 ) : "";
          try {
-            outputStream.write( content.getBytes( encoding ) );
+            outputStream.write( content.getBytes( context.encoding() ) );
          } catch ( final IOException e ) {
             LOG.error( OUTPUT_ERROR_MESSAGE, e );
          }
          return withLastCharacter( end ).withAlignment( alignment + content.length() );
+      }
+
+      public State withOutputStream( final OutputStream outputStream ) {
+         return this.outputStream == outputStream
+               ? this
+               : new State( context, outputStream, visitedResources, identifiedAnonymousResources, indentationLevel,
+                     alignment, lastCharacter );
+      }
+
+      public State withVisitedResources( final Set<Resource> visitedResources ) {
+         return this.visitedResources == visitedResources
+               ? this
+               : new State( context, outputStream, visitedResources, identifiedAnonymousResources, indentationLevel,
+                     alignment, lastCharacter );
+      }
+
+      public State withIdentifiedAnonymousResources( final Map<Resource, String> identifiedAnonymousResources ) {
+         return this.identifiedAnonymousResources == identifiedAnonymousResources
+               ? this
+               : new State( context, outputStream, visitedResources, identifiedAnonymousResources, indentationLevel,
+                     alignment, lastCharacter );
+      }
+
+      public State withIndentationLevel( final int indentationLevel ) {
+         return this.indentationLevel == indentationLevel
+               ? this
+               : new State( context, outputStream, visitedResources, identifiedAnonymousResources, indentationLevel,
+                     alignment, lastCharacter );
+      }
+
+      public State withAlignment( final int alignment ) {
+         return this.alignment == alignment
+               ? this
+               : new State( context, outputStream, visitedResources, identifiedAnonymousResources, indentationLevel,
+                     alignment, lastCharacter );
+      }
+
+      public State withLastCharacter( final String lastCharacter ) {
+         return Objects.equals( this.lastCharacter, lastCharacter )
+               ? this
+               : new State( context, outputStream, visitedResources, identifiedAnonymousResources, indentationLevel,
+                     alignment, lastCharacter );
       }
    }
 }
