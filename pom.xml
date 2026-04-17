@@ -93,7 +93,6 @@
         <jackson-databind.version>2.21.2</jackson-databind.version>
         <jspecify.version>1.0.0</jspecify.version>
         <logback.version>1.5.32</logback.version>
-        <lombok.version>1.18.44</lombok.version>
         <openllet.version>2.6.5</openllet.version>
         <owlapi.version>5.5.1</owlapi.version>
         <picocli.version>4.7.7</picocli.version>
@@ -253,12 +252,6 @@
                 <version>${logback.version}</version>
             </dependency>
             <dependency>
-                <groupId>org.projectlombok</groupId>
-                <artifactId>lombok</artifactId>
-                <version>${lombok.version}</version>
-                <scope>provided</scope>
-            </dependency>
-            <dependency>
                 <groupId>com.github.galigator.openllet</groupId>
                 <artifactId>openllet-jena</artifactId>
                 <version>${openllet.version}</version>
@@ -351,6 +344,11 @@
         <dependency>
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
+            <scope>compile</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.soabase.record-builder</groupId>
+            <artifactId>record-builder-processor</artifactId>
             <scope>compile</scope>
         </dependency>
     </dependencies>
@@ -517,9 +515,9 @@
                     <target>${maven.compiler.target}</target>
                     <annotationProcessorPaths>
                         <path>
-                            <groupId>org.projectlombok</groupId>
-                            <artifactId>lombok</artifactId>
-                            <version>${lombok.version}</version>
+                            <groupId>io.soabase.record-builder</groupId>
+                            <artifactId>record-builder-processor</artifactId>
+                            <version>${record-builder.version}</version>
                         </path>
                     </annotationProcessorPaths>
                 </configuration>
