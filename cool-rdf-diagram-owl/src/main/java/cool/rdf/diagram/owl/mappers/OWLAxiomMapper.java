@@ -538,7 +538,7 @@ public class OWLAxiomMapper implements OWLAxiomVisitorEx<Graph> {
             .map( element -> {
                if ( element.isEdge() ) {
                   final Edge edge = element.asEdge();
-                  if ( allSyntaxParts.contains( edge.getFrom() ) ) {
+                  if ( allSyntaxParts.contains( edge.from() ) ) {
                      return edge.setFrom( ruleNode );
                   }
                }

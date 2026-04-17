@@ -57,7 +57,7 @@ public abstract class GraphTransformer implements UnaryOperator<Set<GraphElement
     * @return the change set
     */
    protected ChangeSet updateEdgesTo( final Set<GraphElement> graph, final Node oldToNode, final Node newToNode ) {
-      return updateEdge( graph, oldToNode, newToNode, Edge::getTo, Edge::setTo );
+      return updateEdge( graph, oldToNode, newToNode, Edge::to, Edge::setTo );
    }
 
    /**
@@ -71,7 +71,7 @@ public abstract class GraphTransformer implements UnaryOperator<Set<GraphElement
     * @return the change set
     */
    protected ChangeSet updateEdgesFrom( final Set<GraphElement> graph, final Node oldFromNode, final Node newFromNode ) {
-      return updateEdge( graph, oldFromNode, newFromNode, Edge::getFrom, Edge::setFrom );
+      return updateEdge( graph, oldFromNode, newFromNode, Edge::from, Edge::setFrom );
    }
 
    private ChangeSet updateEdge( final Set<GraphElement> graph, final Node oldNode, final Node newNode,

@@ -16,20 +16,14 @@
 
 package cool.rdf.diagram.owl.graph;
 
-import lombok.AccessLevel;
-import lombok.AllArgsConstructor;
-import lombok.EqualsAndHashCode;
-import lombok.ToString;
-import lombok.experimental.FieldDefaults;
-
 /**
  * Sealed class that represents the types of edges in the graph
  */
-public abstract class Edge implements GraphElement {
+public interface Edge extends GraphElement {
    /**
     * The type of edge
     */
-   public enum Type {
+   enum Type {
       /**
        * Default filled black arrow, indicating default relation
        */
@@ -56,28 +50,26 @@ public abstract class Edge implements GraphElement {
       NO_ARROW
    }
 
-   private Edge() {}
-
    /**
     * Returns the "from" node
     *
     * @return the node
     */
-   public abstract Node getFrom();
+   Node from();
 
    /**
     * Returns the "to" node
     *
     * @return the node
     */
-   public abstract Node getTo();
+   Node to();
 
    /**
     * Returns the edge's type
     *
     * @return the type
     */
-   public abstract Type getType();
+   Type type();
 
    /**
     * Returns a new edge with the "from" node updated to a new value
@@ -85,7 +77,7 @@ public abstract class Edge implements GraphElement {
     * @param newFromId the new "from" node id
     * @return the new edge
     */
-   public abstract Edge setFrom( Node newFromId );
+   Edge setFrom( Node newFromId );
 
    /**
     * Returns a new edge with the "to" node updated to a new value
@@ -93,48 +85,26 @@ public abstract class Edge implements GraphElement {
     * @param newToId the new "to" node id
     * @return the new edge
     */
-   public abstract Edge setTo( Node newToId );
+   Edge setTo( Node newToId );
 
    @Override
-   public boolean isEdge() {
+   default boolean isEdge() {
       return true;
    }
 
    @Override
-   public Edge asEdge() {
+   default Edge asEdge() {
       return this;
    }
 
    /**
     * A plain edge (i.e., which does not have a label)
     */
-   @FieldDefaults( makeFinal = true,
-      level = AccessLevel.PRIVATE )
-   @AllArgsConstructor
-   @ToString
-   @EqualsAndHashCode( callSuper = true )
-   public static class Plain extends Edge {
-      Type type;
-
-      Node from;
-
-      Node to;
-
-      @Override
-      public Type getType() {
-         return type;
-      }
-
-      @Override
-      public Node getFrom() {
-         return from;
-      }
-
-      @Override
-      public Node getTo() {
-         return to;
-      }
-
+   record Plain(
+         Type type,
+         Node from,
+         Node to
+   ) implements Edge {
       @Override
       public Edge setFrom( final Node newFrom ) {
          return new Plain( type, newFrom, to );
@@ -154,12 +124,12 @@ public abstract class Edge implements GraphElement {
    /**
     * An Edge with an attached label
     */
-   @FieldDefaults( makeFinal = true,
-      level = AccessLevel.PRIVATE )
-   @AllArgsConstructor
-   @ToString
-   @EqualsAndHashCode( callSuper = true )
-   public static class Decorated extends Edge {
+   record Decorated(
+         Type type,
+         Node from,
+         Node to,
+         Label label
+   ) implements Edge {
       /**
        * The possible labels
        */
@@ -215,36 +185,9 @@ public abstract class Edge implements GraphElement {
           *
           * @return the label string
           */
-         public String getLabel() {
+         public String label() {
             return label;
          }
-      }
-
-      Type type;
-
-      Node from;
-
-      Node to;
-
-      Label label;
-
-      @Override
-      public Type getType() {
-         return type;
-      }
-
-      @Override
-      public Node getFrom() {
-         return from;
-      }
-
-      @Override
-      public Node getTo() {
-         return to;
-      }
-
-      public Label getLabel() {
-         return label;
       }
 
       @Override

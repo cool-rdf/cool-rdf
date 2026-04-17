@@ -59,7 +59,7 @@ public class PropertyMarkerMerger extends GraphTransformer {
    }
 
    private Optional<PropertyMarker> markerByEdge( final Set<GraphElement> graph, final Edge edge ) {
-      return getNode( graph, edge.getTo().id() ).stream()
+      return getNode( graph, edge.to().id() ).stream()
             .flatMap( node -> node.view( PropertyMarker.class ) )
             .findFirst();
    }
@@ -91,7 +91,7 @@ public class PropertyMarkerMerger extends GraphTransformer {
       final Set<GraphElement> result = graph.stream()
             .filter( GraphElement::isEdge )
             .map( GraphElement::asEdge )
-            .collect( Collectors.groupingBy( Edge::getFrom ) )
+            .collect( Collectors.groupingBy( Edge::from ) )
             .values().stream().map( edges -> {
                final Set<Tuple2<Edge, PropertyMarker>> propertyMarkers = edges.stream()
                      .flatMap( edge -> markerByEdge( graph, edge )

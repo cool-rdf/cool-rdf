@@ -98,7 +98,7 @@ public class OWLAxiomMapperTest extends MapperTestBase {
 
       final Edge theEdge = edges.getFirst();
       assertThat( theEdge ).matches( isEdgeWithFromAndTo( "Foo", "Bar" ) );
-      assertThat( theEdge.getType() ).isEqualTo( Edge.Type.HOLLOW_ARROW );
+      assertThat( theEdge.type() ).isEqualTo( Edge.Type.HOLLOW_ARROW );
    }
 
    @Test
@@ -139,9 +139,9 @@ public class OWLAxiomMapperTest extends MapperTestBase {
             edges.stream().filter( isEdgeWithFromAndTo( complementId, "bar" ) ).findAny().get();
       final Edge complementToProp =
             edges.stream().filter( isEdgeWithFromAndTo( complementId, "property" ) ).findAny().get();
-      assertThat( fooToComplement.getType() ).isEqualTo( Edge.Type.DEFAULT_ARROW );
-      assertThat( complementToBar.getType() ).isEqualTo( Edge.Type.DEFAULT_ARROW );
-      assertThat( complementToProp.getType() ).isEqualTo( Edge.Type.DASHED_ARROW );
+      assertThat( fooToComplement.type() ).isEqualTo( Edge.Type.DEFAULT_ARROW );
+      assertThat( complementToBar.type() ).isEqualTo( Edge.Type.DEFAULT_ARROW );
+      assertThat( complementToProp.type() ).isEqualTo( Edge.Type.DASHED_ARROW );
    }
 
    @Test
@@ -236,9 +236,9 @@ public class OWLAxiomMapperTest extends MapperTestBase {
       assertThat( edges ).hasSize( 1 );
 
       final Edge propertyToDomain = edges.getFirst();
-      assertThat( propertyToDomain.getType() ).isEqualTo( Edge.Type.DEFAULT_ARROW );
+      assertThat( propertyToDomain.type() ).isEqualTo( Edge.Type.DEFAULT_ARROW );
       assertThat( propertyToDomain.getClass() ).isEqualTo( Edge.Decorated.class );
-      assertThat( ( (Edge.Decorated) propertyToDomain ).getLabel() ).isEqualTo( Edge.Decorated.Label.DOMAIN );
+      assertThat( ( (Edge.Decorated) propertyToDomain ).label() ).isEqualTo( Edge.Decorated.Label.DOMAIN );
    }
 
    @Test
@@ -261,9 +261,9 @@ public class OWLAxiomMapperTest extends MapperTestBase {
       assertThat( edges ).hasSize( 1 );
 
       final Edge propertyToDomain = edges.getFirst();
-      assertThat( propertyToDomain.getType() ).isEqualTo( Edge.Type.DEFAULT_ARROW );
+      assertThat( propertyToDomain.type() ).isEqualTo( Edge.Type.DEFAULT_ARROW );
       assertThat( propertyToDomain.getClass() ).isEqualTo( Edge.Decorated.class );
-      assertThat( ( (Edge.Decorated) propertyToDomain ).getLabel() ).isEqualTo( Edge.Decorated.Label.DOMAIN );
+      assertThat( ( (Edge.Decorated) propertyToDomain ).label() ).isEqualTo( Edge.Decorated.Label.DOMAIN );
    }
 
    @Test
@@ -342,9 +342,9 @@ public class OWLAxiomMapperTest extends MapperTestBase {
             edges.stream().filter( isEdgeWithFromAndTo( complementId, valueNodeId ) ).findAny().get();
       final Edge complementToProp =
             edges.stream().filter( isEdgeWithFromAndTo( complementId, "property" ) ).findAny().get();
-      assertThat( fooToComplement.getType() ).isEqualTo( Edge.Type.DEFAULT_ARROW );
-      assertThat( complementToValue.getType() ).isEqualTo( Edge.Type.DEFAULT_ARROW );
-      assertThat( complementToProp.getType() ).isEqualTo( Edge.Type.DASHED_ARROW );
+      assertThat( fooToComplement.type() ).isEqualTo( Edge.Type.DEFAULT_ARROW );
+      assertThat( complementToValue.type() ).isEqualTo( Edge.Type.DEFAULT_ARROW );
+      assertThat( complementToProp.type() ).isEqualTo( Edge.Type.DASHED_ARROW );
    }
 
    @Test
@@ -448,9 +448,9 @@ public class OWLAxiomMapperTest extends MapperTestBase {
       assertThat( edges ).hasSize( 1 );
 
       final Edge propertyToRange = edges.getFirst();
-      assertThat( propertyToRange.getType() ).isEqualTo( Edge.Type.DEFAULT_ARROW );
+      assertThat( propertyToRange.type() ).isEqualTo( Edge.Type.DEFAULT_ARROW );
       assertThat( propertyToRange.getClass() ).isEqualTo( Edge.Decorated.class );
-      assertThat( ( (Edge.Decorated) propertyToRange ).getLabel() ).isEqualTo( Edge.Decorated.Label.RANGE );
+      assertThat( ( (Edge.Decorated) propertyToRange ).label() ).isEqualTo( Edge.Decorated.Label.RANGE );
    }
 
    @Test
@@ -483,9 +483,9 @@ public class OWLAxiomMapperTest extends MapperTestBase {
       final Edge invisToBar = edges.stream().filter( isEdgeWithFromAndTo( invisibleId, "bar" ) ).findAny().get();
       final Edge invisToProp =
             edges.stream().filter( isEdgeWithFromAndTo( invisibleId, "property" ) ).findAny().get();
-      assertThat( fooToInvis.getType() ).isEqualTo( Edge.Type.NO_ARROW );
-      assertThat( invisToBar.getType() ).isEqualTo( Edge.Type.DEFAULT_ARROW );
-      assertThat( invisToProp.getType() ).isEqualTo( Edge.Type.DASHED_ARROW );
+      assertThat( fooToInvis.type() ).isEqualTo( Edge.Type.NO_ARROW );
+      assertThat( invisToBar.type() ).isEqualTo( Edge.Type.DEFAULT_ARROW );
+      assertThat( invisToProp.type() ).isEqualTo( Edge.Type.DASHED_ARROW );
    }
 
    @Test
@@ -533,7 +533,7 @@ public class OWLAxiomMapperTest extends MapperTestBase {
 
       final Edge theEdge = edges.getFirst();
       assertThat( theEdge ).matches( isEdgeWithFromAndTo( "foo", "bar" ) );
-      assertThat( theEdge.getType() ).isEqualTo( Edge.Type.HOLLOW_ARROW );
+      assertThat( theEdge.type() ).isEqualTo( Edge.Type.HOLLOW_ARROW );
    }
 
    @Test
@@ -607,9 +607,9 @@ public class OWLAxiomMapperTest extends MapperTestBase {
       assertThat( edges ).hasSize( 1 );
 
       final Edge propertyToRange = edges.getFirst();
-      assertThat( propertyToRange.getType() ).isEqualTo( Edge.Type.DEFAULT_ARROW );
+      assertThat( propertyToRange.type() ).isEqualTo( Edge.Type.DEFAULT_ARROW );
       assertThat( propertyToRange.getClass() ).isEqualTo( Edge.Decorated.class );
-      assertThat( ( (Edge.Decorated) propertyToRange ).getLabel() ).isEqualTo( Edge.Decorated.Label.RANGE );
+      assertThat( ( (Edge.Decorated) propertyToRange ).label() ).isEqualTo( Edge.Decorated.Label.RANGE );
    }
 
    @Test
@@ -687,7 +687,7 @@ public class OWLAxiomMapperTest extends MapperTestBase {
 
       final Edge theEdge = edges.getFirst();
       assertThat( theEdge ).matches( isEdgeWithFromAndTo( "Foo", "Thing" ) );
-      assertThat( theEdge.getType() ).isEqualTo( Edge.Type.DEFAULT_ARROW );
+      assertThat( theEdge.type() ).isEqualTo( Edge.Type.DEFAULT_ARROW );
    }
 
    @Test
@@ -825,7 +825,7 @@ public class OWLAxiomMapperTest extends MapperTestBase {
 
       final Edge theEdge = edges.getFirst();
       assertThat( theEdge ).matches( isEdgeWithFromAndTo( "foo", "bar" ) );
-      assertThat( theEdge.getType() ).isEqualTo( Edge.Type.HOLLOW_ARROW );
+      assertThat( theEdge.type() ).isEqualTo( Edge.Type.HOLLOW_ARROW );
    }
 
    @Test

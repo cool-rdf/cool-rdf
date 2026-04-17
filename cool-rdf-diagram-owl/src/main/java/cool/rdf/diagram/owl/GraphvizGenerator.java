@@ -89,26 +89,26 @@ public class GraphvizGenerator implements Function<Stream<GraphElement>, Graphvi
       final Node.Visitor<GraphvizDocument> nodeTypeToGraphviz = new GraphvizNodeVisitor( configuration );
 
       final Function<Edge.Decorated, GraphvizDocument> decoratedEdgeToGraphviz = edge -> {
-         final String label = edge.getLabel().getLabel();
-         final String edgeStyle = edgeTypeToGraphviz( edge.getType() )
+         final String label = edge.label().label();
+         final String edgeStyle = edgeTypeToGraphviz( edge.type() )
                .map( style -> String.format( "%s, fontsize=%d, fontname=\"%s\", color=\"%s\", fontcolor=\"%s\"",
                      style, configuration.fontsize, configuration.fontname, configuration.fgColor,
                      configuration.fgColor ) )
                .orElse( "" );
          return GraphvizDocument.withEdge( new GraphvizDocument.Statement(
-               String.format( "%s -> %s [label=\"%s\", %s]", escapeNodeId( edge.getFrom().id() ),
-                     escapeNodeId( edge.getTo().id() ), label, edgeStyle ) ) );
+               String.format( "%s -> %s [label=\"%s\", %s]", escapeNodeId( edge.from().id() ),
+                     escapeNodeId( edge.to().id() ), label, edgeStyle ) ) );
       };
 
       final Function<Edge.Plain, GraphvizDocument> plainEdgeToGraphviz = edge -> {
-         final String edgeStyle = edgeTypeToGraphviz( edge.getType() )
+         final String edgeStyle = edgeTypeToGraphviz( edge.type() )
                .map( style -> String.format( "%s, fontsize=%d, fontname=\"%s\", color=\"%s\", fontcolor=\"%s\"",
                      style, configuration.fontsize, configuration.fontname, configuration.fgColor,
                      configuration.fgColor ) )
                .orElse( "" );
          return GraphvizDocument.withEdge( new GraphvizDocument.Statement(
-               String.format( "%s -> %s [%s]", escapeNodeId( edge.getFrom().id() ),
-                     escapeNodeId( edge.getTo().id() ), edgeStyle ) ) );
+               String.format( "%s -> %s [%s]", escapeNodeId( edge.from().id() ),
+                     escapeNodeId( edge.to().id() ), edgeStyle ) ) );
       };
 
       graphVisitor = new GraphVisitor<>( nodeTypeToGraphviz, plainEdgeToGraphviz, decoratedEdgeToGraphviz );

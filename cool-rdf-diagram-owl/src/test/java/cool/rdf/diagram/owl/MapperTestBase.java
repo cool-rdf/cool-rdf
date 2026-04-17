@@ -48,25 +48,25 @@ public class MapperTestBase {
 
    protected final TestNameMapper testNameMapper = new TestNameMapper();
 
-   protected final Predicate<Edge> hasDefaultArrow = edge -> edge.getType().equals( Edge.Type.DEFAULT_ARROW );
+   protected final Predicate<Edge> hasDefaultArrow = edge -> edge.type().equals( Edge.Type.DEFAULT_ARROW );
 
-   protected final Predicate<Edge> hasHollowArrow = edge -> edge.getType().equals( Edge.Type.HOLLOW_ARROW );
+   protected final Predicate<Edge> hasHollowArrow = edge -> edge.type().equals( Edge.Type.HOLLOW_ARROW );
 
-   protected final Predicate<Edge> hasDashedArrow = edge -> edge.getType().equals( Edge.Type.DASHED_ARROW );
+   protected final Predicate<Edge> hasDashedArrow = edge -> edge.type().equals( Edge.Type.DASHED_ARROW );
 
-   protected final Predicate<Edge> hasNoArrow = edge -> edge.getType().equals( Edge.Type.NO_ARROW );
+   protected final Predicate<Edge> hasNoArrow = edge -> edge.type().equals( Edge.Type.NO_ARROW );
 
    final Predicate<Edge> hasDomainLabel = edge -> edge.view( Edge.Decorated.class )
-         .map( decoratedEdge -> decoratedEdge.getLabel().equals( Edge.Decorated.Label.DOMAIN ) )
+         .map( decoratedEdge -> decoratedEdge.label().equals( Edge.Decorated.Label.DOMAIN ) )
          .findFirst()
          .orElse( false );
 
    final Predicate<Edge> hasRangeLabel = edge -> edge.view( Edge.Decorated.class )
-         .map( decoratedEdge -> decoratedEdge.getLabel().equals( Edge.Decorated.Label.RANGE ) )
+         .map( decoratedEdge -> decoratedEdge.label().equals( Edge.Decorated.Label.RANGE ) )
          .findFirst()
          .orElse( false );
 
-   final Predicate<Edge> hasFromBar = edge -> edge.getFrom().id().id().equals( "bar" );
+   final Predicate<Edge> hasFromBar = edge -> edge.from().id().id().equals( "bar" );
 
    protected MappingConfiguration createTestMappingConfiguration() {
       return DefaultMappingConfiguration.builder()
@@ -165,15 +165,15 @@ public class MapperTestBase {
    }
 
    protected Predicate<Edge> isEdgeWithFromAndTo( final String fromId, final String toId ) {
-      return edge -> edge.getFrom().id().id().equals( fromId )
-            && edge.getTo().id().id().equals( toId );
+      return edge -> edge.from().id().id().equals( fromId )
+            && edge.to().id().id().equals( toId );
    }
 
    protected Predicate<Edge> isEdgeWithFromAndToAndLabel( final String fromId, final String toId,
          final Edge.Decorated.Label label ) {
-      return edge -> edge.getFrom().id().id().equals( fromId )
-            && edge.getTo().id().id().equals( toId )
-            && ( (Edge.Decorated) edge ).getLabel().equals( label );
+      return edge -> edge.from().id().id().equals( fromId )
+            && edge.to().id().id().equals( toId )
+            && ( (Edge.Decorated) edge ).label().equals( label );
    }
 
    protected Predicate<Edge> isEdgeWithFromAndTo( final Node.Id fromId, final Node.Id toId ) {
@@ -181,10 +181,10 @@ public class MapperTestBase {
    }
 
    protected Predicate<Edge> isEdgeWithFrom( final String iri ) {
-      return edge -> edge.getFrom().id().iri().map( theIri -> theIri.equals( iri( iri ) ) ).orElse( false );
+      return edge -> edge.from().id().iri().map( theIri -> theIri.equals( iri( iri ) ) ).orElse( false );
    }
 
    protected Predicate<Edge> isEdgeWithTo( final String iri ) {
-      return edge -> edge.getTo().id().iri().map( theIri -> theIri.equals( iri( iri ) ) ).orElse( false );
+      return edge -> edge.to().id().iri().map( theIri -> theIri.equals( iri( iri ) ) ).orElse( false );
    }
 }
