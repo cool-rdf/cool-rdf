@@ -44,7 +44,7 @@ public class Inferrer {
    /**
     * The default configuration
     */
-   public static final Configuration DEFAULT_CONFIGURATION = Configuration.builder().build();
+   public static final Configuration DEFAULT_CONFIGURATION = ConfigurationBuilder.builder().build();
 
    private static final Logger LOG = LoggerFactory.getLogger( Inferrer.class );
 
@@ -99,7 +99,7 @@ public class Inferrer {
    public Try<Void> infer( final InputStream input, final OutputStream output, final Configuration configuration ) {
       final OntModel model = ModelFactory.createOntologyModel( PelletReasonerFactory.THE_SPEC );
       try {
-         model.read( input, configuration.base, configurationFormatToJenaFormat( configuration.inputFormat ) );
+         model.read( input, configuration.base(), configurationFormatToJenaFormat( configuration.inputFormat() ) );
          return writeTurtle( model, output );
       } catch ( final Exception exception ) {
          LOG.debug( "Failure during RDF I/O", exception );

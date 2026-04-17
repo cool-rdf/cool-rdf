@@ -77,7 +77,7 @@ public class CoolInfer extends AbstractCommand implements Runnable {
 
    @Override
    public void run() {
-      final Configuration.ConfigurationBuilder configurationBuilder = Configuration.builder();
+      final ConfigurationBuilder configurationBuilder = ConfigurationBuilder.builder();
 
       final Inferrer inferrer = new Inferrer();
 

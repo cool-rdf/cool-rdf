@@ -17,26 +17,22 @@
 package cool.rdf.infer;
 
 import cool.rdf.formatter.TurtleFormatter;
-import lombok.Builder;
+import io.soabase.recordbuilder.core.RecordBuilder;
 
 /**
  * The configuration for inferring from models
+ *
+ * @param base the format used to parse the input
+ * @param inputFormat the RDF base URL
  */
-@Builder
-public class Configuration {
-   /**
-    * The format used to parse the input
-    */
-   @SuppressWarnings( "CanBeFinal" )
-   @Builder.Default
-   public Format inputFormat = Format.TURTLE;
+@RecordBuilder
+public record Configuration(
+      @RecordBuilder.Initializer( "DEFAULT_INPUT_FORMAT" ) Format inputFormat,
+      @RecordBuilder.Initializer( "DEFAULT_BASE" ) String base
+) {
 
-   /**
-    * The RDF base URL
-    */
-   @SuppressWarnings( "CanBeFinal" )
-   @Builder.Default
-   public String base = TurtleFormatter.DEFAULT_EMPTY_BASE;
+   public static final Format DEFAULT_INPUT_FORMAT = Format.TURTLE;
+   public static final String DEFAULT_BASE = TurtleFormatter.DEFAULT_EMPTY_BASE;
 
    /**
     * The possible input formats
